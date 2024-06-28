@@ -2,43 +2,38 @@
 package ginvalidator
 
 import (
-	// valid "github.com/asaskevich/govalidator"
 	"github.com/gin-gonic/gin"
-	"fmt"
 )
 
-type Param struct {
-	field        string
-	errorMessage string
+var defaultParamLocation = "query"
 
-	value string
-}
+func NewParam(ctx *gin.Context, field, errorMessage string) Processor {
+	value := ctx.Query(field)
 
-func NewParam(field, errorMessage string) *Param {
-	return &Param{
-		field:        field,
-		errorMessage: errorMessage,
-	}
-}
-
-func (p *Param) IsALPHA() *Param {
-	return p
-}
-
-func (p *Param) IsASCII() *Param {
-	return p
-}
-
-func (p *Param) Validate() gin.HandlerFunc {
-	return func(ctx *gin.Context) {
-
-		contentType := ctx.GetHeader("Content-Type")
-		fmt.Println("contentType:", contentType)
-
-		if contentType != "application/json" {
-			ctx.Next()
-		}
-
-		ctx.Next()
+	return Processor{
+		Validator: Validator{
+			field:        field,
+			errorMessage: errorMessage,
+			value:        value,
+			currentValue: value,
+			resErrs:      make([]ResponseError, 0),
+			location:     defaultParamLocation,
+		},
+		Modifier: Modifier{
+			field:        field,
+			errorMessage: errorMessage,
+			value:        value,
+			currentValue: value,
+			resErrs:      make([]ResponseError, 0),
+			location:     defaultParamLocation,
+		},
+		Sanitizer: Sanitizer{
+			field:        field,
+			errorMessage: errorMessage,
+			value:        value,
+			currentValue: value,
+			resErrs:      make([]ResponseError, 0),
+			location:     defaultParamLocation,
+		},
 	}
 }

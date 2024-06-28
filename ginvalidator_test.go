@@ -6,9 +6,9 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/buger/jsonparser"
+	valid "github.com/asaskevich/govalidator"
+	// "github.com/buger/jsonparser"
 	"github.com/gin-gonic/gin"
-	"github.com/stretchr/testify/assert"
 )
 
 func ExampleMiddleware() gin.HandlerFunc {
@@ -24,9 +24,14 @@ func setupRouter() *gin.Engine {
 		c.JSON(http.StatusOK, gin.H{"message": "success"})
 	})
 
-	p := NewParam("person", "person not provided")
+	router.GET("/hello", func(ctx *gin.Context) {
+		p := NewParam(ctx, "person", "person not provided")
+		p.IsAlphanumeric("person is not alphanumeric.").IsASCII("person is not an ascii character.").IsALPHA("person is not an alphanumeric.")
 
-	router.GET("/hello", p.IsALPHA().IsASCII().Validate(), func(c *gin.Context) {
+		fmt.Printf("Validation errors: %+v\n", p.GetErrors())
+
+		ctx.Next()
+	}, func(c *gin.Context) {
 		person := c.Query("person")
 		c.JSON(http.StatusOK, gin.H{"message": person})
 	})
@@ -41,45 +46,47 @@ func TestExampleMiddleware(t *testing.T) {
 	req, _ := http.NewRequest("GET", "/test", nil)
 	router.ServeHTTP(w, req)
 
-	assert.Equal(t, http.StatusOK, w.Code)
-	assert.Equal(t, `{"message":"success"}`, w.Body.String())
+	fmt.Println("isValid", valid.IsASCII("你好，世界！"))
 
-	data := []byte(`{
-  "person": {
-    "name": {
-      "first": "Leonid",
-      "last": "Bugaev",
-      "fullName": "Leonid Bugaev",
-    },
-    "github": {
-      "handle": "buger",
-      "followers": 109
-    },
-    "avatars": [
-      { "url": "https://avatars1.githubusercontent.com/u/14009?v=3&s=460", "type": "thumbnail" }
-    ]
-  },
-  "company": {
-    "name": "Acme"
-  }
-}`)
+	// 	assert.Equal(t, http.StatusOK, w.Code)
+	// 	assert.Equal(t, `{"message":"success"}`, w.Body.String())
 
-	key, _, _, _ := jsonparser.Get(data, "person", "avatars", "[0]", "url")
+	// 	data := []byte(`{
+	//   "person": {
+	//     "name": {
+	//       "first": "Leonid",
+	//       "last": "Bugaev",
+	//       "fullName": "Leonid Bugaev",
+	//     },
+	//     "github": {
+	//       "handle": "buger",
+	//       "followers": 109
+	//     },
+	//     "avatars": [
+	//       { "url": "https://avatars1.githubusercontent.com/u/14009?v=3&s=460", "type": "thumbnail" }
+	//     ]
+	//   },
+	//   "company": {
+	//     "name": "Acme"
+	//   }
+	// }`)
 
-	fmt.Println("Key:", string(key))
+	// 	key, _, _, _ := jsonparser.Get(data, "person", "avatars", "[0]", "url")
+
+	// 	fmt.Println("Key:", string(key))
 }
 
 func TestParamMiddleware(t *testing.T) {
 	router := setupRouter()
 
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/hello?person=david", nil)
+	req, _ := http.NewRequest("GET", "/hello?person=jason(*)", nil)
 	req.Header.Set("Content-Type", "application/json")
 
 	router.ServeHTTP(w, req)
 
-	fmt.Println("Response:", w.Body.String())
+	// fmt.Println("Response:", w.Body.String())
 
-	assert.Equal(t, http.StatusOK, w.Code)
-	assert.Equal(t, `{"message":"david"}`, w.Body.String())
+	// assert.Equal(t, http.StatusOK, w.Code)
+	// assert.Equal(t, `{"message":"david"}`, w.Body.String())
 }

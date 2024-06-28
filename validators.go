@@ -1,79 +1,107 @@
 package ginvalidator
 
 import (
+	"fmt"
+
 	valid "github.com/asaskevich/govalidator"
 )
 
-type Validator struct {
+type validator struct {
 	field        string
 	errorMessage string
 	location     string
-
-	value        string
-	currentValue string
-	resErrs      []ResponseError
+	rules        validationProcessesRules
 }
 
-func (v Validator) IsALPHA(errMsg string) Processor {
-	var finalErrMsg = errMsg
-	var resErrs = v.resErrs
-	var resErr ResponseError
-
-	if errMsg == "" && v.errorMessage != "" {
-		finalErrMsg = v.errorMessage
-	}
-
-	if !valid.IsAlpha(v.currentValue) {
-		resErr = ResponseError{location: v.location, msg: finalErrMsg, path: v.field, typ: "field"}
-		resErrs = append(resErrs, resErr)
-	}
-
-	return Processor{
-		Validator: Validator{field: v.field, errorMessage: v.errorMessage, location: v.location, value: v.value, currentValue: v.currentValue, resErrs: resErrs},
-		Modifier:  Modifier{field: v.field, errorMessage: v.errorMessage, location: v.location, value: v.value, currentValue: v.currentValue, resErrs: resErrs},
-		Sanitizer: Sanitizer{field: v.field, errorMessage: v.errorMessage, location: v.location, value: v.value, currentValue: v.currentValue, resErrs: resErrs},
+func (v *validator) createProcessorFromValidator() processor {
+	return processor{
+		validator: *v,
+		modifier: modifier{
+			field:        v.field,
+			errorMessage: v.errorMessage,
+			location:     defaultParamLocation,
+			rules:        v.rules,
+		},
+		sanitizer: sanitizer{
+			field:        v.field,
+			errorMessage: v.errorMessage,
+			location:     defaultParamLocation,
+			rules:        v.rules,
+		},
 	}
 }
 
-func (v Validator) IsASCII(errMsg string) Processor {
-	var finalErrMsg = errMsg
-	var resErrs = v.resErrs
-	var resErr ResponseError
+func (v validator) IsAlpha(errorMessage string) processor {
+	isASCII := func(value, field string) validationProcessResponse {
+		location := v.location
+		var finalErrMessage string
+		if errorMessage != "" {
+			finalErrMessage = errorMessage
+		} else if v.errorMessage != "" {
+			finalErrMessage = v.errorMessage
+		} else {
+			finalErrMessage = fmt.Sprintf("%s is not alpha.", value)
+		}
+		path := field
+		typ := "____"
+		newValue := value
+		funcName := "IsAlpha"
+		isValid := valid.IsAlpha(value)
 
-	if errMsg == "" && v.errorMessage != "" {
-		finalErrMsg = v.errorMessage
+		return newValidationProcessResponse(location, finalErrMessage, path, typ, newValue, funcName, isValid)
 	}
 
-	if !valid.IsASCII(v.currentValue) {
-		resErr = ResponseError{location: v.location, msg: finalErrMsg, path: v.field, typ: "field"}
-		resErrs = append(resErrs, resErr)
-	}
+	v.rules = append(v.rules, isASCII)
 
-	return Processor{
-		Validator: Validator{field: v.field, errorMessage: v.errorMessage, location: v.location, value: v.value, currentValue: v.currentValue, resErrs: resErrs},
-		Modifier:  Modifier{field: v.field, errorMessage: v.errorMessage, location: v.location, value: v.value, currentValue: v.currentValue, resErrs: resErrs},
-		Sanitizer: Sanitizer{field: v.field, errorMessage: v.errorMessage, location: v.location, value: v.value, currentValue: v.currentValue, resErrs: resErrs},
-	}
+	return v.createProcessorFromValidator()
 }
 
-func (v Validator) IsAlphanumeric(errMsg string) Processor {
+func (v validator) IsAlphanumeric(errorMessage string) processor {
+	isASCII := func(value, field string) validationProcessResponse {
+		location := v.location
+		var finalErrMessage string
+		if errorMessage != "" {
+			finalErrMessage = errorMessage
+		} else if v.errorMessage != "" {
+			finalErrMessage = v.errorMessage
+		} else {
+			finalErrMessage = fmt.Sprintf("%s is not alphanumeric.", value)
+		}
+		path := field
+		typ := "____"
+		newValue := value
+		funcName := "IsAlphanumeric"
+		isValid := valid.IsAlphanumeric(value)
 
-	var finalErrMsg = errMsg
-	var resErrs = v.resErrs
-	var resErr ResponseError
-
-	if errMsg == "" && v.errorMessage != "" {
-		finalErrMsg = v.errorMessage
+		return newValidationProcessResponse(location, finalErrMessage, path, typ, newValue, funcName, isValid)
 	}
 
-	if !valid.IsAlphanumeric(v.currentValue) {
-		resErr = ResponseError{location: v.location, msg: finalErrMsg, path: v.field, typ: "field"}
-		resErrs = append(resErrs, resErr)
+	v.rules = append(v.rules, isASCII)
+
+	return v.createProcessorFromValidator()
+}
+
+func (v validator) IsASCII(errorMessage string) processor {
+	isASCII := func(value, field string) validationProcessResponse {
+		location := v.location
+		var finalErrMessage string
+		if errorMessage != "" {
+			finalErrMessage = errorMessage
+		} else if v.errorMessage != "" {
+			finalErrMessage = v.errorMessage
+		} else {
+			finalErrMessage = fmt.Sprintf("%s is not ascii.", value)
+		}
+		path := field
+		typ := "____"
+		newValue := value
+		funcName := "IsASCII"
+		isValid := valid.IsASCII(value)
+
+		return newValidationProcessResponse(location, finalErrMessage, path, typ, newValue, funcName, isValid)
 	}
 
-	return Processor{
-		Validator: Validator{field: v.field, errorMessage: v.errorMessage, location: v.location, value: v.value, currentValue: v.currentValue, resErrs: resErrs},
-		Modifier:  Modifier{field: v.field, errorMessage: v.errorMessage, location: v.location, value: v.value, currentValue: v.currentValue, resErrs: resErrs},
-		Sanitizer: Sanitizer{field: v.field, errorMessage: v.errorMessage, location: v.location, value: v.value, currentValue: v.currentValue, resErrs: resErrs},
-	}
+	v.rules = append(v.rules, isASCII)
+
+	return v.createProcessorFromValidator()
 }

@@ -1,39 +1,38 @@
-// params.go
 package ginvalidator
 
-import (
-	"github.com/gin-gonic/gin"
-)
+type param struct {
+	field        string
+	errorMessage string
+}
 
-var defaultParamLocation = "query"
+const defaultParamLocation = "param"
 
-func NewParam(ctx *gin.Context, field, errorMessage string) Processor {
-	value := ctx.Query(field)
+func (p *param) Chain() processor {
+	return processor{
+		validator: validator{
+			field:        p.field,
+			errorMessage: p.errorMessage,
+			location:     defaultParamLocation,
+			rules:        make(validationProcessesRules, 0),
+		},
+		modifier: modifier{
+			field:        p.field,
+			errorMessage: p.errorMessage,
+			location:     defaultParamLocation,
+			rules:        make(validationProcessesRules, 0),
+		},
+		sanitizer: sanitizer{
+			field:        p.field,
+			errorMessage: p.errorMessage,
+			location:     defaultParamLocation,
+			rules:        make(validationProcessesRules, 0),
+		},
+	}
+}
 
-	return Processor{
-		Validator: Validator{
-			field:        field,
-			errorMessage: errorMessage,
-			value:        value,
-			currentValue: value,
-			resErrs:      make([]ResponseError, 0),
-			location:     defaultParamLocation,
-		},
-		Modifier: Modifier{
-			field:        field,
-			errorMessage: errorMessage,
-			value:        value,
-			currentValue: value,
-			resErrs:      make([]ResponseError, 0),
-			location:     defaultParamLocation,
-		},
-		Sanitizer: Sanitizer{
-			field:        field,
-			errorMessage: errorMessage,
-			value:        value,
-			currentValue: value,
-			resErrs:      make([]ResponseError, 0),
-			location:     defaultParamLocation,
-		},
+func NewParam(field, errorMessage string) param {
+	return param{
+		field:        field,
+		errorMessage: errorMessage,
 	}
 }

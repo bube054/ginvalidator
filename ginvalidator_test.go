@@ -24,14 +24,9 @@ func setupRouter() *gin.Engine {
 		c.JSON(http.StatusOK, gin.H{"message": "success"})
 	})
 
-	router.GET("/hello", func(ctx *gin.Context) {
-		p := NewParam(ctx, "person", "person not provided")
-		p.IsAlphanumeric("person is not alphanumeric.").IsASCII("person is not an ascii character.").IsALPHA("person is not an alphanumeric.")
+	p := NewParam("person", "person is not valid.")
 
-		fmt.Printf("Validation errors: %+v\n", p.GetErrors())
-
-		ctx.Next()
-	}, func(c *gin.Context) {
+	router.GET("/hello/:person", p.Chain().IsASCII("person is not ascii").IsAlpha("person is not alpha").Validate(), func(c *gin.Context) {
 		person := c.Query("person")
 		c.JSON(http.StatusOK, gin.H{"message": person})
 	})
@@ -80,7 +75,7 @@ func TestParamMiddleware(t *testing.T) {
 	router := setupRouter()
 
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/hello?person=jason(*)", nil)
+	req, _ := http.NewRequest("GET", "/hello/david", nil)
 	req.Header.Set("Content-Type", "application/json")
 
 	router.ServeHTTP(w, req)

@@ -51,6 +51,8 @@ func TestExampleMiddleware(t *testing.T) {
 
 	fmt.Println("isValid", valid.IsASCII("你好，世界！"))
 
+	// fmt.Printf("json field(s) %v", splitFieldOnPeriod("name"))
+
 	// 	assert.Equal(t, http.StatusOK, w.Code)
 	// 	assert.Equal(t, `{"message":"success"}`, w.Body.String())
 

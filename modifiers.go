@@ -12,38 +12,37 @@ type modifier struct {
 	field        string
 	errorMessage string
 	location     string
-	rules        validationProcessesRules
+	rules        validationChainRules
 	processType  string
 }
 
-func (m *modifier) createProcessorFromModifier() processor {
-	return processor{
+func (m *modifier) createProcessorFromModifier() validationChain {
+	return validationChain{
 		validator: validator{
 			field:        m.field,
 			errorMessage: m.errorMessage,
-			location:     defaultParamLocation,
+			location:     m.location,
 			rules:        m.rules,
 		},
 		modifier: *m,
 		sanitizer: sanitizer{
 			field:        m.field,
 			errorMessage: m.errorMessage,
-			location:     defaultParamLocation,
+			location:     m.location,
 			rules:        m.rules,
 		},
 	}
 }
 
-func (m modifier) Not() processor {
-	not := func(value, field string, ctx *gin.Context) validationProcessResponse {
+func (m modifier) Not() validationChain {
+	not := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := m.location
 		path := field
-		typ := "____"
 		newValue := value
 		funcName := "IsNot"
 		isValid := true
 
-		return newValidationProcessResponse(location, "", path, typ, newValue, funcName, isValid, false)
+		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, false)
 	}
 
 	m.rules = append(m.rules, not)
@@ -51,16 +50,15 @@ func (m modifier) Not() processor {
 	return m.createProcessorFromModifier()
 }
 
-func (m modifier) Bail() processor {
-	not := func(value, field string, ctx *gin.Context) validationProcessResponse {
+func (m modifier) Bail() validationChain {
+	not := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := m.location
 		path := field
-		typ := "____"
 		newValue := value
 		funcName := "Bail"
 		isValid := true
 
-		return newValidationProcessResponse(location, "", path, typ, newValue, funcName, isValid, true)
+		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, true)
 	}
 
 	m.rules = append(m.rules, not)
@@ -70,17 +68,16 @@ func (m modifier) Bail() processor {
 
 type IfFunc func(*gin.Context) bool
 
-func (m modifier) If(ifFunc IfFunc) processor {
-	iF := func(value, field string, ctx *gin.Context) validationProcessResponse {
+func (m modifier) If(ifFunc IfFunc) validationChain {
+	iF := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := m.location
 		path := field
-		typ := "____"
 		newValue := value
 		funcName := "If"
 		isValid := true
 		shouldBail := !ifFunc(ctx)
 
-		return newValidationProcessResponse(location, "", path, typ, newValue, funcName, isValid, shouldBail)
+		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, shouldBail)
 	}
 
 	m.rules = append(m.rules, iF)

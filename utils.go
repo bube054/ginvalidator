@@ -1,10 +1,12 @@
 package ginvalidator
 
 import (
+	"strings"
+
 	valid "github.com/asaskevich/govalidator"
 )
 
-func wasPreviousRuleNegation(rules validationProcessesRules) bool {
+func wasPreviousRuleNegation(rules validationChainRules) bool {
 	if len(rules) == 0 {
 		return false
 	}
@@ -36,4 +38,8 @@ func valueIsInSlice(value string, valuesFrom []string) bool {
 	}
 
 	return false
+}
+
+func splitJSONFieldSelector(value string) ([]string, error) {
+	return strings.Split(value, "."), nil
 }

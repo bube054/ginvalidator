@@ -11,33 +11,33 @@ type sanitizer struct {
 	field        string
 	errorMessage string
 	location     string
-	rules        validationProcessesRules
+	rules        validationChainRules
 	processType  string
 }
 
-func (s *sanitizer) createProcessorFromSanitizer() processor {
-	return processor{
+func (s *sanitizer) createProcessorFromSanitizer() validationChain {
+	return validationChain{
 		validator: validator{
 			field:        s.field,
 			errorMessage: s.errorMessage,
-			location:     defaultParamLocation,
+			location:     s.location,
 			rules:        s.rules,
 		},
 		modifier: modifier{
 			field:        s.field,
 			errorMessage: s.errorMessage,
-			location:     defaultParamLocation,
+			location:     s.location,
 			rules:        s.rules,
 		},
 		sanitizer: *s,
 	}
 }
 
-func (s sanitizer) Default(defaultValue string) processor {
-	default_ := func(value, field string, ctx *gin.Context) validationProcessResponse {
+func (s sanitizer) Default(defaultValue string) validationChain {
+	default_ := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := s.location
 		path := field
-		typ := "____"
+
 		var newValue = value
 
 		if valueIsNullish(newValue) {
@@ -47,7 +47,7 @@ func (s sanitizer) Default(defaultValue string) processor {
 		funcName := "Default"
 		isValid := true
 
-		return newValidationProcessResponse(location, "", path, typ, newValue, funcName, isValid, false)
+		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, false)
 	}
 
 	s.rules = append(s.rules, default_)
@@ -55,11 +55,11 @@ func (s sanitizer) Default(defaultValue string) processor {
 	return s.createProcessorFromSanitizer()
 }
 
-func (s sanitizer) Replace(valuesFrom []string, valueTo string) processor {
-	replace := func(value, field string, ctx *gin.Context) validationProcessResponse {
+func (s sanitizer) Replace(valuesFrom []string, valueTo string) validationChain {
+	replace := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := s.location
 		path := field
-		typ := "____"
+
 		var newValue = value
 
 		if valueIsInSlice(newValue, valuesFrom) {
@@ -69,7 +69,7 @@ func (s sanitizer) Replace(valuesFrom []string, valueTo string) processor {
 		funcName := "Replace"
 		isValid := true
 
-		return newValidationProcessResponse(location, "", path, typ, newValue, funcName, isValid, false)
+		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, false)
 	}
 
 	s.rules = append(s.rules, replace)
@@ -77,17 +77,17 @@ func (s sanitizer) Replace(valuesFrom []string, valueTo string) processor {
 	return s.createProcessorFromSanitizer()
 }
 
-func (s sanitizer) ToLowerCase() processor {
-	toLowerCase := func(value, field string, ctx *gin.Context) validationProcessResponse {
+func (s sanitizer) ToLowerCase() validationChain {
+	toLowerCase := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := s.location
 		path := field
-		typ := "____"
+
 		newValue := strings.ToLower(value)
 
 		funcName := "Replace"
 		isValid := true
 
-		return newValidationProcessResponse(location, "", path, typ, newValue, funcName, isValid, false)
+		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, false)
 	}
 
 	s.rules = append(s.rules, toLowerCase)
@@ -95,17 +95,17 @@ func (s sanitizer) ToLowerCase() processor {
 	return s.createProcessorFromSanitizer()
 }
 
-func (s sanitizer) ToUpperCase() processor {
-	toUpperCase := func(value, field string, ctx *gin.Context) validationProcessResponse {
+func (s sanitizer) ToUpperCase() validationChain {
+	toUpperCase := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := s.location
 		path := field
-		typ := "____"
+
 		newValue := strings.ToUpper(value)
 
 		funcName := "Replace"
 		isValid := true
 
-		return newValidationProcessResponse(location, "", path, typ, newValue, funcName, isValid, false)
+		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, false)
 	}
 
 	s.rules = append(s.rules, toUpperCase)
@@ -113,17 +113,17 @@ func (s sanitizer) ToUpperCase() processor {
 	return s.createProcessorFromSanitizer()
 }
 
-func (s sanitizer) Blacklist(chars string) processor {
-	toUpperCase := func(value, field string, ctx *gin.Context) validationProcessResponse {
+func (s sanitizer) Blacklist(chars string) validationChain {
+	toUpperCase := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := s.location
 		path := field
-		typ := "____"
+
 		newValue := strings.ToUpper(value)
 
 		funcName := "Replace"
 		isValid := true
 
-		return newValidationProcessResponse(location, "", path, typ, newValue, funcName, isValid, false)
+		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, false)
 	}
 
 	s.rules = append(s.rules, toUpperCase)
@@ -131,17 +131,17 @@ func (s sanitizer) Blacklist(chars string) processor {
 	return s.createProcessorFromSanitizer()
 }
 
-func (s sanitizer) Escape() processor {
-	toUpperCase := func(value, field string, ctx *gin.Context) validationProcessResponse {
+func (s sanitizer) Escape() validationChain {
+	toUpperCase := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := s.location
 		path := field
-		typ := "____"
+
 		newValue := strings.ToUpper(value)
 
 		funcName := "Replace"
 		isValid := true
 
-		return newValidationProcessResponse(location, "", path, typ, newValue, funcName, isValid, false)
+		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, false)
 	}
 
 	s.rules = append(s.rules, toUpperCase)
@@ -149,17 +149,17 @@ func (s sanitizer) Escape() processor {
 	return s.createProcessorFromSanitizer()
 }
 
-func (s sanitizer) Unescape() processor {
-	toUpperCase := func(value, field string, ctx *gin.Context) validationProcessResponse {
+func (s sanitizer) Unescape() validationChain {
+	toUpperCase := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := s.location
 		path := field
-		typ := "____"
+
 		newValue := strings.ToUpper(value)
 
 		funcName := "Replace"
 		isValid := true
 
-		return newValidationProcessResponse(location, "", path, typ, newValue, funcName, isValid, false)
+		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, false)
 	}
 
 	s.rules = append(s.rules, toUpperCase)
@@ -167,17 +167,17 @@ func (s sanitizer) Unescape() processor {
 	return s.createProcessorFromSanitizer()
 }
 
-func (s sanitizer) LTrim() processor {
-	toUpperCase := func(value, field string, ctx *gin.Context) validationProcessResponse {
+func (s sanitizer) LTrim() validationChain {
+	toUpperCase := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := s.location
 		path := field
-		typ := "____"
+
 		newValue := strings.ToUpper(value)
 
 		funcName := "Replace"
 		isValid := true
 
-		return newValidationProcessResponse(location, "", path, typ, newValue, funcName, isValid, false)
+		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, false)
 	}
 
 	s.rules = append(s.rules, toUpperCase)
@@ -185,17 +185,17 @@ func (s sanitizer) LTrim() processor {
 	return s.createProcessorFromSanitizer()
 }
 
-func (s sanitizer) normalizeEmail() processor {
-	toUpperCase := func(value, field string, ctx *gin.Context) validationProcessResponse {
+func (s sanitizer) normalizeEmail() validationChain {
+	toUpperCase := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := s.location
 		path := field
-		typ := "____"
+
 		newValue := strings.ToUpper(value)
 
 		funcName := "Replace"
 		isValid := true
 
-		return newValidationProcessResponse(location, "", path, typ, newValue, funcName, isValid, false)
+		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, false)
 	}
 
 	s.rules = append(s.rules, toUpperCase)
@@ -203,17 +203,17 @@ func (s sanitizer) normalizeEmail() processor {
 	return s.createProcessorFromSanitizer()
 }
 
-func (s sanitizer) RTrim() processor {
-	toUpperCase := func(value, field string, ctx *gin.Context) validationProcessResponse {
+func (s sanitizer) RTrim() validationChain {
+	toUpperCase := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := s.location
 		path := field
-		typ := "____"
+
 		newValue := strings.ToUpper(value)
 
 		funcName := "Replace"
 		isValid := true
 
-		return newValidationProcessResponse(location, "", path, typ, newValue, funcName, isValid, false)
+		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, false)
 	}
 
 	s.rules = append(s.rules, toUpperCase)
@@ -221,17 +221,17 @@ func (s sanitizer) RTrim() processor {
 	return s.createProcessorFromSanitizer()
 }
 
-func (s sanitizer) toBoolean() processor {
-	toUpperCase := func(value, field string, ctx *gin.Context) validationProcessResponse {
+func (s sanitizer) toBoolean() validationChain {
+	toUpperCase := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := s.location
 		path := field
-		typ := "____"
+
 		newValue := strings.ToUpper(value)
 
 		funcName := "Replace"
 		isValid := true
 
-		return newValidationProcessResponse(location, "", path, typ, newValue, funcName, isValid, false)
+		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, false)
 	}
 
 	s.rules = append(s.rules, toUpperCase)
@@ -239,17 +239,17 @@ func (s sanitizer) toBoolean() processor {
 	return s.createProcessorFromSanitizer()
 }
 
-func (s sanitizer) toDate() processor {
-	toUpperCase := func(value, field string, ctx *gin.Context) validationProcessResponse {
+func (s sanitizer) toDate() validationChain {
+	toUpperCase := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := s.location
 		path := field
-		typ := "____"
+
 		newValue := strings.ToUpper(value)
 
 		funcName := "Replace"
 		isValid := true
 
-		return newValidationProcessResponse(location, "", path, typ, newValue, funcName, isValid, false)
+		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, false)
 	}
 
 	s.rules = append(s.rules, toUpperCase)
@@ -257,17 +257,17 @@ func (s sanitizer) toDate() processor {
 	return s.createProcessorFromSanitizer()
 }
 
-func (s sanitizer) ToFloat() processor {
-	toUpperCase := func(value, field string, ctx *gin.Context) validationProcessResponse {
+func (s sanitizer) ToFloat() validationChain {
+	toUpperCase := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := s.location
 		path := field
-		typ := "____"
+
 		newValue := strings.ToUpper(value)
 
 		funcName := "Replace"
 		isValid := true
 
-		return newValidationProcessResponse(location, "", path, typ, newValue, funcName, isValid, false)
+		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, false)
 	}
 
 	s.rules = append(s.rules, toUpperCase)
@@ -275,17 +275,17 @@ func (s sanitizer) ToFloat() processor {
 	return s.createProcessorFromSanitizer()
 }
 
-func (s sanitizer) ToInt() processor {
-	toUpperCase := func(value, field string, ctx *gin.Context) validationProcessResponse {
+func (s sanitizer) ToInt() validationChain {
+	toUpperCase := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := s.location
 		path := field
-		typ := "____"
+
 		newValue := strings.ToUpper(value)
 
 		funcName := "Replace"
 		isValid := true
 
-		return newValidationProcessResponse(location, "", path, typ, newValue, funcName, isValid, false)
+		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, false)
 	}
 
 	s.rules = append(s.rules, toUpperCase)
@@ -293,17 +293,17 @@ func (s sanitizer) ToInt() processor {
 	return s.createProcessorFromSanitizer()
 }
 
-func (s sanitizer) Trim() processor {
-	toUpperCase := func(value, field string, ctx *gin.Context) validationProcessResponse {
+func (s sanitizer) Trim() validationChain {
+	toUpperCase := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := s.location
 		path := field
-		typ := "____"
+
 		newValue := strings.ToUpper(value)
 
 		funcName := "Replace"
 		isValid := true
 
-		return newValidationProcessResponse(location, "", path, typ, newValue, funcName, isValid, false)
+		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, false)
 	}
 
 	s.rules = append(s.rules, toUpperCase)
@@ -311,17 +311,17 @@ func (s sanitizer) Trim() processor {
 	return s.createProcessorFromSanitizer()
 }
 
-func (s sanitizer) Whitelist(chars string) processor {
-	toUpperCase := func(value, field string, ctx *gin.Context) validationProcessResponse {
+func (s sanitizer) Whitelist(chars string) validationChain {
+	toUpperCase := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := s.location
 		path := field
-		typ := "____"
+
 		newValue := strings.ToUpper(value)
 
 		funcName := "Replace"
 		isValid := true
 
-		return newValidationProcessResponse(location, "", path, typ, newValue, funcName, isValid, false)
+		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, false)
 	}
 
 	s.rules = append(s.rules, toUpperCase)

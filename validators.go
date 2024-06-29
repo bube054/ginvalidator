@@ -13,23 +13,23 @@ type validator struct {
 	field        string
 	errorMessage string
 	location     string
-	rules        validationProcessesRules
+	rules        validationChainRules
 	processType  string
 }
 
-func (v *validator) createProcessorFromValidator() processor {
-	return processor{
+func (v *validator) createProcessorFromValidator() validationChain {
+	return validationChain{
 		validator: *v,
 		modifier: modifier{
 			field:        v.field,
 			errorMessage: v.errorMessage,
-			location:     defaultParamLocation,
+			location:     v.location,
 			rules:        v.rules,
 		},
 		sanitizer: sanitizer{
 			field:        v.field,
 			errorMessage: v.errorMessage,
-			location:     defaultParamLocation,
+			location:     v.location,
 			rules:        v.rules,
 		},
 	}
@@ -37,10 +37,10 @@ func (v *validator) createProcessorFromValidator() processor {
 
 type customValidatorFunc func(value string, req http.Request, location string, path string) error
 
-func (v validator) Custom(customValidator customValidatorFunc) processor {
+func (v validator) Custom(customValidator customValidatorFunc) validationChain {
 	previousRuleWasNegation := wasPreviousRuleNegation(v.rules)
 
-	custom := func(value, field string, ctx *gin.Context) validationProcessResponse {
+	custom := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := v.location
 
 		var finalErrMessage string
@@ -59,7 +59,7 @@ func (v validator) Custom(customValidator customValidatorFunc) processor {
 		}
 
 		path := field
-		typ := "____"
+
 		newValue := value
 		funcName := "Custom"
 		isValid := customValidatorErr == nil
@@ -72,7 +72,7 @@ func (v validator) Custom(customValidator customValidatorFunc) processor {
 			// }
 		}
 
-		return newValidationProcessResponse(location, finalErrMessage, path, typ, newValue, funcName, isValid, false)
+		return newValidationChainResponse(location, finalErrMessage, path, newValue, funcName, isValid, false)
 	}
 
 	v.rules = append(v.rules, custom)
@@ -80,20 +80,20 @@ func (v validator) Custom(customValidator customValidatorFunc) processor {
 	return v.createProcessorFromValidator()
 }
 
-func (v validator) IsArray(errorMessage string) processor {
+func (v validator) IsArray(errorMessage string) validationChain {
 	return v.createProcessorFromValidator()
 }
 
-func (v validator) IsObject(errorMessage string) processor {
+func (v validator) IsObject(errorMessage string) validationChain {
 	return v.createProcessorFromValidator()
 }
 
-func (v validator) IsString(errorMessage string) processor {
+func (v validator) IsString(errorMessage string) validationChain {
 	return v.createProcessorFromValidator()
 }
 
-func (v validator) IsNotEmpty(errorMessage string) processor {
-	isNotEmpty := func(value, field string, ctx *gin.Context) validationProcessResponse {
+func (v validator) IsNotEmpty(errorMessage string) validationChain {
+	isNotEmpty := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := v.location
 		var finalErrMessage string
 		if errorMessage != "" {
@@ -104,12 +104,12 @@ func (v validator) IsNotEmpty(errorMessage string) processor {
 			finalErrMessage = fmt.Sprintf("%s is not empty.", value)
 		}
 		path := field
-		typ := "____"
+
 		newValue := value
 		funcName := "IsNotEmpty"
 		isValid := value != ""
 
-		return newValidationProcessResponse(location, finalErrMessage, path, typ, newValue, funcName, isValid, false)
+		return newValidationChainResponse(location, finalErrMessage, path, newValue, funcName, isValid, false)
 	}
 
 	v.rules = append(v.rules, isNotEmpty)
@@ -119,8 +119,8 @@ func (v validator) IsNotEmpty(errorMessage string) processor {
 
 // standard validators
 
-func (v validator) Contains(errorMessage string, substring string) processor {
-	contains := func(value, field string, ctx *gin.Context) validationProcessResponse {
+func (v validator) Contains(errorMessage string, substring string) validationChain {
+	contains := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := v.location
 		var finalErrMessage string
 		if errorMessage != "" {
@@ -131,12 +131,12 @@ func (v validator) Contains(errorMessage string, substring string) processor {
 			finalErrMessage = fmt.Sprintf("%s is not empty.", value)
 		}
 		path := field
-		typ := "____"
+
 		newValue := value
 		funcName := "Contains"
 		isValid := valid.Contains(value, substring)
 
-		return newValidationProcessResponse(location, finalErrMessage, path, typ, newValue, funcName, isValid, false)
+		return newValidationChainResponse(location, finalErrMessage, path, newValue, funcName, isValid, false)
 	}
 
 	v.rules = append(v.rules, contains)
@@ -144,8 +144,8 @@ func (v validator) Contains(errorMessage string, substring string) processor {
 	return v.createProcessorFromValidator()
 }
 
-func (v validator) Equals(errorMessage string, comparison string) processor {
-	equals := func(value, field string, ctx *gin.Context) validationProcessResponse {
+func (v validator) Equals(errorMessage string, comparison string) validationChain {
+	equals := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := v.location
 		var finalErrMessage string
 		if errorMessage != "" {
@@ -156,12 +156,12 @@ func (v validator) Equals(errorMessage string, comparison string) processor {
 			finalErrMessage = fmt.Sprintf("%s is not empty.", value)
 		}
 		path := field
-		typ := "____"
+
 		newValue := value
 		funcName := "Equals"
 		isValid := value == comparison
 
-		return newValidationProcessResponse(location, finalErrMessage, path, typ, newValue, funcName, isValid, false)
+		return newValidationChainResponse(location, finalErrMessage, path, newValue, funcName, isValid, false)
 	}
 
 	v.rules = append(v.rules, equals)
@@ -169,8 +169,8 @@ func (v validator) Equals(errorMessage string, comparison string) processor {
 	return v.createProcessorFromValidator()
 }
 
-func (v validator) IsAfter(errorMessage string, comparisonTime time.Time) processor {
-	isAfter := func(value, field string, ctx *gin.Context) validationProcessResponse {
+func (v validator) IsAfter(errorMessage string, comparisonTime time.Time) validationChain {
+	isAfter := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := v.location
 		var finalErrMessage string
 		if errorMessage != "" {
@@ -181,7 +181,7 @@ func (v validator) IsAfter(errorMessage string, comparisonTime time.Time) proces
 			finalErrMessage = fmt.Sprintf("%s is not after %s.", value, comparisonTime)
 		}
 		path := field
-		typ := "____"
+
 		newValue := value
 		funcName := "IsAfter"
 
@@ -195,7 +195,7 @@ func (v validator) IsAfter(errorMessage string, comparisonTime time.Time) proces
 			isValid = valueAsTime.After(comparisonTime)
 		}
 
-		return newValidationProcessResponse(location, finalErrMessage, path, typ, newValue, funcName, isValid, false)
+		return newValidationChainResponse(location, finalErrMessage, path, newValue, funcName, isValid, false)
 	}
 
 	v.rules = append(v.rules, isAfter)
@@ -203,10 +203,10 @@ func (v validator) IsAfter(errorMessage string, comparisonTime time.Time) proces
 	return v.createProcessorFromValidator()
 }
 
-func (v validator) IsAlpha(errorMessage string) processor {
+func (v validator) IsAlpha(errorMessage string) validationChain {
 	previousRuleWasNegation := wasPreviousRuleNegation(v.rules)
 
-	isASCII := func(value, field string, ctx *gin.Context) validationProcessResponse {
+	isASCII := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := v.location
 		var finalErrMessage string
 		if errorMessage != "" {
@@ -217,7 +217,7 @@ func (v validator) IsAlpha(errorMessage string) processor {
 			finalErrMessage = fmt.Sprintf("%s is not alpha.", value)
 		}
 		path := field
-		typ := "____"
+
 		newValue := value
 		funcName := "IsAlpha"
 		isValid := valid.IsAlpha(value)
@@ -226,7 +226,7 @@ func (v validator) IsAlpha(errorMessage string) processor {
 			isValid = !isValid
 		}
 
-		return newValidationProcessResponse(location, finalErrMessage, path, typ, newValue, funcName, isValid, false)
+		return newValidationChainResponse(location, finalErrMessage, path, newValue, funcName, isValid, false)
 	}
 
 	v.rules = append(v.rules, isASCII)
@@ -234,11 +234,11 @@ func (v validator) IsAlpha(errorMessage string) processor {
 	return v.createProcessorFromValidator()
 }
 
-func (v validator) IsAlphanumeric(errorMessage string) processor {
+func (v validator) IsAlphanumeric(errorMessage string) validationChain {
 	previousRuleWasNegation := wasPreviousRuleNegation(v.rules)
 	fmt.Println("previousRuleWasNegationIsAlphaNumeric:", previousRuleWasNegation)
 
-	isASCII := func(value, field string, ctx *gin.Context) validationProcessResponse {
+	isASCII := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := v.location
 		var finalErrMessage string
 		if errorMessage != "" {
@@ -249,7 +249,7 @@ func (v validator) IsAlphanumeric(errorMessage string) processor {
 			finalErrMessage = fmt.Sprintf("%s is not alphanumeric.", value)
 		}
 		path := field
-		typ := "____"
+
 		newValue := value
 		funcName := "IsAlphanumeric"
 		isValid := valid.IsAlphanumeric(value)
@@ -258,7 +258,7 @@ func (v validator) IsAlphanumeric(errorMessage string) processor {
 			isValid = !isValid
 		}
 
-		return newValidationProcessResponse(location, finalErrMessage, path, typ, newValue, funcName, isValid, false)
+		return newValidationChainResponse(location, finalErrMessage, path, newValue, funcName, isValid, false)
 	}
 
 	v.rules = append(v.rules, isASCII)
@@ -266,10 +266,10 @@ func (v validator) IsAlphanumeric(errorMessage string) processor {
 	return v.createProcessorFromValidator()
 }
 
-func (v validator) IsASCII(errorMessage string) processor {
+func (v validator) IsASCII(errorMessage string) validationChain {
 	previousRuleWasNegation := wasPreviousRuleNegation(v.rules)
 
-	isASCII := func(value, field string, ctx *gin.Context) validationProcessResponse {
+	isASCII := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := v.location
 		var finalErrMessage string
 		if errorMessage != "" {
@@ -280,7 +280,7 @@ func (v validator) IsASCII(errorMessage string) processor {
 			finalErrMessage = fmt.Sprintf("%s is not ascii.", value)
 		}
 		path := field
-		typ := "____"
+
 		newValue := value
 		funcName := "IsASCII"
 		isValid := valid.IsASCII(value)
@@ -289,7 +289,7 @@ func (v validator) IsASCII(errorMessage string) processor {
 			isValid = !isValid
 		}
 
-		return newValidationProcessResponse(location, finalErrMessage, path, typ, newValue, funcName, isValid, false)
+		return newValidationChainResponse(location, finalErrMessage, path, newValue, funcName, isValid, false)
 	}
 
 	v.rules = append(v.rules, isASCII)
@@ -297,8 +297,8 @@ func (v validator) IsASCII(errorMessage string) processor {
 	return v.createProcessorFromValidator()
 }
 
-func (v validator) IsBase32(errorMessage string, crockford bool) processor {
-	// isBase32 := func(value, field string, ctx *gin.Context) validationProcessResponse {
+func (v validator) IsBase32(errorMessage string, crockford bool) validationChain {
+	// isBase32 := func(value, field string, ctx *gin.Context) validationChainResponse {
 	// 	location := v.location
 	// 	var finalErrMessage string
 	// 	if errorMessage != "" {
@@ -309,12 +309,12 @@ func (v validator) IsBase32(errorMessage string, crockford bool) processor {
 	// 		finalErrMessage = fmt.Sprintf("%s is not base32.", value)
 	// 	}
 	// 	path := field
-	// 	typ := "____"
+	//
 	// 	newValue := value
 	// 	funcName := "IsBase32"
 	// 	// isValid := valid.IsBase32(value)
 
-	// 	return newValidationProcessResponse(location, finalErrMessage, path, typ, newValue, funcName, isValid, false)
+	// 	return newValidationChainResponse(location, finalErrMessage, path, newValue, funcName, isValid, false)
 	// }
 
 	// v.rules = append(v.rules, isBase32)
@@ -322,8 +322,8 @@ func (v validator) IsBase32(errorMessage string, crockford bool) processor {
 	return v.createProcessorFromValidator()
 }
 
-func (v validator) IsBase64(errorMessage string) processor {
-	isBase64 := func(value, field string, ctx *gin.Context) validationProcessResponse {
+func (v validator) IsBase64(errorMessage string) validationChain {
+	isBase64 := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := v.location
 		var finalErrMessage string
 		if errorMessage != "" {
@@ -334,12 +334,12 @@ func (v validator) IsBase64(errorMessage string) processor {
 			finalErrMessage = fmt.Sprintf("%s is not base64.", value)
 		}
 		path := field
-		typ := "____"
+
 		newValue := value
 		funcName := "IsBase64"
 		isValid := valid.IsBase64(value)
 
-		return newValidationProcessResponse(location, finalErrMessage, path, typ, newValue, funcName, isValid, false)
+		return newValidationChainResponse(location, finalErrMessage, path, newValue, funcName, isValid, false)
 	}
 
 	v.rules = append(v.rules, isBase64)

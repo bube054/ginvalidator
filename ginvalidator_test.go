@@ -26,10 +26,18 @@ func setupRouter() *gin.Engine {
 
 	p := NewParam("person", "person is not valid.")
 
-	router.GET("/hello/:person", p.Chain().IsASCII("person is not ascii").IsAlpha("person is not alpha").Validate(), func(c *gin.Context) {
-		person := c.Query("person")
-		c.JSON(http.StatusOK, gin.H{"message": person})
-	})
+	router.GET("/hello/:person",
+		// IsAlpha("person is not alpha").
+		p.Chain().
+			IsASCII("person is not ascii").
+			Bail().
+			Not().
+			IsAlphanumeric("").
+			Validate(),
+		func(c *gin.Context) {
+			person := c.Query("person")
+			c.JSON(http.StatusOK, gin.H{"message": person})
+		})
 	return router
 }
 

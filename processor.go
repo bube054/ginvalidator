@@ -21,22 +21,22 @@ func (p processor) Validate() gin.HandlerFunc {
 		}
 
 		field := p.validator.field
-		fmt.Println("field:", field)
 		currentValue := ctx.Param(field)
-		fmt.Println("value/param:", currentValue)
 
-		fmt.Printf("the rules are %+v\n", p.validator.rules)
+		responses := make([]validationProcessResponse, 0)
+		for _, validator := range p.validator.rules {
+			response := validator(currentValue, field, ctx)
 
-		results := make([]validationProcessResponse, 0)
-		for i, validator := range p.validator.rules {
-			result := validator(currentValue, field)
+			if response.shouldBail || response.funcName == "Bail" {
+				break
+			}
 
-			currentValue = result.newValue
-			results = append(results, result)
-			fmt.Printf("result at %d is %v\n", i+1, result)
+			currentValue = response.newValue
+			responses = append(responses, response)
 		}
 
-		ctx.Set("__GIN__VALIDATOR__", results)
+		fmt.Println("responses:", responses)
+		ctx.Set("__GIN__VALIDATOR__PARAM__VALIDATION__PROCESS__RESPONSES__", responses)
 
 		ctx.Next()
 	}
@@ -48,22 +48,24 @@ type validationProcessResponse struct {
 	path     string
 	typ      string
 
-	newValue string
-	funcName string
-	isValid  bool
+	newValue   string
+	funcName   string
+	isValid    bool
+	shouldBail bool
 }
 
-func newValidationProcessResponse(location, msg, path, typ, newValue, funcName string, isValid bool) validationProcessResponse {
+func newValidationProcessResponse(location, msg, path, typ, newValue, funcName string, isValid bool, shouldBail bool) validationProcessResponse {
 	return validationProcessResponse{
-		location: location,
-		msg:      msg,
-		path:     path,
-		typ:      typ,
-		newValue: newValue,
-		funcName: funcName,
-		isValid:  isValid,
+		location:   location,
+		msg:        msg,
+		path:       path,
+		typ:        typ,
+		newValue:   newValue,
+		funcName:   funcName,
+		isValid:    isValid,
+		shouldBail: shouldBail,
 	}
 }
 
-type validationProcessesRule func(value, field string) validationProcessResponse
+type validationProcessesRule func(value, field string, ctx *gin.Context) validationProcessResponse
 type validationProcessesRules []validationProcessesRule

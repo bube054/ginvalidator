@@ -10,22 +10,25 @@ type query struct {
 func (q *query) Chain() validationChain {
 	return validationChain{
 		validator: validator{
-			field:        q.field,
-			errorMessage: q.errorMessage,
-			location:     queryLocation,
-			rules:        make(validationChainRules, 0),
+			field:           q.field,
+			errorMessage:    q.errorMessage,
+			location:        queryLocation,
+			rules:           make(validationChainRules, 0),
+			chainMethodType: validatorType,
 		},
 		modifier: modifier{
-			field:        q.field,
-			errorMessage: q.errorMessage,
-			location:     queryLocation,
-			rules:        make(validationChainRules, 0),
+			field:           q.field,
+			errorMessage:    q.errorMessage,
+			location:        queryLocation,
+			rules:           make(validationChainRules, 0),
+			chainMethodType: modifierType,
 		},
 		sanitizer: sanitizer{
-			field:        q.field,
-			errorMessage: q.errorMessage,
-			location:     queryLocation,
-			rules:        make(validationChainRules, 0),
+			field:           q.field,
+			errorMessage:    q.errorMessage,
+			location:        queryLocation,
+			rules:           make(validationChainRules, 0),
+			chainMethodType: sanitizerType,
 		},
 	}
 }

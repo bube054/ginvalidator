@@ -41,7 +41,7 @@ func (vc validationChain) Validate() gin.HandlerFunc {
 
 		// fmt.Println("responses:", responses)
 		// ctx.Set("__GIN__VALIDATOR__PARAM__VALIDATION__PROCESS__RESPONSES__", responses)
-		field := vc.getValidationField()
+		field := vc.getFieldToValidate()
 		sanitizedValue, err := vc.getValueToValidate(ctx)
 		responses := make([]validationChainResponse, 0)
 
@@ -62,13 +62,10 @@ func (vc validationChain) Validate() gin.HandlerFunc {
 			responses = append(responses, response)
 		}
 
+		fmt.Printf("responses: %+v\n", responses)
+
 		ctx.Next()
 	}
-}
-
-// gets the validation field
-func (vc validationChain) getValidationField() string {
-	return vc.validator.field // could have also access modifier or sanitizer.
 }
 
 // gets the validation rules
@@ -81,9 +78,14 @@ func (vc validationChain) getValidationLocation() string {
 	return vc.validator.location // could have also access modifier or sanitizer.
 }
 
+// gets the validation field
+func (vc validationChain) getFieldToValidate() string {
+	return vc.validator.field // could have also access modifier or sanitizer.
+}
+
 // get the field to be validated from validation location
 func (vc validationChain) getValueToValidate(ctx *gin.Context) (string, error) {
-	field := vc.getValidationField()
+	field := vc.getFieldToValidate()
 	switch vc.getValidationLocation() {
 	case bodyLocation:
 		keys, err := splitJSONFieldSelector(field)

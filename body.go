@@ -10,22 +10,25 @@ type body struct {
 func (b *body) Chain() validationChain {
 	return validationChain{
 		validator: validator{
-			field:        b.field,
-			errorMessage: b.errorMessage,
-			location:     bodyLocation,
-			rules:        make(validationChainRules, 0),
+			field:           b.field,
+			errorMessage:    b.errorMessage,
+			location:        bodyLocation,
+			rules:           make(validationChainRules, 0),
+			chainMethodType: validatorType,
 		},
 		modifier: modifier{
-			field:        b.field,
-			errorMessage: b.errorMessage,
-			location:     bodyLocation,
-			rules:        make(validationChainRules, 0),
+			field:           b.field,
+			errorMessage:    b.errorMessage,
+			location:        bodyLocation,
+			rules:           make(validationChainRules, 0),
+			chainMethodType: modifierType,
 		},
 		sanitizer: sanitizer{
-			field:        b.field,
-			errorMessage: b.errorMessage,
-			location:     bodyLocation,
-			rules:        make(validationChainRules, 0),
+			field:           b.field,
+			errorMessage:    b.errorMessage,
+			location:        bodyLocation,
+			rules:           make(validationChainRules, 0),
+			chainMethodType: sanitizerType,
 		},
 	}
 }

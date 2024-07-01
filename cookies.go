@@ -10,22 +10,25 @@ type cookie struct {
 func (c *cookie) Chain() validationChain {
 	return validationChain{
 		validator: validator{
-			field:        c.field,
-			errorMessage: c.errorMessage,
-			location:     cookiesLocation,
-			rules:        make(validationChainRules, 0),
+			field:           c.field,
+			errorMessage:    c.errorMessage,
+			location:        cookiesLocation,
+			rules:           make(validationChainRules, 0),
+			chainMethodType: validatorType,
 		},
 		modifier: modifier{
-			field:        c.field,
-			errorMessage: c.errorMessage,
-			location:     cookiesLocation,
-			rules:        make(validationChainRules, 0),
+			field:           c.field,
+			errorMessage:    c.errorMessage,
+			location:        cookiesLocation,
+			rules:           make(validationChainRules, 0),
+			chainMethodType: modifierType,
 		},
 		sanitizer: sanitizer{
-			field:        c.field,
-			errorMessage: c.errorMessage,
-			location:     cookiesLocation,
-			rules:        make(validationChainRules, 0),
+			field:           c.field,
+			errorMessage:    c.errorMessage,
+			location:        cookiesLocation,
+			rules:           make(validationChainRules, 0),
+			chainMethodType: sanitizerType,
 		},
 	}
 }

@@ -2,21 +2,15 @@ package ginvalidator
 
 import "github.com/gin-gonic/gin"
 
-// valid "github.com/asaskevich/govalidator"
-
-// import (
-//   valid "github.com/asaskevich/govalidator"
-// )
-
 type modifier struct {
-	field        string
-	errorMessage string
-	location     string
-	rules        validationChainRules
-	processType  string
+	field           string
+	errorMessage    string
+	location        string
+	rules           validationChainRules
+	chainMethodType string
 }
 
-func (m *modifier) createProcessorFromModifier() validationChain {
+func (m *modifier) createValidationChainFromModifier() validationChain {
 	return validationChain{
 		validator: validator{
 			field:        m.field,
@@ -47,7 +41,7 @@ func (m modifier) Not() validationChain {
 
 	m.rules = append(m.rules, not)
 
-	return m.createProcessorFromModifier()
+	return m.createValidationChainFromModifier()
 }
 
 func (m modifier) Bail() validationChain {
@@ -63,7 +57,7 @@ func (m modifier) Bail() validationChain {
 
 	m.rules = append(m.rules, not)
 
-	return m.createProcessorFromModifier()
+	return m.createValidationChainFromModifier()
 }
 
 type IfFunc func(*gin.Context) bool
@@ -82,5 +76,5 @@ func (m modifier) If(ifFunc IfFunc) validationChain {
 
 	m.rules = append(m.rules, iF)
 
-	return m.createProcessorFromModifier()
+	return m.createValidationChainFromModifier()
 }

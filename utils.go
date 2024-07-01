@@ -1,9 +1,11 @@
 package ginvalidator
 
 import (
+	"fmt"
 	"strings"
 
 	valid "github.com/asaskevich/govalidator"
+	"github.com/buger/jsonparser"
 )
 
 func wasPreviousRuleNegation(rules validationChainRules) bool {
@@ -42,4 +44,24 @@ func valueIsInSlice(value string, valuesFrom []string) bool {
 
 func splitJSONFieldSelector(value string) ([]string, error) {
 	return strings.Split(value, "."), nil
+}
+
+func convertValueToJSON(value string) []byte {
+	return []byte(fmt.Sprintf(`{"%s":"%s"}`, jsonKey, value))
+}
+
+func getJSONDataType(value []byte) string {
+	_, typ, _, _ := jsonparser.Get(value, jsonKey)
+	return typ.String()
+}
+
+func getFinalErrorMessage(errMsgFromChainMethod, errMsgFromConfig, defaultErrMsg string) (finalErrMessage string) {
+	if errMsgFromChainMethod != "" {
+		finalErrMessage = errMsgFromChainMethod
+	} else if errMsgFromConfig != "" {
+		finalErrMessage = errMsgFromConfig
+	} else {
+		finalErrMessage = defaultErrMsg
+	}
+	return
 }

@@ -10,22 +10,25 @@ type param struct {
 func (p *param) Chain() validationChain {
 	return validationChain{
 		validator: validator{
-			field:        p.field,
-			errorMessage: p.errorMessage,
-			location:     paramsLocation,
-			rules:        make(validationChainRules, 0),
+			field:           p.field,
+			errorMessage:    p.errorMessage,
+			location:        paramsLocation,
+			rules:           make(validationChainRules, 0),
+			chainMethodType: validatorType,
 		},
 		modifier: modifier{
-			field:        p.field,
-			errorMessage: p.errorMessage,
-			location:     paramsLocation,
-			rules:        make(validationChainRules, 0),
+			field:           p.field,
+			errorMessage:    p.errorMessage,
+			location:        paramsLocation,
+			rules:           make(validationChainRules, 0),
+			chainMethodType: modifierType,
 		},
 		sanitizer: sanitizer{
-			field:        p.field,
-			errorMessage: p.errorMessage,
-			location:     paramsLocation,
-			rules:        make(validationChainRules, 0),
+			field:           p.field,
+			errorMessage:    p.errorMessage,
+			location:        paramsLocation,
+			rules:           make(validationChainRules, 0),
+			chainMethodType: sanitizerType,
 		},
 	}
 }

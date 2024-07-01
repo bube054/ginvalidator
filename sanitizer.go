@@ -8,14 +8,14 @@ import (
 )
 
 type sanitizer struct {
-	field        string
-	errorMessage string
-	location     string
-	rules        validationChainRules
-	processType  string
+	field           string
+	errorMessage    string
+	location        string
+	rules           validationChainRules
+	chainMethodType string
 }
 
-func (s *sanitizer) createProcessorFromSanitizer() validationChain {
+func (s *sanitizer) createValidationChainFromSanitizer() validationChain {
 	return validationChain{
 		validator: validator{
 			field:        s.field,
@@ -52,7 +52,7 @@ func (s sanitizer) Default(defaultValue string) validationChain {
 
 	s.rules = append(s.rules, default_)
 
-	return s.createProcessorFromSanitizer()
+	return s.createValidationChainFromSanitizer()
 }
 
 func (s sanitizer) Replace(valuesFrom []string, valueTo string) validationChain {
@@ -74,7 +74,7 @@ func (s sanitizer) Replace(valuesFrom []string, valueTo string) validationChain 
 
 	s.rules = append(s.rules, replace)
 
-	return s.createProcessorFromSanitizer()
+	return s.createValidationChainFromSanitizer()
 }
 
 func (s sanitizer) ToLowerCase() validationChain {
@@ -92,7 +92,7 @@ func (s sanitizer) ToLowerCase() validationChain {
 
 	s.rules = append(s.rules, toLowerCase)
 
-	return s.createProcessorFromSanitizer()
+	return s.createValidationChainFromSanitizer()
 }
 
 func (s sanitizer) ToUpperCase() validationChain {
@@ -110,7 +110,7 @@ func (s sanitizer) ToUpperCase() validationChain {
 
 	s.rules = append(s.rules, toUpperCase)
 
-	return s.createProcessorFromSanitizer()
+	return s.createValidationChainFromSanitizer()
 }
 
 func (s sanitizer) Blacklist(chars string) validationChain {
@@ -128,7 +128,7 @@ func (s sanitizer) Blacklist(chars string) validationChain {
 
 	s.rules = append(s.rules, toUpperCase)
 
-	return s.createProcessorFromSanitizer()
+	return s.createValidationChainFromSanitizer()
 }
 
 func (s sanitizer) Escape() validationChain {
@@ -146,7 +146,7 @@ func (s sanitizer) Escape() validationChain {
 
 	s.rules = append(s.rules, toUpperCase)
 
-	return s.createProcessorFromSanitizer()
+	return s.createValidationChainFromSanitizer()
 }
 
 func (s sanitizer) Unescape() validationChain {
@@ -164,7 +164,7 @@ func (s sanitizer) Unescape() validationChain {
 
 	s.rules = append(s.rules, toUpperCase)
 
-	return s.createProcessorFromSanitizer()
+	return s.createValidationChainFromSanitizer()
 }
 
 func (s sanitizer) LTrim() validationChain {
@@ -182,7 +182,7 @@ func (s sanitizer) LTrim() validationChain {
 
 	s.rules = append(s.rules, toUpperCase)
 
-	return s.createProcessorFromSanitizer()
+	return s.createValidationChainFromSanitizer()
 }
 
 func (s sanitizer) normalizeEmail() validationChain {
@@ -200,7 +200,7 @@ func (s sanitizer) normalizeEmail() validationChain {
 
 	s.rules = append(s.rules, toUpperCase)
 
-	return s.createProcessorFromSanitizer()
+	return s.createValidationChainFromSanitizer()
 }
 
 func (s sanitizer) RTrim() validationChain {
@@ -218,7 +218,7 @@ func (s sanitizer) RTrim() validationChain {
 
 	s.rules = append(s.rules, toUpperCase)
 
-	return s.createProcessorFromSanitizer()
+	return s.createValidationChainFromSanitizer()
 }
 
 func (s sanitizer) toBoolean() validationChain {
@@ -236,7 +236,7 @@ func (s sanitizer) toBoolean() validationChain {
 
 	s.rules = append(s.rules, toUpperCase)
 
-	return s.createProcessorFromSanitizer()
+	return s.createValidationChainFromSanitizer()
 }
 
 func (s sanitizer) toDate() validationChain {
@@ -254,7 +254,7 @@ func (s sanitizer) toDate() validationChain {
 
 	s.rules = append(s.rules, toUpperCase)
 
-	return s.createProcessorFromSanitizer()
+	return s.createValidationChainFromSanitizer()
 }
 
 func (s sanitizer) ToFloat() validationChain {
@@ -272,7 +272,7 @@ func (s sanitizer) ToFloat() validationChain {
 
 	s.rules = append(s.rules, toUpperCase)
 
-	return s.createProcessorFromSanitizer()
+	return s.createValidationChainFromSanitizer()
 }
 
 func (s sanitizer) ToInt() validationChain {
@@ -290,7 +290,7 @@ func (s sanitizer) ToInt() validationChain {
 
 	s.rules = append(s.rules, toUpperCase)
 
-	return s.createProcessorFromSanitizer()
+	return s.createValidationChainFromSanitizer()
 }
 
 func (s sanitizer) Trim() validationChain {
@@ -308,7 +308,7 @@ func (s sanitizer) Trim() validationChain {
 
 	s.rules = append(s.rules, toUpperCase)
 
-	return s.createProcessorFromSanitizer()
+	return s.createValidationChainFromSanitizer()
 }
 
 func (s sanitizer) Whitelist(chars string) validationChain {
@@ -326,5 +326,5 @@ func (s sanitizer) Whitelist(chars string) validationChain {
 
 	s.rules = append(s.rules, toUpperCase)
 
-	return s.createProcessorFromSanitizer()
+	return s.createValidationChainFromSanitizer()
 }

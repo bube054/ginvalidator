@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	valid "github.com/asaskevich/govalidator"
-	// "github.com/buger/jsonparser"
+	"github.com/buger/jsonparser"
 	"github.com/gin-gonic/gin"
 )
 
@@ -29,14 +29,18 @@ func setupRouter() *gin.Engine {
 	router.GET("/hello/:person",
 		// IsAlpha("person is not alpha").
 		p.Chain().
-			IsASCII("person is not ascii").
-			Bail().
 			Not().
-			IsAlphanumeric("").
+			IsArray("person is an array", &ArrayLengthCheckerOpts{}).
 			Validate(),
+		// p.Chain().
+		// 	IsASCII("person is not ascii").
+		// 	Bail().
+		// 	Not().
+		// 	IsAlphanumeric("").
+		// 	Validate(),
 		func(c *gin.Context) {
 			person := c.Query("person")
-			c.JSON(http.StatusOK, gin.H{"message": person})
+			c.AbortWithStatusJSON(http.StatusOK, gin.H{"message": person})
 		})
 	return router
 }
@@ -56,36 +60,40 @@ func TestExampleMiddleware(t *testing.T) {
 	// 	assert.Equal(t, http.StatusOK, w.Code)
 	// 	assert.Equal(t, `{"message":"success"}`, w.Body.String())
 
-	// 	data := []byte(`{
-	//   "person": {
-	//     "name": {
-	//       "first": "Leonid",
-	//       "last": "Bugaev",
-	//       "fullName": "Leonid Bugaev",
-	//     },
-	//     "github": {
-	//       "handle": "buger",
-	//       "followers": 109
-	//     },
-	//     "avatars": [
-	//       { "url": "https://avatars1.githubusercontent.com/u/14009?v=3&s=460", "type": "thumbnail" }
-	//     ]
-	//   },
-	//   "company": {
-	//     "name": "Acme"
-	//   }
-	// }`)
+	data := []byte(`{
+	  "person": {
+	    "name": {
+	      "first": "Leonid",
+	      "last": "Bugaev",
+	      "fullName": "Leonid Bugaev",
+	    },
+	    "github": {
+	      "handle": "buger",
+	      "followers": 109
+	    },
+	    "avatars": [
+	      { "url": "https://avatars1.githubusercontent.com/u/14009?v=3&s=460", "type": "thumbnail" }
+	    ]
+	  },
+	  "company": {
+	    "name": "Acme"
+	  }
+	}`)
 
-	// 	key, _, _, _ := jsonparser.Get(data, "person", "avatars", "[0]", "url")
+	_ = data
 
-	// 	fmt.Println("Key:", string(key))
+	ty := "person"
+	key, typ, _, _ := jsonparser.Get([]byte(fmt.Sprintf(`{"key":"%s"}`, ty)), "key")
+	// key, typ, _, _ := jsonparser.Get(data, "person", "avatars", "[0]", "url")
+
+	fmt.Printf("key is %s while datatype is %v", key, typ)
 }
 
 func TestParamMiddleware(t *testing.T) {
 	router := setupRouter()
 
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/hello/david", nil)
+	req, _ := http.NewRequest("GET", "/hello/[]", nil)
 	req.Header.Set("Content-Type", "application/json")
 
 	router.ServeHTTP(w, req)

@@ -153,19 +153,3 @@ func UnderscoreToCamelCase(s string) string
 func ValidateMap(inputMap map[string]interface{}, validationMap map[string]interface{}) (bool, error)
 func ValidateStruct(s interface{}) (bool, error)
 func WhiteList(str, chars string) string
-type ConditionIterator
-type CustomTypeValidator
-type Error
-func (e Error) Error() string
-type Errors
-func (es Errors) Error() string
-func (es Errors) Errors() []error
-type ISO3166Entry
-type ISO693Entry
-type InterfaceParamValidator
-type Iterator
-type ParamValidator
-type ResultIterator
-type UnsupportedTypeError
-func (e *UnsupportedTypeError) Error() string
-type Validator

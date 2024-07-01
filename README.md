@@ -41,12 +41,13 @@ package main
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+  gv "github.com/bube054/ginvalidator"
 )
 
 func main() {
   router := gin.Default()
 
-  p := NewParam("person", "person can not be empty.")
+  p := gv.NewParam("person", "person can not be empty.")
   router.GET(
     "/hello/:person", p.Chain().Not().Empty("person can not be empty.").Validate(), func(ctx *gin.Context) {
 			person := ctx.Query("person")

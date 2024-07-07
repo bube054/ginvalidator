@@ -9,6 +9,7 @@ type ReturnableValidationChainResponse struct {
 	location string // where the value to be validated lives e.g body, cookies, headers, params, query.
 	msg      string // the validation error message. empty string for no errors.
 	path     string // the str
+	value    string
 }
 
 // for internal use only

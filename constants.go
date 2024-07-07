@@ -9,6 +9,15 @@ const (
 	queryLocation   = "query"
 )
 
+// ctx keys
+const (
+	bodyLocationStore    = "gin___validator___body___location"
+	cookiesLocationStore = "gin___validator___cookies___location"
+	headersLocationStore = "gin___validator___headers___location"
+	paramsLocationStore  = "gin___validator___params___location"
+	queryLocationStore   = "gin___validator___query___location"
+)
+
 // method types
 const (
 	validatorType = "validator"
@@ -22,7 +31,6 @@ const (
 )
 
 // validation methods and their default error messages
-// hey codeium
 const (
 	customFuncName = "custom"
 	customErrMsg   = ""
@@ -68,6 +76,9 @@ const (
 
 	isBase64FuncName = "isBase64"
 	isBase64ErrMsg   = "is not base64."
+
+	isBeforeFuncName = "isBefore"
+	isBeforeErrMsg   = "is not before."
 
 	isBICFuncName = "isBIC"
 	isBICErrMsg   = "is not bic."
@@ -284,4 +295,34 @@ const (
 
 	matchesFuncName = "matches"
 	matchesErrMsg   = "does not match."
+)
+
+// for modifiers
+const (
+	notFunc  = "not"
+	bailFunc = "bail"
+	iFFunc   = "if"
+)
+
+// for sanitizers
+const (
+	customSanitizerFunc = "customSanitizer"
+	defaultFunc         = "default"
+	replaceFunc         = "replace"
+	toArrayFunc         = "toArray"
+	toLowerCaseFunc     = "toLowerCase"
+	toUpperCaseFunc     = "toUpperCase"
+	blacklistFunc       = "blacklist"
+	escapeFunc          = "escape"
+	unescapeFunc        = "unescape"
+	ltrimFunc           = "ltrim"
+	normalizeEmailFunc  = "normalizeEmail"
+	rtrimFunc           = "rtrim"
+	stripLowFunc        = "stripLow"
+	toBooleanFunc       = "toBoolean"
+	toDateFunc          = "toDate"
+	toFloatFunc         = "toFloat"
+	toIntFunc           = "toInt"
+	trimFunc            = "trim"
+	whitelistFunc       = "whitelist"
 )

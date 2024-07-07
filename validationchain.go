@@ -3,6 +3,8 @@ package ginvalidator
 import (
 	"fmt"
 	"io"
+
+	// "io"
 	"log"
 
 	"github.com/buger/jsonparser"
@@ -18,43 +20,27 @@ type validationChain struct {
 
 func (vc validationChain) Validate() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		// contentTypeHeader := ctx.GetHeader("Content-Type")
-
-		// if contentTypeHeader != "application/json" {
-		// 	ctx.Next()
-		// }
-
-		// field := vc.validator.field
-		// currentValue := ctx.Param(field)
-
-		// responses := make([]validationChainResponse, 0)
-		// for _, validator := range vc.validator.rules {
-		// 	response := validator(currentValue, field, ctx)
-
-		// 	if response.shouldBail || response.funcName == "Bail" {
-		// 		break
-		// 	}
-
-		// 	currentValue = response.newValue
-		// 	responses = append(responses, response)
-		// }
-
-		// fmt.Println("responses:", responses)
-		// ctx.Set("__GIN__VALIDATOR__PARAM__VALIDATION__PROCESS__RESPONSES__", responses)
 		field := vc.getFieldToValidate()
 		sanitizedValue, err := vc.getValueToValidate(ctx)
 		responses := make([]validationChainResponse, 0)
 
 		if err != nil {
-			// handle errors more efficiently later.
 			log.Println("a validation error has occurred:", err)
 			ctx.Next()
 		}
 
-		for _, rules := range vc.getValidationRules() {
+		rules := vc.getValidationRules()
+		for i, rules := range rules {
 			response := rules(sanitizedValue, field, ctx)
 
-			if response.shouldBail || response.funcName == "Bail" {
+			if i > 0 {
+				previousResponse := responses[len(responses)-1]
+				if !previousResponse.isValid && response.shouldBail {
+					break
+				}
+			}
+
+			if response.shouldBail {
 				break
 			}
 
@@ -62,8 +48,9 @@ func (vc validationChain) Validate() gin.HandlerFunc {
 			responses = append(responses, response)
 		}
 
-		fmt.Printf("responses: %+v\n", responses)
+		vc.saveResponsesToStore(ctx, responses)
 
+		// fmt.Printf("responses: %+v\n", responses)
 		ctx.Next()
 	}
 }
@@ -114,6 +101,45 @@ func (vc validationChain) getValueToValidate(ctx *gin.Context) (string, error) {
 	case queryLocation:
 		return ctx.Query(field), nil
 	default:
-		return "", fmt.Errorf("invalid request location for %s.", field)
+		return "", fmt.Errorf("invalid request location for %s", field)
+	}
+}
+
+func (vc validationChain) getStoreName() string {
+	switch vc.getValidationLocation() {
+	case bodyLocation:
+		return bodyLocationStore
+	case cookiesLocation:
+		return cookiesLocationStore
+	case headersLocation:
+		return headersLocationStore
+	case paramsLocation:
+		return paramsLocationStore
+	case queryLocation:
+		return queryLocationStore
+	default:
+		return ""
+	}
+}
+
+type CtxStore map[string][]validationChainResponse
+
+func (vc validationChain) saveResponsesToStore(ctx *gin.Context, responses []validationChainResponse) {
+	defaultCtxStore := make(CtxStore)
+	storeName := vc.getStoreName()
+	field := vc.getFieldToValidate()
+
+	value, exists := ctx.Get(storeName)
+
+	if !exists {
+		defaultCtxStore[field] = responses
+		ctx.Set(storeName, defaultCtxStore)
+	} else {
+		store, ok := value.(CtxStore)
+		if !ok {
+			store = make(CtxStore)
+		}
+		store[field] = responses
+		ctx.Set(storeName, store)
 	}
 }

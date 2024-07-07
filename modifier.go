@@ -1,6 +1,10 @@
 package ginvalidator
 
-import "github.com/gin-gonic/gin"
+import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+)
 
 type modifier struct {
 	field           string
@@ -28,12 +32,13 @@ func (m *modifier) createValidationChainFromModifier() validationChain {
 	}
 }
 
+// A modifier that negates the result of the next validator in the chain.
 func (m modifier) Not() validationChain {
 	not := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := m.location
 		path := field
 		newValue := value
-		funcName := "IsNot"
+		funcName := notFunc
 		isValid := true
 
 		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, false)
@@ -44,32 +49,35 @@ func (m modifier) Not() validationChain {
 	return m.createValidationChainFromModifier()
 }
 
+// A modifier that stops running the validation chain if any of the previous validators failed.
+// This is useful to prevent a custom validator that touches a database or external API from running when you know it will fail.
 func (m modifier) Bail() validationChain {
-	not := func(value, field string, ctx *gin.Context) validationChainResponse {
+	bail := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := m.location
 		path := field
 		newValue := value
-		funcName := "Bail"
+		funcName := bailFunc
 		isValid := true
 
 		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, true)
 	}
 
-	m.rules = append(m.rules, not)
+	m.rules = append(m.rules, bail)
 
 	return m.createValidationChainFromModifier()
 }
 
-type IfFunc func(*gin.Context) bool
+type Continue func(value string, req http.Request, location string) bool
 
-func (m modifier) If(ifFunc IfFunc) validationChain {
+// A modifier that adds a condition on whether the validation chain should continue running on a field or not.
+func (m modifier) If(ifFunc Continue) validationChain {
 	iF := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := m.location
 		path := field
 		newValue := value
-		funcName := "If"
+		funcName := iFFunc
 		isValid := true
-		shouldBail := !ifFunc(ctx)
+		shouldBail := !ifFunc(value, *ctx.Request, location)
 
 		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, shouldBail)
 	}

@@ -17,7 +17,7 @@ func wasPreviousRuleNegation(rules validationChainRules) bool {
 	lastRule := rules[lastRuleIndex]
 	response := lastRule("", "", nil)
 
-	if response.funcName == "IsNot" {
+	if response.funcName == notFunc {
 		return true
 	} else {
 		return false

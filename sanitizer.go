@@ -2,6 +2,8 @@ package ginvalidator
 
 import (
 	// valid "github.com/asaskevich/govalidator"
+
+	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -31,6 +33,25 @@ func (s *sanitizer) createValidationChainFromSanitizer() validationChain {
 		},
 		sanitizer: *s,
 	}
+}
+
+type CustomSanitizerFunc func(value string, req http.Request, location string) string
+
+// Adds a custom sanitizer function to the chain. The value returned by the function will become the new value of the field.
+func (s sanitizer) CustomSanitizer(customSan CustomSanitizerFunc) validationChain {
+	custom := func(value, field string, ctx *gin.Context) validationChainResponse {
+		location := s.location
+		path := field
+		newValue := customSan(value, *ctx.Request, location)
+		funcName := customSanitizerFunc
+		isValid := true
+
+		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, false)
+	}
+
+	s.rules = append(s.rules, custom)
+
+	return s.createValidationChainFromSanitizer()
 }
 
 func (s sanitizer) Default(defaultValue string) validationChain {

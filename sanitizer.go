@@ -37,7 +37,7 @@ func (s *sanitizer) createValidationChainFromSanitizer() validationChain {
 
 type CustomSanitizerFunc func(value string, req http.Request, location string) string
 
-// Adds a custom sanitizer function to the chain. The value returned by the function will become the new value of the field.
+// A sanitizer that makes the newly returned value by the function to become the new value of the field.
 func (s sanitizer) CustomSanitizer(customSan CustomSanitizerFunc) validationChain {
 	custom := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := s.location
@@ -54,18 +54,16 @@ func (s sanitizer) CustomSanitizer(customSan CustomSanitizerFunc) validationChai
 	return s.createValidationChainFromSanitizer()
 }
 
+// A sanitizer that replaces the value of the field if it's either an empty string, null, undefined, or NaN.
 func (s sanitizer) Default(defaultValue string) validationChain {
 	default_ := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := s.location
 		path := field
-
 		var newValue = value
-
 		if valueIsNullish(newValue) {
 			newValue = defaultValue
 		}
-
-		funcName := "Default"
+		funcName := defaultFunc
 		isValid := true
 
 		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, false)
@@ -76,6 +74,7 @@ func (s sanitizer) Default(defaultValue string) validationChain {
 	return s.createValidationChainFromSanitizer()
 }
 
+// A sanitizer that replaces the value of the field with valueTo whenever the current value is in valuesFrom.
 func (s sanitizer) Replace(valuesFrom []string, valueTo string) validationChain {
 	replace := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := s.location
@@ -87,7 +86,7 @@ func (s sanitizer) Replace(valuesFrom []string, valueTo string) validationChain 
 			newValue = valueTo
 		}
 
-		funcName := "Replace"
+		funcName := replaceFunc
 		isValid := true
 
 		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, false)
@@ -105,7 +104,7 @@ func (s sanitizer) ToLowerCase() validationChain {
 
 		newValue := strings.ToLower(value)
 
-		funcName := "Replace"
+		funcName := toLowerCaseFunc
 		isValid := true
 
 		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, false)
@@ -123,7 +122,7 @@ func (s sanitizer) ToUpperCase() validationChain {
 
 		newValue := strings.ToUpper(value)
 
-		funcName := "Replace"
+		funcName := toUpperCaseFunc
 		isValid := true
 
 		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, false)
@@ -141,7 +140,7 @@ func (s sanitizer) Blacklist(chars string) validationChain {
 
 		newValue := strings.ToUpper(value)
 
-		funcName := "Replace"
+		funcName := blacklistFunc
 		isValid := true
 
 		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, false)
@@ -159,7 +158,7 @@ func (s sanitizer) Escape() validationChain {
 
 		newValue := strings.ToUpper(value)
 
-		funcName := "Replace"
+		funcName := escapeFunc
 		isValid := true
 
 		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, false)
@@ -177,7 +176,7 @@ func (s sanitizer) Unescape() validationChain {
 
 		newValue := strings.ToUpper(value)
 
-		funcName := "Replace"
+		funcName := unescapeFunc
 		isValid := true
 
 		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, false)
@@ -195,7 +194,7 @@ func (s sanitizer) LTrim() validationChain {
 
 		newValue := strings.ToUpper(value)
 
-		funcName := "Replace"
+		funcName := ltrimFunc
 		isValid := true
 
 		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, false)
@@ -206,14 +205,14 @@ func (s sanitizer) LTrim() validationChain {
 	return s.createValidationChainFromSanitizer()
 }
 
-func (s sanitizer) normalizeEmail() validationChain {
+func (s sanitizer) NormalizeEmail() validationChain {
 	toUpperCase := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := s.location
 		path := field
 
 		newValue := strings.ToUpper(value)
 
-		funcName := "Replace"
+		funcName := normalizeEmailFunc
 		isValid := true
 
 		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, false)
@@ -231,7 +230,7 @@ func (s sanitizer) RTrim() validationChain {
 
 		newValue := strings.ToUpper(value)
 
-		funcName := "Replace"
+		funcName := rtrimFunc
 		isValid := true
 
 		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, false)
@@ -242,14 +241,14 @@ func (s sanitizer) RTrim() validationChain {
 	return s.createValidationChainFromSanitizer()
 }
 
-func (s sanitizer) toBoolean() validationChain {
+func (s sanitizer) ToBoolean() validationChain {
 	toUpperCase := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := s.location
 		path := field
 
 		newValue := strings.ToUpper(value)
 
-		funcName := "Replace"
+		funcName := toBooleanFunc
 		isValid := true
 
 		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, false)
@@ -260,14 +259,14 @@ func (s sanitizer) toBoolean() validationChain {
 	return s.createValidationChainFromSanitizer()
 }
 
-func (s sanitizer) toDate() validationChain {
+func (s sanitizer) ToDate() validationChain {
 	toUpperCase := func(value, field string, ctx *gin.Context) validationChainResponse {
 		location := s.location
 		path := field
 
 		newValue := strings.ToUpper(value)
 
-		funcName := "Replace"
+		funcName := toDateFunc
 		isValid := true
 
 		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, false)
@@ -285,7 +284,7 @@ func (s sanitizer) ToFloat() validationChain {
 
 		newValue := strings.ToUpper(value)
 
-		funcName := "Replace"
+		funcName := toFloatFunc
 		isValid := true
 
 		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, false)

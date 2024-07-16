@@ -6,6 +6,12 @@ type ValidationResult struct {
 }
 
 func NewValidationResult(ctx *gin.Context) (results []ReturnableValidationChainResponse) {
+	// locationStores := [...]string{bodyLocationStore, cookiesLocationStore, headersLocationStore, paramsLocationStore, queryLocationStore}
+
+	// for _, locationStore := range locationStores {
+
+	// }
+
 	// for body
 	value, exists := ctx.Get(bodyLocationStore)
 	store, ok := value.(CtxStore)

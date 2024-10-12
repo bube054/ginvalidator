@@ -14,10 +14,10 @@ type modifier struct {
 	rulesCreatorFuncs ruleCreatorFuncs
 }
 
-func (m *modifier) recreateVMSFromModifier(ruleCreatorFunc ruleCreatorFunc) VMS {
+func (m *modifier) recreateVMSFromModifier(ruleCreatorFunc ruleCreatorFunc) ValidationChain {
 	newRulesCreatorFunc := append(m.rulesCreatorFuncs, ruleCreatorFunc)
 
-	return VMS{
+	return ValidationChain{
 		validator: validator{
 			field:             m.field,
 			reqLoc:            m.reqLoc,
@@ -39,96 +39,68 @@ func (m *modifier) recreateVMSFromModifier(ruleCreatorFunc ruleCreatorFunc) VMS 
 	}
 }
 
-type BailModifierOpts struct {
-	level string // "chain" || "request"
-}
+func (m modifier) Bail() ValidationChain {
+	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 
-func (m modifier) Bail(opts BailModifierOpts) VMS {
-	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, value string) vmsRule {
-
-		return NewVMSRule(
+		return NewValidationChainRule(
 			withIsValid(true),
-			withNewValue(value),
-			withVMSName("Bail"),
-			withTyp("modifier"),
+			withNewValue(sanitizedValue),
+			withValidationChainName("Bail"),
+			withValidationChainType(modifierType),
 			withShouldBail(false),
-			withBailLevel(opts.level),
-			withShouldNegate(false),
-			withShouldHide(false),
-			withOptional(false),
 		)
 	}
 
 	return m.recreateVMSFromModifier(ruleCreator)
 }
 
-type IfModifierFunc func(req http.Request, value string) bool
+type IfModifierFunc func(req http.Request, initialValue, sanitizedValue string) bool
 
-func (m modifier) If(imf IfModifierFunc) VMS {
-	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, value string) vmsRule {
+func (m modifier) If(imf IfModifierFunc) ValidationChain {
+	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		httpRequest := ctx.Request
-		shouldBail := imf(*httpRequest, value)
+		shouldBail := imf(*httpRequest, initialValue, sanitizedValue)
 
-		return NewVMSRule(
+		return NewValidationChainRule(
 			withIsValid(true),
-			withNewValue(value),
-			withVMSName("If"),
-			withTyp("modifier"),
+			withNewValue(sanitizedValue),
+			withValidationChainName("If"),
+			withValidationChainType(modifierType),
 			withShouldBail(shouldBail),
-			withShouldNegate(false),
-			withShouldHide(false),
-			withOptional(false),
 		)
 	}
 
 	return m.recreateVMSFromModifier(ruleCreator)
 }
 
-func (m modifier) Not() VMS {
-	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, value string) vmsRule {
-		return NewVMSRule(
+func (m modifier) Not() ValidationChain {
+	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
+		return NewValidationChainRule(
 			withIsValid(true),
-			withNewValue(value),
-			withVMSName("Not"),
-			withTyp("modifier"),
+			withNewValue(sanitizedValue),
+			withValidationChainName("Not"),
+			withValidationChainType(modifierType),
 			withShouldBail(false),
-			withShouldNegate(true),
-			withShouldHide(false),
-			withOptional(false),
 		)
 	}
 
 	return m.recreateVMSFromModifier(ruleCreator)
 }
 
-func (m modifier) Optional() VMS {
-	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, value string) vmsRule {
-		return NewVMSRule(
-			withIsValid(true),
-			withNewValue(value),
-			withVMSName("Optional"),
-			withTyp("modifier"),
-			withShouldBail(false),
-			withShouldNegate(false),
-			withShouldHide(false),
-			withOptional(true),
-		)
-	}
+type SkipModifierFunc func(req http.Request, initialValue, sanitizedValue string) bool
 
-	return m.recreateVMSFromModifier(ruleCreator)
-}
+func (m modifier) Skip(smf SkipModifierFunc) ValidationChain {
+	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
+		httpRequest := ctx.Request
+		shouldSkip := smf(*httpRequest, initialValue, sanitizedValue)
 
-func (m modifier) Hide() VMS {
-	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, value string) vmsRule {
-		return NewVMSRule(
+		return NewValidationChainRule(
 			withIsValid(true),
-			withNewValue(value),
-			withVMSName("Hide"),
-			withTyp("modifier"),
+			withNewValue(sanitizedValue),
+			withValidationChainName("If"),
+			withValidationChainType(modifierType),
 			withShouldBail(false),
-			withShouldNegate(false),
-			withShouldHide(true),
-			withOptional(false),
+			withShouldSkip(shouldSkip),
 		)
 	}
 

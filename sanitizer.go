@@ -15,10 +15,10 @@ type sanitizer struct {
 	rulesCreatorFuncs ruleCreatorFuncs
 }
 
-func (s *sanitizer) recreateVMSFromSanitizer(ruleCreatorFunc ruleCreatorFunc) VMS {
+func (s *sanitizer) recreateVMSFromSanitizer(ruleCreatorFunc ruleCreatorFunc) ValidationChain {
 	newRulesCreatorFunc := append(s.rulesCreatorFuncs, ruleCreatorFunc)
 
-	return VMS{
+	return ValidationChain{
 		validator: validator{
 			field:             s.field,
 			reqLoc:            s.reqLoc,
@@ -41,22 +41,18 @@ func (s *sanitizer) recreateVMSFromSanitizer(ruleCreatorFunc ruleCreatorFunc) VM
 }
 
 // built in sanitizers start here
-type CustomSanitizerFunc func(req http.Request, value string) string
+type CustomSanitizerFunc func(req http.Request, initialValue, sanitizedValue string) string
 
-func (s sanitizer) CustomSanitizer(csf CustomSanitizerFunc) VMS {
-	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, value string) vmsRule {
+func (s sanitizer) CustomSanitizer(csf CustomSanitizerFunc) ValidationChain {
+	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		httpRequest := ctx.Request
-		newValue := csf(*httpRequest, value)
+		newValue := csf(*httpRequest, initialValue, sanitizedValue)
 
-		return NewVMSRule(
+		return NewValidationChainRule(
 			withIsValid(true),
 			withNewValue(newValue),
-			withVMSName("CustomSanitizer"),
-			withTyp("sanitizer"),
-			withShouldBail(false),
-			withShouldNegate(false),
-			withShouldHide(false),
-			withOptional(false),
+			withValidationChainName("CustomSanitizer"),
+			withValidationChainType(sanitizerType),
 		)
 	}
 
@@ -65,19 +61,15 @@ func (s sanitizer) CustomSanitizer(csf CustomSanitizerFunc) VMS {
 
 // built in sanitizers end here
 
-func (s sanitizer) Blacklist(blacklistedChars string) VMS {
-	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, value string) vmsRule {
-		newValue := san.Blacklist(value, blacklistedChars)
+func (s sanitizer) Blacklist(blacklistedChars string) ValidationChain {
+	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
+		newValue := san.Blacklist(sanitizedValue, blacklistedChars)
 
-		return NewVMSRule(
+		return NewValidationChainRule(
 			withIsValid(true),
 			withNewValue(newValue),
-			withVMSName("Blacklist"),
-			withTyp("sanitizer"),
-			withShouldBail(false),
-			withShouldNegate(false),
-			withShouldHide(false),
-			withOptional(false),
+			withValidationChainName("Blacklist"),
+			withValidationChainType(sanitizerType),
 		)
 	}
 

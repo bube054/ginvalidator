@@ -15,10 +15,10 @@ type validator struct {
 	rulesCreatorFuncs ruleCreatorFuncs
 }
 
-func (v *validator) recreateVMSFromValidator(ruleCreatorFunc ruleCreatorFunc) VMS {
+func (v *validator) recreateVMSFromValidator(ruleCreatorFunc ruleCreatorFunc) ValidationChain {
 	newRulesCreatorFunc := append(v.rulesCreatorFuncs, ruleCreatorFunc)
 
-	return VMS{
+	return ValidationChain{
 		validator: validator{
 			field:             v.field,
 			reqLoc:            v.reqLoc,
@@ -40,81 +40,143 @@ func (v *validator) recreateVMSFromValidator(ruleCreatorFunc ruleCreatorFunc) VM
 	}
 }
 
-// built in validators start here
-type CustomValidatorFunc func(req http.Request, value string) bool
+type CustomValidatorFunc func(req http.Request, initialValue, sanitizedValue string) bool
 
-func (v validator) CustomValidator(cvf CustomValidatorFunc) VMS {
-	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, value string) vmsRule {
+func (v validator) CustomValidator(cvf CustomValidatorFunc) ValidationChain {
+	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		httpRequest := ctx.Request
-		isValid := cvf(*httpRequest, value)
+		isValid := cvf(*httpRequest, initialValue, sanitizedValue)
 
-		return NewVMSRule(
+		return NewValidationChainRule(
 			withIsValid(isValid),
-			withNewValue(value),
-			withVMSName("CustomValidator"),
-			withTyp("validator"),
-			withShouldBail(false),
-			withShouldNegate(false),
-			withShouldHide(false),
-			withOptional(false),
+			withNewValue(sanitizedValue),
+			withValidationChainName("CustomValidator"),
+			withValidationChainType(validatorType),
 		)
 	}
 
 	return v.recreateVMSFromValidator(ruleCreator)
 }
 
-// func (v validator) NotEmpty() VMS {
-// 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, value string) vmsRule {
-// 		isValid := !vgo.IsEmpty(value, nil)
+func (v validator) Contains(seed string, opts *vgo.ContainsOpt) ValidationChain {
+	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
+		isValid := vgo.Contains(sanitizedValue, seed, opts)
 
-// 		return NewVMSRule(isValid, value, "NotEmpty", "validator", false, false)
-// 	}
-
-// 	return v.recreateVMSFromValidator(ruleCreator)
-// }
-
-// built in validators end here
-
-// imported validators ends here
-func (v validator) Contains(seed string, opts *vgo.ContainsOpt) VMS {
-	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, value string) vmsRule {
-		isValid := vgo.Contains(value, seed, opts)
-
-		return NewVMSRule(
+		return NewValidationChainRule(
 			withIsValid(isValid),
-			withNewValue(value),
-			withVMSName("Contains"),
-			withTyp("validator"),
-			withShouldBail(false),
-			withShouldNegate(false),
-			withShouldHide(false),
-			withOptional(false),
+			withNewValue(sanitizedValue),
+			withValidationChainName("Contains"),
+			withValidationChainType(validatorType),
 		)
 	}
 
 	return v.recreateVMSFromValidator(ruleCreator)
 }
 
-func (v validator) Equals(comparison string) VMS {
-	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, value string) vmsRule {
-		isValid := vgo.Equals(value, comparison)
+func (v validator) Equals(comparison string) ValidationChain {
+	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
+		isValid := vgo.Equals(sanitizedValue, comparison)
 
-		return NewVMSRule(
+		return NewValidationChainRule(
 			withIsValid(isValid),
-			withNewValue(value),
-			withVMSName("Equals"),
-			withTyp("validator"),
-			withShouldBail(false),
-			withShouldNegate(false),
-			withShouldHide(false),
-			withOptional(false),
+			withNewValue(sanitizedValue),
+			withValidationChainName("Equals"),
+			withValidationChainType(validatorType),
 		)
 	}
 
 	return v.recreateVMSFromValidator(ruleCreator)
 }
 
-// imported validators ends here
+func (v validator) AbaRouting() ValidationChain {
+	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
+		isValid := vgo.IsAbaRouting(sanitizedValue)
+
+		return NewValidationChainRule(
+			withIsValid(isValid),
+			withNewValue(sanitizedValue),
+			withValidationChainName("AbaRouting"),
+			withValidationChainType(validatorType),
+		)
+	}
+
+	return v.recreateVMSFromValidator(ruleCreator)
+}
+
+func (v validator) After(opts *vgo.IsAfterOpts) ValidationChain {
+	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
+		isValid := vgo.IsAfter(sanitizedValue, opts)
+
+		return NewValidationChainRule(
+			withIsValid(isValid),
+			withNewValue(sanitizedValue),
+			withValidationChainName("After"),
+			withValidationChainType(validatorType),
+		)
+	}
+
+	return v.recreateVMSFromValidator(ruleCreator)
+}
+
+func (v validator) Alphanumeric(opts *vgo.IsAlphanumericOpts) ValidationChain {
+	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
+		isValid := vgo.IsAlphanumeric(sanitizedValue, opts)
+
+		return NewValidationChainRule(
+			withIsValid(isValid),
+			withNewValue(sanitizedValue),
+			withValidationChainName("Alphanumeric"),
+			withValidationChainType(validatorType),
+		)
+	}
+
+	return v.recreateVMSFromValidator(ruleCreator)
+}
+
+func (v validator) Ascii() ValidationChain {
+	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
+		isValid := vgo.IsAscii(sanitizedValue)
+
+		return NewValidationChainRule(
+			withIsValid(isValid),
+			withNewValue(sanitizedValue),
+			withValidationChainName("Ascii"),
+			withValidationChainType(validatorType),
+		)
+	}
+
+	return v.recreateVMSFromValidator(ruleCreator)
+}
+
+func (v validator) Base32(opts *vgo.IsBase32Opts) ValidationChain {
+	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
+		isValid := vgo.IsBase32(sanitizedValue, opts)
+
+		return NewValidationChainRule(
+			withIsValid(isValid),
+			withNewValue(sanitizedValue),
+			withValidationChainName("Base32"),
+			withValidationChainType(validatorType),
+		)
+	}
+
+	return v.recreateVMSFromValidator(ruleCreator)
+}
+
+func (v validator) Base58() ValidationChain {
+	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
+		isValid := vgo.IsBase58(sanitizedValue)
+
+		return NewValidationChainRule(
+			withIsValid(isValid),
+			withNewValue(sanitizedValue),
+			withValidationChainName("Base58"),
+			withValidationChainType(validatorType),
+		)
+	}
+
+	return v.recreateVMSFromValidator(ruleCreator)
+}
 
 func newValidator(field string, errFmtFunc *ErrFmtFuncHandler, reqLoc requestLocation) validator {
 	return validator{

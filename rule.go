@@ -2,100 +2,72 @@ package ginvalidator
 
 import "github.com/gin-gonic/gin"
 
-type vmsRule struct {
-	isValid      bool
-	newValue     string
-	vmsName      string
-	typ          string
-	shouldBail   bool
-	bailLevel    string // "chain" || "request"
-	shouldNegate bool
-	shouldHide   bool
-	optional     bool
+type validationChainRule struct {
+	isValid             bool
+	newValue            string
+	validationChainName string
+	validationChainType validationChainType
+	shouldBail          bool
+	shouldSkip          bool
 }
 
-func NewVMSRule(opts ...func(*vmsRule)) vmsRule {
-	vmsRule := &vmsRule{}
+func NewValidationChainRule(opts ...func(*validationChainRule)) validationChainRule {
+	validationChainRule := &validationChainRule{}
 
 	for _, opt := range opts {
-		opt(vmsRule)
+		opt(validationChainRule)
 	}
 
-	return *vmsRule
+	return *validationChainRule
 }
 
-func withIsValid(isValid bool) func(*vmsRule) {
-	return func(vr *vmsRule) {
-		vr.isValid = isValid
-	}
-}
-
-func withNewValue(newValue string) func(*vmsRule) {
-	return func(vr *vmsRule) {
-		vr.newValue = newValue
+func withIsValid(isValid bool) func(*validationChainRule) {
+	return func(vcr *validationChainRule) {
+		vcr.isValid = isValid
 	}
 }
 
-func withVMSName(vmsName string) func(*vmsRule) {
-	return func(vr *vmsRule) {
-		vr.vmsName = vmsName
+func withNewValue(newValue string) func(*validationChainRule) {
+	return func(vcr *validationChainRule) {
+		vcr.newValue = newValue
 	}
 }
 
-func withTyp(typ string) func(*vmsRule) {
-	return func(vr *vmsRule) {
-		vr.typ = typ
+func withValidationChainName(vcn string) func(*validationChainRule) {
+	return func(vcr *validationChainRule) {
+		vcr.validationChainName = vcn
 	}
 }
 
-func withShouldBail(shouldBail bool) func(*vmsRule) {
-	return func(vr *vmsRule) {
-		vr.shouldBail = shouldBail
+func withValidationChainType(vct validationChainType) func(*validationChainRule) {
+	return func(vcr *validationChainRule) {
+		vcr.validationChainType = vct
 	}
 }
 
-func withBailLevel(bailLevel string) func(*vmsRule) {
-	return func(vr *vmsRule) {
-		switch bailLevel {
-		case "chain", "request":
-			vr.bailLevel = bailLevel
-		default:
-			vr.bailLevel = "chain"
-		}
+func withShouldBail(shouldBail bool) func(*validationChainRule) {
+	return func(vcr *validationChainRule) {
+		vcr.shouldBail = shouldBail
 	}
 }
 
-func withShouldNegate(shouldNegate bool) func(*vmsRule) {
-	return func(vr *vmsRule) {
-		vr.shouldNegate = shouldNegate
+func withShouldSkip(shouldSkip bool) func(*validationChainRule) {
+	return func(vcr *validationChainRule) {
+		vcr.shouldSkip = shouldSkip
 	}
 }
 
-func withShouldHide(shouldHide bool) func(*vmsRule) {
-	return func(vr *vmsRule) {
-		vr.shouldHide = shouldHide
-	}
-}
-
-func withOptional(optional bool) func(*vmsRule) {
-	return func(vr *vmsRule) {
-		vr.optional = optional
-	}
-}
-
-// func NewVMSRule(isValid bool, newValue string, vmsName string, typ string, shouldBail bool, shouldNegate bool) vmsRule {
-// 	return vmsRule{
+// func NewValidationChainRule(isValid bool, newValue string, validationChainName string, validationChainType string, shouldBail bool, shouldNegate bool) validationChainRule {
+// 	return validationChainRule{
 // 		isValid:      isValid,
 // 		newValue:     newValue,
-// 		vmsName:      vmsName,
-// 		typ:          typ,
+// 		validationChainName:      validationChainName,
+// 		validationChainType:          validationChainType,
 // 		shouldBail:   shouldBail,
 // 		shouldNegate: shouldNegate,
 // 	}
 // }
 
-type vmsRules []vmsRule
-
-type ruleCreatorFunc func(ctx *gin.Context, value string) vmsRule
+type ruleCreatorFunc func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule
 
 type ruleCreatorFuncs []ruleCreatorFunc

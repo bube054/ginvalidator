@@ -39,12 +39,12 @@ func ValidationResult(ctx *gin.Context) ([]ValidationChainError, error) {
 		}
 	}
 
-	createNewStore(ctx)
+	createErrNewStore(ctx)
 
 	return allErrs, nil
 }
 
-func createNewStore(ctx *gin.Context) {
+func createErrNewStore(ctx *gin.Context) {
 	var newStore storeErrsMap
 
 	ctx.Set(GinValidatorCtxStoreName, newStore)
@@ -59,7 +59,7 @@ func saveErrorsToCtx(ctx *gin.Context, errs []ValidationChainError) {
 
 	if !ok {
 		fmt.Println("store dne, starting to save errs")
-		createNewStore(ctx)
+		createErrNewStore(ctx)
 		saveErrorsToCtx(ctx, errs)
 		return
 	}
@@ -69,7 +69,7 @@ func saveErrorsToCtx(ctx *gin.Context, errs []ValidationChainError) {
 
 	if !ok {
 		fmt.Println("store exists but is wrong type")
-		createNewStore(ctx)
+		createErrNewStore(ctx)
 		saveErrorsToCtx(ctx, errs)
 		return
 	}

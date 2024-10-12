@@ -49,7 +49,7 @@ func (v ValidationChain) Validate() gin.HandlerFunc {
 		}
 
 		ruleCreators := v.validator.rulesCreatorFuncs
-		posErrs := make([]ValidationChainError, 0, len(ruleCreators))
+		valErrs := make([]ValidationChainError, 0, len(ruleCreators))
 
 		numOfPreviousValidatorsFailed := 0
 		shouldNegateNextValidator := false
@@ -87,34 +87,21 @@ func (v ValidationChain) Validate() gin.HandlerFunc {
 			if rule.validationChainType == 0 {
 				if !valid {
 					numOfPreviousValidatorsFailed++
+
+					vce := NewValidationChainError(
+						VCEWithLocation(location),
+						VCEWithMsg(errMsg),
+						VCEWithField(field),
+						VCEWithValue(initialValue),
+					)
+
+					valErrs = append(valErrs, vce)
 				}
-
-				vce := NewValidationChainError(
-					VCEWithIsValid(valid),
-					VCEWithLocation(location),
-					VCEWithMsg(errMsg),
-					VCEWithField(field),
-					VCEWithValue(initialValue),
-					VCEWithSanitizedValue(sanitizedValue),
-				)
-
-				posErrs = append(posErrs, vce)
 			}
 
 			// rule is for sanitizers
 			if rule.validationChainType == 1 {
 				sanitizedValue = newValue
-
-				vce := NewValidationChainError(
-					VCEWithIsValid(true),
-					VCEWithLocation(location),
-					VCEWithMsg(""),
-					VCEWithField(field),
-					VCEWithValue(initialValue),
-					VCEWithSanitizedValue(newValue),
-				)
-
-				posErrs = append(posErrs, vce)
 			}
 
 			// rule is for modifiers
@@ -140,31 +127,11 @@ func (v ValidationChain) Validate() gin.HandlerFunc {
 				if vcn == "Skip" {
 					shouldSkipNextValidator = shouldSkip
 				}
-
-				vce := NewValidationChainError(
-					VCEWithIsValid(true),
-					VCEWithLocation(location),
-					VCEWithMsg(""),
-					VCEWithField(field),
-					VCEWithValue(initialValue),
-					VCEWithSanitizedValue(newValue),
-				)
-
-				posErrs = append(posErrs, vce)
 			}
 		}
 
-		errs := make([]ValidationChainError, 0, cap(posErrs))
-
-		for _, err := range posErrs {
-			if !err.isValid {
-				errs = append(errs, err)
-			}
-		}
-
-		fmt.Println("All errors: ", errs)
-
-		saveErrorsToCtx(ctx, errs)
+		saveErrorsToCtx(ctx, valErrs)
+		saveSanitizedDataToCtx(ctx, location, field, sanitizedValue)
 
 		ctx.Next()
 	}

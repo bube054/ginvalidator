@@ -5,9 +5,6 @@ type ValidationChainError struct {
 	Msg            string
 	Field          string
 	Value          string
-	SanitizedValue string
-
-	isValid bool
 }
 
 func VCEWithLocation(location string) func(*ValidationChainError) {
@@ -34,17 +31,11 @@ func VCEWithValue(value string) func(*ValidationChainError) {
 	}
 }
 
-func VCEWithSanitizedValue(sanitizedValue string) func(*ValidationChainError) {
-	return func(vce *ValidationChainError) {
-		vce.SanitizedValue = sanitizedValue
-	}
-}
-
-func VCEWithIsValid(isValid bool) func(*ValidationChainError) {
-	return func(vce *ValidationChainError) {
-		vce.isValid = isValid
-	}
-}
+// func VCEWithSanitizedValue(sanitizedValue string) func(*ValidationChainError) {
+// 	return func(vce *ValidationChainError) {
+// 		vce.SanitizedValue = sanitizedValue
+// 	}
+// }
 
 func NewValidationChainError(opts ...func(*ValidationChainError)) ValidationChainError {
 	vce := &ValidationChainError{}

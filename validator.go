@@ -15,7 +15,7 @@ type validator struct {
 	rulesCreatorFuncs ruleCreatorFuncs
 }
 
-func (v *validator) recreateVMSFromValidator(ruleCreatorFunc ruleCreatorFunc) ValidationChain {
+func (v *validator) recreateValidationChainFromValidator(ruleCreatorFunc ruleCreatorFunc) ValidationChain {
 	newRulesCreatorFunc := append(v.rulesCreatorFuncs, ruleCreatorFunc)
 
 	return ValidationChain{
@@ -55,7 +55,7 @@ func (v validator) CustomValidator(cvf CustomValidatorFunc) ValidationChain {
 		)
 	}
 
-	return v.recreateVMSFromValidator(ruleCreator)
+	return v.recreateValidationChainFromValidator(ruleCreator)
 }
 
 func (v validator) Contains(seed string, opts *vgo.ContainsOpt) ValidationChain {
@@ -70,7 +70,7 @@ func (v validator) Contains(seed string, opts *vgo.ContainsOpt) ValidationChain 
 		)
 	}
 
-	return v.recreateVMSFromValidator(ruleCreator)
+	return v.recreateValidationChainFromValidator(ruleCreator)
 }
 
 func (v validator) Equals(comparison string) ValidationChain {
@@ -85,7 +85,7 @@ func (v validator) Equals(comparison string) ValidationChain {
 		)
 	}
 
-	return v.recreateVMSFromValidator(ruleCreator)
+	return v.recreateValidationChainFromValidator(ruleCreator)
 }
 
 func (v validator) AbaRouting() ValidationChain {
@@ -100,7 +100,7 @@ func (v validator) AbaRouting() ValidationChain {
 		)
 	}
 
-	return v.recreateVMSFromValidator(ruleCreator)
+	return v.recreateValidationChainFromValidator(ruleCreator)
 }
 
 func (v validator) After(opts *vgo.IsAfterOpts) ValidationChain {
@@ -115,7 +115,7 @@ func (v validator) After(opts *vgo.IsAfterOpts) ValidationChain {
 		)
 	}
 
-	return v.recreateVMSFromValidator(ruleCreator)
+	return v.recreateValidationChainFromValidator(ruleCreator)
 }
 
 func (v validator) Alphanumeric(opts *vgo.IsAlphanumericOpts) ValidationChain {
@@ -130,7 +130,7 @@ func (v validator) Alphanumeric(opts *vgo.IsAlphanumericOpts) ValidationChain {
 		)
 	}
 
-	return v.recreateVMSFromValidator(ruleCreator)
+	return v.recreateValidationChainFromValidator(ruleCreator)
 }
 
 func (v validator) Ascii() ValidationChain {
@@ -145,7 +145,7 @@ func (v validator) Ascii() ValidationChain {
 		)
 	}
 
-	return v.recreateVMSFromValidator(ruleCreator)
+	return v.recreateValidationChainFromValidator(ruleCreator)
 }
 
 func (v validator) Base32(opts *vgo.IsBase32Opts) ValidationChain {
@@ -160,7 +160,7 @@ func (v validator) Base32(opts *vgo.IsBase32Opts) ValidationChain {
 		)
 	}
 
-	return v.recreateVMSFromValidator(ruleCreator)
+	return v.recreateValidationChainFromValidator(ruleCreator)
 }
 
 func (v validator) Base58() ValidationChain {
@@ -175,7 +175,7 @@ func (v validator) Base58() ValidationChain {
 		)
 	}
 
-	return v.recreateVMSFromValidator(ruleCreator)
+	return v.recreateValidationChainFromValidator(ruleCreator)
 }
 
 func newValidator(field string, errFmtFunc *ErrFmtFuncHandler, reqLoc requestLocation) validator {

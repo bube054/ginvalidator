@@ -21,14 +21,15 @@ func setupRouter() *gin.Engine {
 func bodySetupRouter() *gin.Engine {
 	router := setupRouter()
 
-	body := NewBody("simple_key", nil)
-	router.GET("/body", 
+	body := NewBody("message", nil)
+	router.GET("/body",
 		body.
 			CreateChain().
 			Contains("errors", nil).
 			Blacklist("0-9").
 			Alphanumeric(nil).
-			Validate(), 
+			Blacklist("0-9").
+			Validate(),
 		func(c *gin.Context) {
 			errs, err := ValidationResult(c)
 
@@ -38,9 +39,17 @@ func bodySetupRouter() *gin.Engine {
 				fmt.Printf("All Errors 🙌🙌🙌🙌 %+v\n", errs)
 			}
 
+			data, err := MatchedData(c)
+
+			if err != nil {
+				fmt.Println(err)
+			}
+
+			fmt.Println("data:", data)
+
 			c.String(200, "pong")
 		},
-)
+	)
 
 	return router
 }

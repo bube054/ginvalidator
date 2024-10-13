@@ -29,7 +29,7 @@ func MatchedData(ctx *gin.Context) (SanitizedData, error) {
 	return store, nil
 }
 
-func createNewStore(ctx *gin.Context) {
+func createSanitizedDataStore(ctx *gin.Context) {
 	var newStore SanitizedData
 
 	ctx.Set(GinValidatorSanitizedDataStore, newStore)
@@ -44,7 +44,7 @@ func saveSanitizedDataToCtx(ctx *gin.Context, location, field, value string) {
 
 	if !ok {
 		fmt.Println("sanitization store dne, starting to save errs")
-		createNewStore(ctx)
+		createSanitizedDataStore(ctx)
 		saveSanitizedDataToCtx(ctx, location, field, value)
 		return
 	}
@@ -54,7 +54,7 @@ func saveSanitizedDataToCtx(ctx *gin.Context, location, field, value string) {
 
 	if !ok {
 		fmt.Println("sanitization store exists but is wrong type")
-		createNewStore(ctx)
+		createSanitizedDataStore(ctx)
 		saveSanitizedDataToCtx(ctx, location, field, value)
 		return
 	}

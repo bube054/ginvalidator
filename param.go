@@ -1,7 +1,5 @@
 package ginvalidator
 
-import "github.com/gin-gonic/gin"
-
 type Param struct {
 	field      string
 	errFmtFunc *ErrFmtFuncHandler
@@ -16,10 +14,4 @@ func NewParam(field string, errFmtFunc *ErrFmtFuncHandler) Param {
 		field:      field,
 		errFmtFunc: errFmtFunc,
 	}
-}
-
-func extractParamValue(field string, ctx *gin.Context) (string, error) {
-	param := ctx.Param(field)
-
-	return param, nil
 }

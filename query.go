@@ -1,7 +1,5 @@
 package ginvalidator
 
-import "github.com/gin-gonic/gin"
-
 type Query struct {
 	field      string
 	errFmtFunc *ErrFmtFuncHandler
@@ -16,10 +14,4 @@ func NewQuery(field string, errFmtFunc *ErrFmtFuncHandler) Query {
 		field:      field,
 		errFmtFunc: errFmtFunc,
 	}
-}
-
-func extractQueryValue(field string, ctx *gin.Context) (string, error) {
-	param := ctx.Query(field)
-
-	return param, nil
 }

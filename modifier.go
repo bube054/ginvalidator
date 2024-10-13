@@ -14,7 +14,7 @@ type modifier struct {
 	rulesCreatorFuncs ruleCreatorFuncs
 }
 
-func (m *modifier) recreateVMSFromModifier(ruleCreatorFunc ruleCreatorFunc) ValidationChain {
+func (m *modifier) recreateValidationChainFromModifier(ruleCreatorFunc ruleCreatorFunc) ValidationChain {
 	newRulesCreatorFunc := append(m.rulesCreatorFuncs, ruleCreatorFunc)
 
 	return ValidationChain{
@@ -51,7 +51,7 @@ func (m modifier) Bail() ValidationChain {
 		)
 	}
 
-	return m.recreateVMSFromModifier(ruleCreator)
+	return m.recreateValidationChainFromModifier(ruleCreator)
 }
 
 type IfModifierFunc func(req http.Request, initialValue, sanitizedValue string) bool
@@ -70,7 +70,7 @@ func (m modifier) If(imf IfModifierFunc) ValidationChain {
 		)
 	}
 
-	return m.recreateVMSFromModifier(ruleCreator)
+	return m.recreateValidationChainFromModifier(ruleCreator)
 }
 
 func (m modifier) Not() ValidationChain {
@@ -84,7 +84,7 @@ func (m modifier) Not() ValidationChain {
 		)
 	}
 
-	return m.recreateVMSFromModifier(ruleCreator)
+	return m.recreateValidationChainFromModifier(ruleCreator)
 }
 
 type SkipModifierFunc func(req http.Request, initialValue, sanitizedValue string) bool
@@ -104,7 +104,7 @@ func (m modifier) Skip(smf SkipModifierFunc) ValidationChain {
 		)
 	}
 
-	return m.recreateVMSFromModifier(ruleCreator)
+	return m.recreateValidationChainFromModifier(ruleCreator)
 }
 
 func newModifier(field string, errFmtFunc *ErrFmtFuncHandler, reqLoc requestLocation) modifier {

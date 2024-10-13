@@ -15,7 +15,7 @@ type sanitizer struct {
 	rulesCreatorFuncs ruleCreatorFuncs
 }
 
-func (s *sanitizer) recreateVMSFromSanitizer(ruleCreatorFunc ruleCreatorFunc) ValidationChain {
+func (s *sanitizer) recreateValidationChainFromSanitizer(ruleCreatorFunc ruleCreatorFunc) ValidationChain {
 	newRulesCreatorFunc := append(s.rulesCreatorFuncs, ruleCreatorFunc)
 
 	return ValidationChain{
@@ -56,7 +56,7 @@ func (s sanitizer) CustomSanitizer(csf CustomSanitizerFunc) ValidationChain {
 		)
 	}
 
-	return s.recreateVMSFromSanitizer(ruleCreator)
+	return s.recreateValidationChainFromSanitizer(ruleCreator)
 }
 
 // built in sanitizers end here
@@ -73,7 +73,7 @@ func (s sanitizer) Blacklist(blacklistedChars string) ValidationChain {
 		)
 	}
 
-	return s.recreateVMSFromSanitizer(ruleCreator)
+	return s.recreateValidationChainFromSanitizer(ruleCreator)
 }
 
 func newSanitizer(field string, errFmtFunc *ErrFmtFuncHandler, reqLoc requestLocation) sanitizer {

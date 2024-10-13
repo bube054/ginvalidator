@@ -24,23 +24,23 @@ func (v ValidationChain) Validate() gin.HandlerFunc {
 		var extractionErr error
 
 		if v.validator.reqLoc == 0 {
-			initialValue, extractionErr = extractBodyValue(field, ctx)
+			initialValue, extractionErr = extractFieldValFromBody(field, ctx)
 			sanitizedValue = initialValue
 		}
 		if v.validator.reqLoc == 1 {
-			initialValue, extractionErr = extractCookieValue(field, ctx)
+			initialValue, extractionErr = extractFieldValFromCookie(field, ctx)
 			sanitizedValue = initialValue
 		}
 		if v.validator.reqLoc == 2 {
-			initialValue, extractionErr = extractHeaderValue(field, ctx)
+			initialValue, extractionErr = extractFieldValFromHeader(field, ctx)
 			sanitizedValue = initialValue
 		}
 		if v.validator.reqLoc == 3 {
-			initialValue, extractionErr = extractParamValue(field, ctx)
+			initialValue, extractionErr = extractFieldValFromParam(field, ctx)
 			sanitizedValue = initialValue
 		}
 		if v.validator.reqLoc == 4 {
-			initialValue, extractionErr = extractQueryValue(field, ctx)
+			initialValue, extractionErr = extractFieldValFromQuery(field, ctx)
 			sanitizedValue = initialValue
 		}
 
@@ -89,10 +89,10 @@ func (v ValidationChain) Validate() gin.HandlerFunc {
 					numOfPreviousValidatorsFailed++
 
 					vce := NewValidationChainError(
-						VCEWithLocation(location),
-						VCEWithMsg(errMsg),
-						VCEWithField(field),
-						VCEWithValue(initialValue),
+						vceWithLocation(location),
+						vceWithMsg(errMsg),
+						vceWithField(field),
+						vceWithValue(initialValue),
 					)
 
 					valErrs = append(valErrs, vce)

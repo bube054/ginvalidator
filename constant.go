@@ -1,5 +1,7 @@
 package ginvalidator
 
+const ValidationChainNameUnknown string = "Unknown name"
+
 type requestLocation int
 
 const (
@@ -22,6 +24,6 @@ const (
 	modifierType
 )
 
-func (v validationChainType) string() string {
-	return [...]string{"validator", "sanitizer", "modifier"}[v]
-}
+// func (v validationChainType) string() string {
+// 	return [...]string{"validator", "sanitizer", "modifier"}[v]
+// }

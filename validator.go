@@ -7,14 +7,29 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type validator struct {
-	field      string
-	errFmtFunc *ErrFmtFuncHandler
+const (
+	CustomValidatorName       string = "CustomValidator"
+	ContainsValidatorName     string = "Contains"
+	EqualsValidatorName       string = "Equals"
+	AbaRoutingValidatorName   string = "AbaRouting"
+	AfterValidatorName        string = "After"
+	AlphanumericValidatorName string = "Alphanumeric"
+	AsciiValidatorName        string = "Ascii"
+	Base32ValidatorName       string = "Base32"
+	Base58ValidatorName       string = "Base58"
+	Base64ValidatorName       string = "Base64"
+)
 
-	reqLoc            requestLocation
-	rulesCreatorFuncs ruleCreatorFuncs
+// A validator is simply a piece of the validation chain that can validate values from the specified field.
+type validator struct {
+	field      string             // the field to be specified
+	errFmtFunc *ErrFmtFuncHandler // the function to create the error message
+
+	reqLoc            requestLocation  // the HTTP request location (e.g., body, headers, cookies, params, or queries)
+	rulesCreatorFuncs ruleCreatorFuncs // the list of functions that creates the validation rules.
 }
 
+// recreateValidationChainFromValidator takes the previous validator and returns a new validation chain.
 func (v *validator) recreateValidationChainFromValidator(ruleCreatorFunc ruleCreatorFunc) ValidationChain {
 	newRulesCreatorFunc := append(v.rulesCreatorFuncs, ruleCreatorFunc)
 
@@ -50,7 +65,7 @@ func (v validator) CustomValidator(cvf CustomValidatorFunc) ValidationChain {
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
-			withValidationChainName("CustomValidator"),
+			withValidationChainName(CustomValidatorName),
 			withValidationChainType(validatorType),
 		)
 	}
@@ -65,7 +80,7 @@ func (v validator) Contains(seed string, opts *vgo.ContainsOpt) ValidationChain 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
-			withValidationChainName("Contains"),
+			withValidationChainName(ContainsValidatorName),
 			withValidationChainType(validatorType),
 		)
 	}
@@ -80,7 +95,7 @@ func (v validator) Equals(comparison string) ValidationChain {
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
-			withValidationChainName("Equals"),
+			withValidationChainName(EqualsValidatorName),
 			withValidationChainType(validatorType),
 		)
 	}
@@ -95,7 +110,7 @@ func (v validator) AbaRouting() ValidationChain {
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
-			withValidationChainName("AbaRouting"),
+			withValidationChainName(AbaRoutingValidatorName),
 			withValidationChainType(validatorType),
 		)
 	}
@@ -110,7 +125,7 @@ func (v validator) After(opts *vgo.IsAfterOpts) ValidationChain {
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
-			withValidationChainName("After"),
+			withValidationChainName(AfterValidatorName),
 			withValidationChainType(validatorType),
 		)
 	}
@@ -125,7 +140,7 @@ func (v validator) Alphanumeric(opts *vgo.IsAlphanumericOpts) ValidationChain {
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
-			withValidationChainName("Alphanumeric"),
+			withValidationChainName(AlphanumericValidatorName),
 			withValidationChainType(validatorType),
 		)
 	}
@@ -140,7 +155,7 @@ func (v validator) Ascii() ValidationChain {
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
-			withValidationChainName("Ascii"),
+			withValidationChainName(AbaRoutingValidatorName),
 			withValidationChainType(validatorType),
 		)
 	}
@@ -155,7 +170,7 @@ func (v validator) Base32(opts *vgo.IsBase32Opts) ValidationChain {
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
-			withValidationChainName("Base32"),
+			withValidationChainName(Base32ValidatorName),
 			withValidationChainType(validatorType),
 		)
 	}
@@ -170,7 +185,22 @@ func (v validator) Base58() ValidationChain {
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
-			withValidationChainName("Base58"),
+			withValidationChainName(Base58ValidatorName),
+			withValidationChainType(validatorType),
+		)
+	}
+
+	return v.recreateValidationChainFromValidator(ruleCreator)
+}
+
+func (v validator) Base64(opts *vgo.IsBase64Opts) ValidationChain {
+	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
+		isValid := vgo.IsBase64(sanitizedValue, opts)
+
+		return NewValidationChainRule(
+			withIsValid(isValid),
+			withNewValue(sanitizedValue),
+			withValidationChainName(Base64ValidatorName),
 			withValidationChainType(validatorType),
 		)
 	}

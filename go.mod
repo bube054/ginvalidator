@@ -1,4 +1,4 @@
-module github/bub054/ginvalidator
+module github.com/bube054/ginvalidator
 
 go 1.21.0
 

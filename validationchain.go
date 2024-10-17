@@ -1,7 +1,7 @@
-// Package ginvalidator is a set of [Gin] middlewares that wraps the 
+// Package ginvalidator is a set of [Gin] middlewares that wraps the
 // extensive collection of validators and sanitizers offered by [validatorgo].
 //
-// It allows you to combine them in many ways so that you can validate and sanitize your express requests, 
+// It allows you to combine them in many ways so that you can validate and sanitize your express requests,
 // and offers tools to determine if the request is valid or not, which data was matched according to your validators, and so on.
 //
 // It is based on the popular js/express library [express-validator]

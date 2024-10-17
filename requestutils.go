@@ -12,9 +12,33 @@ import (
 	"github.com/tidwall/gjson"
 )
 
-var ErrExtractionFromNilCtx = errors.New("gin context is nil")
-var ErrExtractionInvalidContentType = errors.New("invalid content-type header")
-var ErrExtractionInvalidJson = errors.New("invalid json")
+var (
+	ErrExtractionFromNilCtx         = errors.New("gin context is nil")
+	ErrExtractionInvalidContentType = errors.New("invalid content-type header")
+	ErrExtractionInvalidJson        = errors.New("invalid json")
+)
+
+type requestLocation int
+
+const (
+	bodyLocation requestLocation = iota
+	cookieLocation
+	headerLocation
+	paramLocation
+	queryLocation
+)
+
+func (l requestLocation) string() string {
+	return [...]string{"body", "cookies", "headers", "params", "query"}[l]
+}
+
+type validationChainType int
+
+const (
+	validatorType validationChainType = iota
+	sanitizerType
+	modifierType
+)
 
 func extractFieldValFromBody(field string, ctx *gin.Context) (string, error) {
 	if ctx == nil {

@@ -55,8 +55,18 @@ func (v *validator) recreateValidationChainFromValidator(ruleCreatorFunc ruleCre
 	}
 }
 
+// CustomValidatorFunc defines a function that evaluates whether the value is valid according to your custom logic.
+//
+// Parameters:
+//   - req: The HTTP request context derived from `http.Request`.
+//   - initialValue: The original value derived from the specified field.
+//   - sanitizedValue: The current sanitized value after applying previous sanitizers.
 type CustomValidatorFunc func(req http.Request, initialValue, sanitizedValue string) bool
 
+// CustomValidator applies a custom validator function.
+//
+// Parameters:
+//   - cvf: The [CustomValidatorFunc] used to evaluate the validity.
 func (v validator) CustomValidator(cvf CustomValidatorFunc) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		httpRequest := ctx.Request
@@ -73,6 +83,14 @@ func (v validator) CustomValidator(cvf CustomValidatorFunc) ValidationChain {
 	return v.recreateValidationChainFromValidator(ruleCreator)
 }
 
+// Contains is a validator that checks if the string contains the seed.
+//
+// This function uses the [validatorgo] package to perform the validation logic.
+//
+// Its options are according to [ContainsOpt].
+//
+// [validatorgo]: https://pkg.go.dev/github.com/bube054
+// [ContainsOpt]: https://pkg.go.dev/github.com/bube054/validatorgo#ContainsOpt
 func (v validator) Contains(seed string, opts *vgo.ContainsOpt) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid := vgo.Contains(sanitizedValue, seed, opts)
@@ -208,6 +226,12 @@ func (v validator) Base64(opts *vgo.IsBase64Opts) ValidationChain {
 	return v.recreateValidationChainFromValidator(ruleCreator)
 }
 
+// newValidator creates and returns a new validator.
+//
+// Parameters:
+//   - field: The field to validate from the HTTP request data location (e.g., body, headers, cookies, params, or queries).
+//   - errFmtFunc: A function that returns a custom error message. If nil, a generic error message will be used.
+//   - reqLoc: The location in the HTTP request from where the field is extracted (e.g., body, headers, cookies, params, or queries).
 func newValidator(field string, errFmtFunc *ErrFmtFuncHandler, reqLoc requestLocation) validator {
 	return validator{
 		field:      field,

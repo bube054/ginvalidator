@@ -21,6 +21,8 @@ type ginCtxReqOpts struct {
 }
 
 func createTestGinCtx(opts ginCtxReqOpts) *gin.Context {
+	gin.SetMode(gin.TestMode)
+
 	if opts.method == "" {
 		opts.method = http.MethodPost
 	}
@@ -108,8 +110,6 @@ func TestExtractFieldValFromBody(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		gin.SetMode(gin.TestMode)
-
 		t.Run(test.name, func(t *testing.T) {
 			ctx := createTestGinCtx(test.opts)
 			ans, err := extractFieldValFromBody(test.field, ctx)
@@ -147,8 +147,6 @@ func TestExtractFieldValFromCookie(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		gin.SetMode(gin.TestMode)
-
 		t.Run(test.name, func(t *testing.T) {
 			ctx := createTestGinCtx(test.opts)
 			ans, err := extractFieldValFromCookie(test.field, ctx)
@@ -184,8 +182,6 @@ func TestExtractFieldValFromHeader(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		gin.SetMode(gin.TestMode)
-
 		t.Run(test.name, func(t *testing.T) {
 			ctx := createTestGinCtx(test.opts)
 			ans, err := extractFieldValFromHeader(test.field, ctx)
@@ -221,8 +217,6 @@ func TestExtractFieldValFromParam(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		gin.SetMode(gin.TestMode)
-
 		t.Run(test.name, func(t *testing.T) {
 			ctx := createTestGinCtx(test.opts)
 			ans, err := extractFieldValFromParam(test.field, ctx)
@@ -258,8 +252,6 @@ func TestExtractFieldValFromQuery(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		gin.SetMode(gin.TestMode)
-
 		t.Run(test.name, func(t *testing.T) {
 			ctx := createTestGinCtx(test.opts)
 			ans, err := extractFieldValFromQuery(test.field, ctx)

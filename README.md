@@ -10,6 +10,10 @@ It allows you to combine them in many ways so that you can validate and sanitize
 
 It is based on the popular js/express library [express-validator](https://github.com/express-validator/express-validator)
 
+## Support
+This version of ginvalidator requires that your application is running on [Go](https://go.dev/dl/) 1.21+.
+It's also verified to work with [gin](https://github.com/gin-gonic/gin) 1.x.x.
+
 ## Rationale
 Why not use?
 

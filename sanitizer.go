@@ -316,9 +316,7 @@ func (s sanitizer) ToFloat() ValidationChain {
 // [ToInt]: https://pkg.go.dev/github.com/bube054/validatorgo/sanitizer#ToInt
 func (s sanitizer) ToInt() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		num, err := san.ToInt(sanitizedValue)
-
-		fmt.Println(num, err)
+		num, _ := san.ToInt(sanitizedValue)
 
 		newValue := fmt.Sprintf("%d", num)
 

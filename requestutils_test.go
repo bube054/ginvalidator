@@ -116,14 +116,14 @@ func TestExtractFieldValFromBody(t *testing.T) {
 
 			if err != nil {
 				if !errors.Is(test.err, test.err) {
-					t.Errorf("got error `%v`, want `%v`", err, test.err)
+					t.Errorf("got error %+v, want %+v", err, test.err)
 				}
 
 				return
 			}
 
 			if ans != test.value {
-				t.Errorf("got `%s`, want `%s`", ans, test.value)
+				t.Errorf("got %q, want %q", ans, test.value)
 			}
 		})
 	}
@@ -153,12 +153,12 @@ func TestExtractFieldValFromCookie(t *testing.T) {
 
 			if err != nil {
 				if !errors.Is(test.err, test.err) {
-					t.Errorf("got error `%v`, want `%v`", err, test.err)
+					t.Errorf("got error %+v, want %+v", err, test.err)
 				}
 			}
 
 			if ans != test.value {
-				t.Errorf("got `%s`, want `%s`", ans, test.value)
+				t.Errorf("got %q, want %q", ans, test.value)
 			}
 		})
 	}
@@ -188,12 +188,12 @@ func TestExtractFieldValFromHeader(t *testing.T) {
 
 			if err != nil {
 				if !errors.Is(test.err, test.err) {
-					t.Errorf("got error `%v`, want `%v`", err, test.err)
+					t.Errorf("got error %+v, want %+v", err, test.err)
 				}
 			}
 
 			if ans != test.value {
-				t.Errorf("got `%s`, want `%s`", ans, test.value)
+				t.Errorf("got %q, want %q", ans, test.value)
 			}
 		})
 	}
@@ -223,12 +223,12 @@ func TestExtractFieldValFromParam(t *testing.T) {
 
 			if err != nil {
 				if !errors.Is(test.err, test.err) {
-					t.Errorf("got error `%v`, want `%v`", err, test.err)
+					t.Errorf("got error %+v, want %+v", err, test.err)
 				}
 			}
 
 			if ans != test.value {
-				t.Errorf("got `%s`, want `%s`", ans, test.value)
+				t.Errorf("got %q, want %q", ans, test.value)
 			}
 		})
 	}
@@ -258,12 +258,12 @@ func TestExtractFieldValFromQuery(t *testing.T) {
 
 			if err != nil {
 				if !errors.Is(test.err, test.err) {
-					t.Errorf("got error `%v`, want `%v`", err, test.err)
+					t.Errorf("got error %+v, want %+v", err, test.err)
 				}
 			}
 
 			if ans != test.value {
-				t.Errorf("got `%s`, want `%s`", ans, test.value)
+				t.Errorf("got %q, want %q", ans, test.value)
 			}
 		})
 	}

@@ -70,7 +70,7 @@ func TestCustomSanitizer(t *testing.T) {
 			r := vcr(ctx, value, value)
 
 			if r != test.want {
-				t.Errorf("got `%v`, want `%v`", r, test.want)
+				t.Errorf("got %+v, want %+v", r, test.want)
 			}
 		})
 	}
@@ -135,7 +135,7 @@ func TestBlacklist(t *testing.T) {
 			r := vcr(ctx, value, value)
 
 			if r != test.want {
-				t.Errorf("got `%v`, want `%v`", r, test.want)
+				t.Errorf("got %+v, want %+v", r, test.want)
 			}
 		})
 	}
@@ -185,7 +185,7 @@ func TestEscape(t *testing.T) {
 			r := vcr(ctx, value, value)
 
 			if r != test.want {
-				t.Errorf("got `%v`, want `%v`", r, test.want)
+				t.Errorf("got %+v, want %+v", r, test.want)
 			}
 		})
 	}
@@ -250,7 +250,7 @@ func TestLTrim(t *testing.T) {
 			r := vcr(ctx, value, value)
 
 			if r != test.want {
-				t.Errorf("got `%v`, want `%v`", r, test.want)
+				t.Errorf("got %+v, want %+v", r, test.want)
 			}
 		})
 	}
@@ -302,7 +302,7 @@ func TestNormalizeEmail(t *testing.T) {
 			r := vcr(ctx, value, value)
 
 			if r != test.want {
-				t.Errorf("got `%v`, want `%v`", r, test.want)
+				t.Errorf("got %+v, want %+v", r, test.want)
 			}
 		})
 	}
@@ -367,7 +367,7 @@ func TestRTrim(t *testing.T) {
 			r := vcr(ctx, value, value)
 
 			if r != test.want {
-				t.Errorf("got `%v`, want `%v`", r, test.want)
+				t.Errorf("got %+v, want %+v", r, test.want)
 			}
 		})
 	}
@@ -432,7 +432,7 @@ func TestStripLow(t *testing.T) {
 			r := vcr(ctx, value, value)
 
 			if r != test.want {
-				t.Errorf("got `%v`, want `%v`", r, test.want)
+				t.Errorf("got %+v, want %+v", r, test.want)
 			}
 		})
 	}
@@ -497,7 +497,7 @@ func TestToBoolean(t *testing.T) {
 			r := vcr(ctx, value, value)
 
 			if r != test.want {
-				t.Errorf("got `%v`, want `%v`", r, test.want)
+				t.Errorf("got %+v, want %+v", r, test.want)
 			}
 		})
 	}
@@ -547,7 +547,7 @@ func TestToDate(t *testing.T) {
 			r := vcr(ctx, value, value)
 
 			if r != test.want {
-				t.Errorf("got `%v`, want `%v`", r, test.want)
+				t.Errorf("got %+v, want %+v", r, test.want)
 			}
 		})
 	}
@@ -597,7 +597,7 @@ func TestToFloat(t *testing.T) {
 			r := vcr(ctx, value, value)
 
 			if r != test.want {
-				t.Errorf("got `%v`, want `%v`", r, test.want)
+				t.Errorf("got %+v, want %+v", r, test.want)
 			}
 		})
 	}
@@ -647,7 +647,7 @@ func TestToInt(t *testing.T) {
 			r := vcr(ctx, value, value)
 
 			if r != test.want {
-				t.Errorf("got `%v`, want `%v`", r, test.want)
+				t.Errorf("got %+v, want %+v", r, test.want)
 			}
 		})
 	}
@@ -712,7 +712,7 @@ func TestTrim(t *testing.T) {
 			r := vcr(ctx, value, value)
 
 			if r != test.want {
-				t.Errorf("got `%v`, want `%v`", r, test.want)
+				t.Errorf("got %+v, want %+v", r, test.want)
 			}
 		})
 	}
@@ -762,7 +762,7 @@ func TestUnescape(t *testing.T) {
 			r := vcr(ctx, value, value)
 
 			if r != test.want {
-				t.Errorf("got `%v`, want `%v`", r, test.want)
+				t.Errorf("got %+v, want %+v", r, test.want)
 			}
 		})
 	}
@@ -827,7 +827,7 @@ func TestWhitelist(t *testing.T) {
 			r := vcr(ctx, value, value)
 
 			if r != test.want {
-				t.Errorf("got `%v`, want `%v`", r, test.want)
+				t.Errorf("got %+v, want %+v", r, test.want)
 			}
 		})
 	}

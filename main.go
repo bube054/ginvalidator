@@ -1,0 +1,5 @@
+package ginvalidator
+
+func xyx() {
+
+}

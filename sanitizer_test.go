@@ -20,7 +20,7 @@ func TestCustomSanitizer(t *testing.T) {
 		want validationChainRule
 	}{
 		{
-			name:       "Sanitized value returned is the initial value.",
+			name:       "Creates a CustomSanitizer chain rule. Returns the validated value.",
 			field:      "name",
 			errFmtFunc: nil,
 			csf: func(req http.Request, initialValue, sanitizedValue string) string {
@@ -35,7 +35,7 @@ func TestCustomSanitizer(t *testing.T) {
 			),
 		},
 		{
-			name:       "Sanitized value returned is the empty string.",
+			name:       "Creates a CustomSanitizer chain rule. Returns the an empty string.",
 			field:      "name",
 			errFmtFunc: nil,
 			csf: func(req http.Request, initialValue, sanitizedValue string) string {
@@ -89,7 +89,7 @@ func TestBlacklist(t *testing.T) {
 		want validationChainRule
 	}{
 		{
-			name:             "Sanitized value returned is without numbers",
+			name:             "Creates a Blacklist sanitizer chain rule.",
 			field:            "name",
 			errFmtFunc:       nil,
 			blacklistedChars: "0-9",
@@ -102,7 +102,7 @@ func TestBlacklist(t *testing.T) {
 			),
 		},
 		{
-			name:             "Sanitized value returned is without alphabets",
+			name:             "Creates a Blacklist sanitizer chain rule.",
 			field:            "name",
 			errFmtFunc:       nil,
 			blacklistedChars: "[a-zA-Z]",
@@ -153,7 +153,7 @@ func TestEscape(t *testing.T) {
 		want validationChainRule
 	}{
 		{
-			name:       "Sanitized value returned is escaped",
+			name:       "Creates an Escape sanitizer chain rule.",
 			field:      "name",
 			errFmtFunc: nil,
 			reqOpts:    ginCtxReqOpts{body: `{"name": "<John"}`, contentType: "application/json"},
@@ -204,7 +204,7 @@ func TestLTrim(t *testing.T) {
 		want validationChainRule
 	}{
 		{
-			name:       "Sanitized value is same as original",
+			name:       "Creates an LTrim sanitizer chain rule.",
 			field:      "name",
 			errFmtFunc: nil,
 			chars:      "",
@@ -269,7 +269,7 @@ func TestNormalizeEmail(t *testing.T) {
 		want validationChainRule
 	}{
 		{
-			name:       "Sanitized value is normalized",
+			name:       "Creates a NormalizeEmail sanitizer chain rule.",
 			field:      "email",
 			errFmtFunc: nil,
 			opts:       nil,
@@ -321,7 +321,7 @@ func TestRTrim(t *testing.T) {
 		want validationChainRule
 	}{
 		{
-			name:       "Sanitized value is same as original",
+			name:       "Creates an RTrim sanitizer chain rule.",
 			field:      "name",
 			errFmtFunc: nil,
 			chars:      "",
@@ -334,7 +334,7 @@ func TestRTrim(t *testing.T) {
 			),
 		},
 		{
-			name:       "Sanitized value returned is right trimmed",
+			name:       "Creates an RTrim sanitizer chain rule.",
 			field:      "name",
 			errFmtFunc: nil,
 			chars:      " ",
@@ -386,7 +386,7 @@ func TestStripLow(t *testing.T) {
 		want validationChainRule
 	}{
 		{
-			name:         "Sanitized value no new lines kept",
+			name:         "Creates a StripLow sanitizer chain rule.",
 			field:        "name",
 			errFmtFunc:   nil,
 			keepNewLines: false,
@@ -399,7 +399,7 @@ func TestStripLow(t *testing.T) {
 			),
 		},
 		{
-			name:         "Sanitized value has new lines",
+			name:         "Creates a StripLow sanitizer chain rule.",
 			field:        "name",
 			errFmtFunc:   nil,
 			keepNewLines: true,
@@ -451,7 +451,7 @@ func TestToBoolean(t *testing.T) {
 		want validationChainRule
 	}{
 		{
-			name:         "Sanitized value is true",
+			name:         "Creates a Toboolean sanitizer chain rule.",
 			field:        "name",
 			errFmtFunc:   nil,
 			strict: false,
@@ -464,7 +464,7 @@ func TestToBoolean(t *testing.T) {
 			),
 		},
 		{
-			name:         "Sanitized value is false",
+			name:         "Creates a Toboolean sanitizer chain rule.",
 			field:        "name",
 			errFmtFunc:   nil,
 			strict: true,
@@ -515,7 +515,7 @@ func TestToDate(t *testing.T) {
 		want validationChainRule
 	}{
 		{
-			name:       "Sanitized value is a date",
+			name:       "Creates a ToDate sanitizer chain rule.",
 			field:      "date",
 			errFmtFunc: nil,
 			reqOpts:    ginCtxReqOpts{body: `{"date": "Mon Jan  2 15:04:05 2006"}`, contentType: "application/json"},
@@ -565,7 +565,7 @@ func TestToFloat(t *testing.T) {
 		want validationChainRule
 	}{
 		{
-			name:       "Sanitized value is a float",
+			name:       "Creates a ToFloat sanitizer chain rule.",
 			field:      "flt",
 			errFmtFunc: nil,
 			reqOpts:    ginCtxReqOpts{body: `{"flt": "123"}`, contentType: "application/json"},
@@ -615,7 +615,7 @@ func TestToInt(t *testing.T) {
 		want validationChainRule
 	}{
 		{
-			name:       "Sanitized value is an int",
+			name:       "Creates a ToInt sanitizer chain rule.",
 			field:      "int",
 			errFmtFunc: nil,
 			reqOpts:    ginCtxReqOpts{body: `{"int": "123"}`, contentType: "application/json"},
@@ -666,7 +666,7 @@ func TestTrim(t *testing.T) {
 		want validationChainRule
 	}{
 		{
-			name:       "Sanitized value is same as original",
+			name:       "Creates a Trim sanitizer chain rule.",
 			field:      "name",
 			errFmtFunc: nil,
 			chars:      "",
@@ -679,7 +679,7 @@ func TestTrim(t *testing.T) {
 			),
 		},
 		{
-			name:       "Sanitized value returned is trimmed",
+			name:       "Creates a Trim sanitizer chain rule.",
 			field:      "name",
 			errFmtFunc: nil,
 			chars:      " ",
@@ -730,7 +730,7 @@ func TestUnescape(t *testing.T) {
 		want validationChainRule
 	}{
 		{
-			name:       "Sanitized value returned is unescaped",
+			name:       "Creates an Unescape sanitizer chain rule.",
 			field:      "name",
 			errFmtFunc: nil,
 			reqOpts:    ginCtxReqOpts{body: `{"name": "&lt;John"}`, contentType: "application/json"},
@@ -781,7 +781,7 @@ func TestWhitelist(t *testing.T) {
 		want validationChainRule
 	}{
 		{
-			name:             "Sanitized value returned is with numbers",
+			name:             "Creates a Whitelist sanitizer chain rule.",
 			field:            "name",
 			errFmtFunc:       nil,
 			whitelistedChars: "0-9",
@@ -794,7 +794,7 @@ func TestWhitelist(t *testing.T) {
 			),
 		},
 		{
-			name:             "Sanitized value returned is with alphabets",
+			name:             "Creates a Whitelist sanitizer chain rule.",
 			field:            "name",
 			errFmtFunc:       nil,
 			whitelistedChars: "[a-zA-Z]",

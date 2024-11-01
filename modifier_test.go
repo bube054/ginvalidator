@@ -17,7 +17,7 @@ func TestBail(t *testing.T) {
 		want validationChainRule
 	}{
 		{
-			name:       "Bail rule creator created",
+			name:       "Creates a Bail modifier validation chain rule.",
 			field:      "name",
 			errFmtFunc: nil,
 			reqOpts:    ginCtxReqOpts{body: `{"name": "John"}`, contentType: "application/json"},
@@ -68,7 +68,7 @@ func TestIf(t *testing.T) {
 		want validationChainRule
 	}{
 		{
-			name: "If to cause chain to be broken",
+			name: "Creates an If modifier validation chain rule. It returns true, breaking the chain.",
 			imf: func(req http.Request, initialValue, sanitizedValue string) bool {
 				return true
 			},
@@ -84,7 +84,7 @@ func TestIf(t *testing.T) {
 			),
 		},
 		{
-			name: "If to continue chain",
+			name: "Creates an If modifier validation chain rule. It returns false, continuing the chain.",
 			imf: func(req http.Request, initialValue, sanitizedValue string) bool {
 				return false
 			},
@@ -138,7 +138,7 @@ func TestNot(t *testing.T) {
 		want validationChainRule
 	}{
 		{
-			name:       "Bail rule creator created",
+			name:       "Creates a Not modifier validation chain rule.",
 			field:      "name",
 			errFmtFunc: nil,
 			reqOpts:    ginCtxReqOpts{body: `{"name": "John"}`, contentType: "application/json"},
@@ -190,7 +190,7 @@ func TestSkip(t *testing.T) {
 		want validationChainRule
 	}{
 		{
-			name: "Skip to cause rule(s) to be skipped",
+			name: "Creates a Skip modifier validation chain rule. It returns true, skipping the next chain rule.",
 			smf: func(req http.Request, initialValue, sanitizedValue string) bool {
 				return true
 			},
@@ -207,7 +207,7 @@ func TestSkip(t *testing.T) {
 			),
 		},
 		{
-			name: "Skip to not cause rule(s) to be skipped",
+			name: "Creates a Skip modifier validation chain rule. It returns false, continuing to the next chain rule.",
 			smf: func(req http.Request, initialValue, sanitizedValue string) bool {
 				return false
 			},

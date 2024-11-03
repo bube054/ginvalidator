@@ -2,9 +2,14 @@ package ginvalidator
 
 import (
 	"errors"
-	"fmt"
+	// "fmt"
 
 	"github.com/gin-gonic/gin"
+)
+
+var (
+	ErrCannotGetMatchedValuesNilContextProvided      = errors.New("cannot get matched data: nil context provided")
+	ErrNoSanitizedData = errors.New("no matched data present")
 )
 
 const GinValidatorSanitizedDataStore string = "__ginvalidator__sanitized__data__"
@@ -13,17 +18,21 @@ type sanitizedFields map[string]string
 type SanitizedData map[string]sanitizedFields
 
 func MatchedData(ctx *gin.Context) (SanitizedData, error) {
+	if ctx == nil {
+		return nil, ErrCannotGetMatchedValuesNilContextProvided
+	}
+
 	data, ok := ctx.Get(GinValidatorSanitizedDataStore)
 
 	if !ok {
-		return nil, errors.New("no sanitized data yet")
+		return nil, ErrNoSanitizedData
 	}
 
 	var store SanitizedData
 	store, ok = data.(SanitizedData)
 
 	if !ok {
-		return nil, errors.New("no sanitized data yet")
+		return nil, ErrNoSanitizedData
 	}
 
 	return store, nil
@@ -43,7 +52,7 @@ func saveSanitizedDataToCtx(ctx *gin.Context, location, field, value string) {
 	data, ok := ctx.Get(GinValidatorSanitizedDataStore)
 
 	if !ok {
-		fmt.Println("sanitization store dne, starting to save errs")
+		// fmt.Println("sanitization store dne, starting to save errs")
 		createSanitizedDataStore(ctx)
 		saveSanitizedDataToCtx(ctx, location, field, value)
 		return
@@ -53,22 +62,23 @@ func saveSanitizedDataToCtx(ctx *gin.Context, location, field, value string) {
 	store, ok = data.(SanitizedData)
 
 	if !ok {
-		fmt.Println("sanitization store exists but is wrong type")
+		// fmt.Println("sanitization store exists but is wrong type")
 		createSanitizedDataStore(ctx)
 		saveSanitizedDataToCtx(ctx, location, field, value)
 		return
 	}
 
 	if store == nil {
+		// fmt.Println("sanitization store is nil")
 		store = make(SanitizedData)
 	}
 
-	fmt.Println("Save to sanitization store starting")
+	// fmt.Println("Save to sanitization store starting")
 
 	specificLocationStore, ok := store[location]
 
 	if !ok {
-		fmt.Println("could not get sanitization location, had to set default")
+		// fmt.Println("could not get sanitization location, had to set default")
 		specificLocationStore = make(sanitizedFields)
 		store[location] = specificLocationStore
 	}
@@ -78,6 +88,5 @@ func saveSanitizedDataToCtx(ctx *gin.Context, location, field, value string) {
 	store[location] = specificLocationStore
 
 	ctx.Set(GinValidatorSanitizedDataStore, store)
-
-	fmt.Println("Save to sanitization store ending")
+	// fmt.Println("Save to sanitization store ending")
 }

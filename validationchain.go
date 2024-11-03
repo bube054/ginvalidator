@@ -75,15 +75,14 @@ func (v ValidationChain) Validate() gin.HandlerFunc {
 			rule := ruleCreator(ctx, initialValue, sanitizedValue)
 			vcn := rule.validationChainName
 			valid := rule.isValid
+			newValue := rule.newValue
+			shouldBail := rule.shouldBail
+			shouldSkip := rule.shouldSkip
 
 			if shouldNegateNextValidator {
 				valid = !valid
 				shouldNegateNextValidator = false
 			}
-
-			newValue := rule.newValue
-			shouldBail := rule.shouldBail
-			shouldSkip := rule.shouldSkip
 
 			var errMsg string
 

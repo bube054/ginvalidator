@@ -11,37 +11,36 @@ var (
 	ErrNoMatchedData     = errors.New("no matched data present")
 )
 
-const GinValidatorSanitizedDataStore string = "__ginvalidator__sanitized__data__"
+const GinValidatorCtxMatchedDataStoreName string = "__ginvalidator__matched__data__"
 
-type sanitizedFields map[string]string
-type SanitizedData map[string]sanitizedFields
+type matchedDataFieldValues map[string]string
+type MatchedData map[string]matchedDataFieldValues
 
-func MatchedData(ctx *gin.Context) (SanitizedData, error) {
+func GetMatchedData(ctx *gin.Context) (MatchedData, error) {
 	if ctx == nil {
 		return nil, ErrNilCtxMatchedData
 	}
 
-	data, ok := ctx.Get(GinValidatorSanitizedDataStore)
+	data, ok := ctx.Get(GinValidatorCtxMatchedDataStoreName)
 
 	if !ok {
 		return nil, ErrNoMatchedData
 	}
 
-	var store SanitizedData
-	store, ok = data.(SanitizedData)
+	var store MatchedData
+	store, ok = data.(MatchedData)
 
 	if !ok {
 		return nil, ErrNoMatchedData
 	}
 
-	// fmt.Println("STORE:", store)
 	return store, nil
 }
 
 func createSanitizedDataStore(ctx *gin.Context) {
-	var newStore SanitizedData
+	var newStore MatchedData
 
-	ctx.Set(GinValidatorSanitizedDataStore, newStore)
+	ctx.Set(GinValidatorCtxMatchedDataStoreName, newStore)
 }
 
 func saveSanitizedDataToCtx(ctx *gin.Context, location, field, value string) {
@@ -49,44 +48,36 @@ func saveSanitizedDataToCtx(ctx *gin.Context, location, field, value string) {
 		return
 	}
 
-	data, ok := ctx.Get(GinValidatorSanitizedDataStore)
+	data, ok := ctx.Get(GinValidatorCtxMatchedDataStoreName)
 
 	if !ok {
-		// fmt.Println("sanitization store dne, starting to save errs")
 		createSanitizedDataStore(ctx)
 		saveSanitizedDataToCtx(ctx, location, field, value)
 		return
 	}
 
-	var store SanitizedData
-	store, ok = data.(SanitizedData)
+	var store MatchedData
+	store, ok = data.(MatchedData)
 
 	if !ok {
-		// fmt.Println("sanitization store exists but is wrong type")
 		createSanitizedDataStore(ctx)
 		saveSanitizedDataToCtx(ctx, location, field, value)
 		return
 	}
 
 	if store == nil {
-		// fmt.Println("sanitization store is nil")
-		store = make(SanitizedData)
+		store = make(MatchedData)
 	}
-
-	// fmt.Println("Save to sanitization store starting")
 
 	specificLocationStore, ok := store[location]
 
 	if !ok {
-		// fmt.Println("could not get sanitization location, had to set default")
-		specificLocationStore = make(sanitizedFields)
+		specificLocationStore = make(matchedDataFieldValues)
 		store[location] = specificLocationStore
 	}
 
 	specificLocationStore[field] = value
-
 	store[location] = specificLocationStore
 
-	ctx.Set(GinValidatorSanitizedDataStore, store)
-	// fmt.Println("Save to sanitization store ending")
+	ctx.Set(GinValidatorCtxMatchedDataStoreName, store)
 }

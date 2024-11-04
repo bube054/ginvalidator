@@ -45,7 +45,7 @@ func TestBodyValidationChain(t *testing.T) {
 		customValidatorsChain []gin.HandlerFunc
 		validationResult      []ValidationChainError
 		validationResultErr   error
-		matchedData           SanitizedData
+		matchedData           MatchedData
 		matchedDataErr        error
 	}{
 		// For "application/json"
@@ -58,7 +58,7 @@ func TestBodyValidationChain(t *testing.T) {
 			customValidatorsChain: []gin.HandlerFunc{NewBody("name.first", nil).CreateChain().Ascii().Validate()},
 			validationResult:      []ValidationChainError{},
 			validationResultErr:   nil,
-			matchedData:           SanitizedData{"body": sanitizedFields{"name.first": "Tom"}},
+			matchedData:           MatchedData{"body": matchedDataFieldValues{"name.first": "Tom"}},
 			matchedDataErr:        nil,
 		},
 		// {
@@ -70,7 +70,7 @@ func TestBodyValidationChain(t *testing.T) {
 		// 	customValidatorsChain: NewBody("name.first", nil).CreateChain().Not().Validate(),
 		// 	validationResult:      []ValidationChainError{},
 		// 	validationResultErr:   nil,
-		// 	matchedData:           SanitizedData{},
+		// 	matchedData:           MatchedData{},
 		// 	matchedDataErr:        nil,
 		// },
 		// {
@@ -82,7 +82,7 @@ func TestBodyValidationChain(t *testing.T) {
 		// 	customValidatorsChain: NewBody("name.first", nil).CreateChain().ToInt().Validate(),
 		// 	validationResult:      []ValidationChainError{},
 		// 	validationResultErr:   nil,
-		// 	matchedData:           SanitizedData{},
+		// 	matchedData:           MatchedData{},
 		// 	matchedDataErr:        nil,
 		// },
 		// For "application/x-www-form-urlencoded
@@ -108,7 +108,7 @@ func TestBodyValidationChain(t *testing.T) {
 					}
 				}
 
-				matchedData, err := MatchedData(ctx)
+				matchedData, err := GetMatchedData(ctx)
 
 				if test.matchedDataErr != nil {
 					if !errors.Is(test.matchedDataErr, err) {

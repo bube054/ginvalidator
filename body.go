@@ -17,8 +17,10 @@ func (b Body) CreateChain() ValidationChain {
 // Returns a [Body] object that can be used to create validation chains.
 //
 // Parameters:
-//   - field: the name of the field to validate.
+//   - field: the name of the field to validate. It uses [gjson] for its json field extraction syntax.
 //   - errFmtFunc: a handler for formatting error messages.
+//
+// [gjson]: https://github.com/tidwall/gjson?tab=readme-ov-file#path-syntax
 func NewBody(field string, errFmtFunc *ErrFmtFuncHandler) Body {
 	return Body{
 		field:      field,

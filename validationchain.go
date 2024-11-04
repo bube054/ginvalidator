@@ -56,7 +56,7 @@ func (v ValidationChain) Validate() gin.HandlerFunc {
 		}
 
 		if extractionErr != nil {
-			panic(fmt.Errorf("for request location: %s, could not extract field: %s", reqLoc.string(), field))
+			panic(fmt.Errorf("for request location: %q, could not extract field: %q", reqLoc.string(), field))
 		}
 
 		ruleCreators := v.validator.rulesCreatorFuncs
@@ -140,7 +140,7 @@ func (v ValidationChain) Validate() gin.HandlerFunc {
 			}
 		}
 
-		saveErrorsToCtx(ctx, valErrs)
+		saveValidationErrorsToCtx(ctx, valErrs)
 		saveSanitizedDataToCtx(ctx, location, field, sanitizedValue)
 
 		ctx.Next()

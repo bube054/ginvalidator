@@ -1,5 +1,0 @@
-package ginvalidator
-
-func xyx() {
-
-}

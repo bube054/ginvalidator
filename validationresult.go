@@ -1,34 +1,39 @@
 package ginvalidator
 
 import (
-	"fmt"
+	"errors"
 
 	"github.com/gin-gonic/gin"
 )
 
-const GinValidatorCtxStoreName string = "__ginvalidator__ctx__errors__"
+var (
+	ErrNilCtxValidationResult     = errors.New("nil ctx result")
+	ErrNoValidationResult         = errors.New("can not get validation result")
+)
 
-type fieldErrsMap map[string][]ValidationChainError
-type storeErrsMap map[string]fieldErrsMap
+// GinValidatorCtxErrorsStoreName is the key, where the validation errors are stored.
+const GinValidatorCtxErrorsStoreName string = "__ginvalidator__ctx__errors__"
 
+type ctxFieldErrs map[string][]ValidationChainError
+type ctxStoreErrs map[string]ctxFieldErrs
+
+// ValidationResult extracts the validation errors from gin's ctx.
 func ValidationResult(ctx *gin.Context) ([]ValidationChainError, error) {
 	if ctx == nil {
-		return nil, nil
+		return nil, ErrNilCtxValidationResult
 	}
 
-	data, ok := ctx.Get(GinValidatorCtxStoreName)
+	data, ok := ctx.Get(GinValidatorCtxErrorsStoreName)
 
 	if !ok {
-		fmt.Println("store dne")
-		return nil, nil
+		return nil, ErrNoValidationResult
 	}
 
-	var store storeErrsMap
-	store, ok = data.(storeErrsMap)
+	var store ctxStoreErrs
+	store, ok = data.(ctxStoreErrs)
 
 	if !ok {
-		fmt.Println("store exists but is wrong type")
-		return nil, nil
+		return nil, ErrNoValidationResult
 	}
 
 	var allErrs []ValidationChainError
@@ -39,43 +44,42 @@ func ValidationResult(ctx *gin.Context) ([]ValidationChainError, error) {
 		}
 	}
 
-	createErrNewStore(ctx)
+	// createErrNewStore(ctx)
 
 	return allErrs, nil
 }
 
 func createErrNewStore(ctx *gin.Context) {
-	var newStore storeErrsMap
+	var newStore ctxStoreErrs
 
-	ctx.Set(GinValidatorCtxStoreName, newStore)
+	ctx.Set(GinValidatorCtxErrorsStoreName, newStore)
 }
 
-func saveErrorsToCtx(ctx *gin.Context, errs []ValidationChainError) {
+func saveValidationErrorsToCtx(ctx *gin.Context, errs []ValidationChainError) {
 	if ctx == nil {
 		return
 	}
 
-	data, ok := ctx.Get(GinValidatorCtxStoreName)
+	data, ok := ctx.Get(GinValidatorCtxErrorsStoreName)
 
 	if !ok {
-		fmt.Println("store dne, starting to save errs")
 		createErrNewStore(ctx)
-		saveErrorsToCtx(ctx, errs)
+		saveValidationErrorsToCtx(ctx, errs)
 		return
 	}
 
-	var store storeErrsMap
-	store, ok = data.(storeErrsMap)
+	var store ctxStoreErrs
+	store, ok = data.(ctxStoreErrs)
 
 	if !ok {
-		fmt.Println("store exists but is wrong type")
+		// fmt.Println("store exists but is wrong type")
 		createErrNewStore(ctx)
-		saveErrorsToCtx(ctx, errs)
+		saveValidationErrorsToCtx(ctx, errs)
 		return
 	}
 
 	if store == nil {
-		store = make(storeErrsMap)
+		store = make(ctxStoreErrs)
 	}
 
 	for _, err := range errs {
@@ -85,15 +89,15 @@ func saveErrorsToCtx(ctx *gin.Context, errs []ValidationChainError) {
 		specificLocationStore, ok := store[location]
 
 		if !ok {
-			fmt.Println("could not get location, had to set default")
-			specificLocationStore = make(fieldErrsMap)
+			// fmt.Println("could not get location, had to set default")
+			specificLocationStore = make(ctxFieldErrs)
 			store[location] = specificLocationStore
 		}
 
 		currentErrs, ok := specificLocationStore[field]
 
 		if !ok {
-			fmt.Println("could not get errors, had to set default")
+			// fmt.Println("could not get errors, had to set default")
 			currentErrs = make([]ValidationChainError, 0)
 			specificLocationStore[field] = currentErrs
 		}
@@ -104,8 +108,8 @@ func saveErrorsToCtx(ctx *gin.Context, errs []ValidationChainError) {
 
 		store[location] = specificLocationStore
 
-		fmt.Println("Save to store starting")
-		ctx.Set(GinValidatorCtxStoreName, store)
-		fmt.Println("Save to store ending")
+		// fmt.Println("Save to store starting")
+		ctx.Set(GinValidatorCtxErrorsStoreName, store)
+		// fmt.Println("Save to store ending")
 	}
 }

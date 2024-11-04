@@ -2,14 +2,13 @@ package ginvalidator
 
 import (
 	"errors"
-	// "fmt"
 
 	"github.com/gin-gonic/gin"
 )
 
 var (
-	ErrCannotGetMatchedValuesNilContextProvided      = errors.New("cannot get matched data: nil context provided")
-	ErrNoSanitizedData = errors.New("no matched data present")
+	ErrNilCtxMatchedData = errors.New("cannot get matched data: nil context provided")
+	ErrNoMatchedData     = errors.New("no matched data present")
 )
 
 const GinValidatorSanitizedDataStore string = "__ginvalidator__sanitized__data__"
@@ -19,22 +18,23 @@ type SanitizedData map[string]sanitizedFields
 
 func MatchedData(ctx *gin.Context) (SanitizedData, error) {
 	if ctx == nil {
-		return nil, ErrCannotGetMatchedValuesNilContextProvided
+		return nil, ErrNilCtxMatchedData
 	}
 
 	data, ok := ctx.Get(GinValidatorSanitizedDataStore)
 
 	if !ok {
-		return nil, ErrNoSanitizedData
+		return nil, ErrNoMatchedData
 	}
 
 	var store SanitizedData
 	store, ok = data.(SanitizedData)
 
 	if !ok {
-		return nil, ErrNoSanitizedData
+		return nil, ErrNoMatchedData
 	}
 
+	// fmt.Println("STORE:", store)
 	return store, nil
 }
 

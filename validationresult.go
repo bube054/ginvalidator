@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	ErrNilCtxValidationResult     = errors.New("nil ctx result")
+	ErrNilCtxValidationResult     = errors.New("nil ctx provided can not extract validation result")
 	ErrNoValidationResult         = errors.New("can not get validation result")
 )
 

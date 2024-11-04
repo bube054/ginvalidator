@@ -63,6 +63,15 @@ func createTestGinCtx(opts ginCtxReqOpts) *gin.Context {
 	return ctx
 }
 
+func setupRouter() *gin.Engine {
+	gin.SetMode(gin.TestMode)
+	r := gin.Default()
+	r.GET("/ping", func(c *gin.Context) {
+		c.String(200, "pong")
+	})
+	return r
+}
+
 func TestExtractFieldValFromBody(t *testing.T) {
 	tests := []struct {
 		name  string

@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	ErrNilCtxMatchedData = errors.New("cannot get matched data: nil context provided")
+	ErrNilCtxMatchedData = errors.New("nil ctx provided can not extract matched data")
 	ErrNoMatchedData     = errors.New("no matched data present")
 )
 

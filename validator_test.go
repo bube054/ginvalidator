@@ -54,7 +54,7 @@ func TestCustomValidator(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			body := NewBody(test.field, test.errFmtFunc)
-			chain := body.CreateChain()
+			chain := body.Chain()
 
 			vc := chain.CustomValidator(test.cvf)
 			vcrs := vc.validator.rulesCreatorFuncs
@@ -94,9 +94,9 @@ func TestContains(t *testing.T) {
 			name:       "Creates a Contains validator chain rule. Returns true.",
 			field:      "text",
 			errFmtFunc: nil,
-			seed: "world",
-			opts:  &vgo.ContainsOpt{},
-			reqOpts: ginCtxReqOpts{body: `{"text": "Hello world"}`, contentType: "application/json"},
+			seed:       "world",
+			opts:       &vgo.ContainsOpt{},
+			reqOpts:    ginCtxReqOpts{body: `{"text": "Hello world"}`, contentType: "application/json"},
 			want: NewValidationChainRule(
 				withIsValid(true),
 				withNewValue("Hello world"),
@@ -109,7 +109,7 @@ func TestContains(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			body := NewBody(test.field, test.errFmtFunc)
-			chain := body.CreateChain()
+			chain := body.Chain()
 
 			vc := chain.Contains(test.seed, test.opts)
 			vcrs := vc.validator.rulesCreatorFuncs

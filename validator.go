@@ -265,6 +265,27 @@ func (v validator) After(opts *vgo.IsAfterOpts) ValidationChain {
 	return v.recreateValidationChainFromValidator(ruleCreator)
 }
 
+// Alpha is a validator that checks if the string contains only letters (a-zA-Z).
+//
+// This function uses the [IsAlpha] from [validatorgo] package to perform the validation logic.
+//
+// [validatorgo]: https://pkg.go.dev/github.com/bube054
+// [IsAlpha]: https://pkg.go.dev/github.com/bube054/validatorgo#IsAlpha
+func (v validator) Alpha(opts *vgo.IsAlphaOpts) ValidationChain {
+	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
+		isValid := vgo.IsAlpha(sanitizedValue, opts)
+
+		return NewValidationChainRule(
+			withIsValid(isValid),
+			withNewValue(sanitizedValue),
+			withValidationChainName(AlphaValidatorName),
+			withValidationChainType(validatorType),
+		)
+	}
+
+	return v.recreateValidationChainFromValidator(ruleCreator)
+}
+
 // Alphanumeric is a validator that checks if the string contains only letters and numbers (a-zA-Z0-9).
 //
 // This function uses the [IsAlphanumeric] from [validatorgo] package to perform the validation logic.

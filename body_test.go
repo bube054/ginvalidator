@@ -43,36 +43,36 @@ func TestBodyValidationChain(t *testing.T) {
 		matchedDataErr        error
 	}{
 		// For "application/json"
-		// {
-		// 	name:        "Test Validator(pass).",
-		// 	method:      "POST",
-		// 	url:         "/test",
-		// 	body:        body,
-		// 	contentType: "application/json",
-		// 	customValidatorsChain: []gin.HandlerFunc{
-		// 		NewBody("name.first", nil).CreateChain().Ascii().Validate(),
-		// 	},
-		// 	validationResult:    []ValidationChainError{},
-		// 	validationResultErr: nil,
-		// 	matchedData:         MatchedData{"body": matchedDataFieldValues{"name.first": "Tom"}},
-		// 	matchedDataErr:      nil,
-		// },
-		// {
-		// 	name:        "Test Validator(fail).",
-		// 	method:      "POST",
-		// 	url:         "/test",
-		// 	body:        body,
-		// 	contentType: "application/json",
-		// 	customValidatorsChain: []gin.HandlerFunc{
-		// 		NewBody("name.first", nil).CreateChain().Numeric(nil).Validate(),
-		// 	},
-		// 	validationResult: []ValidationChainError{
-		// 		{Location: "body", Msg: defaultValidationChainErrorMessage, Field: "name.first", Value: "Tom"},
-		// 	},
-		// 	validationResultErr: nil,
-		// 	matchedData:         MatchedData{"body": matchedDataFieldValues{"name.first": "Tom"}},
-		// 	matchedDataErr:      nil,
-		// },
+		{
+			name:        "Test Validator(pass).",
+			method:      "POST",
+			url:         "/test",
+			body:        body,
+			contentType: "application/json",
+			customValidatorsChain: []gin.HandlerFunc{
+				NewBody("name.first", nil).Chain().Ascii().Validate(),
+			},
+			validationResult:    []ValidationChainError{},
+			validationResultErr: nil,
+			matchedData:         MatchedData{"body": matchedDataFieldValues{"name.first": "Tom"}},
+			matchedDataErr:      nil,
+		},
+		{
+			name:        "Test Validator(fail).",
+			method:      "POST",
+			url:         "/test",
+			body:        body,
+			contentType: "application/json",
+			customValidatorsChain: []gin.HandlerFunc{
+				NewBody("name.first", nil).Chain().Numeric(nil).Validate(),
+			},
+			validationResult: []ValidationChainError{
+				{Location: "body", Msg: defaultValChainErrMsg, Field: "name.first", Value: "Tom"},
+			},
+			validationResultErr: nil,
+			matchedData:         MatchedData{"body": matchedDataFieldValues{"name.first": "Tom"}},
+			matchedDataErr:      nil,
+		},
 		{
 			name:        "Test Custom Validator(pass).",
 			method:      "POST",
@@ -80,17 +80,12 @@ func TestBodyValidationChain(t *testing.T) {
 			body:        body,
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
-				NewBody("name.first", nil).CreateChain().CustomValidator(
+				NewBody("name.first", nil).Chain().CustomValidator(
 					func(req http.Request, initialValue, sanitizedValue string) bool {
 						data, err := io.ReadAll(req.Body)
 						if err != nil {
 							panic(fmt.Errorf("Custom validator could not read req body err: %w", err))
 						}
-
-						fmt.Println("data:", string(data))
-						// fmt.Println("data1", req.Host)
-						// fmt.Printf("%+v \n", req)
-						// fmt.Println(req.G)
 
 						if string(data) != body {
 							panic(fmt.Errorf("Custom validator req bodies do not match body: %s", data))
@@ -113,36 +108,213 @@ func TestBodyValidationChain(t *testing.T) {
 			matchedData:         MatchedData{"body": matchedDataFieldValues{"name.first": "Tom"}},
 			matchedDataErr:      nil,
 		},
-		// {
-		// 	name:        "Test Validator(fail).",
-		// 	method:      "POST",
-		// 	url:         "/test",
-		// 	body:        body,
-		// 	contentType: "application/json",
-		// 	customValidatorsChain: []gin.HandlerFunc{
-		// 		NewBody("name.first", nil).CreateChain().Numeric(nil).Validate(),
-		// 	},
-		// 	validationResult: []ValidationChainError{
-		// 		{Location: "body", Msg: defaultValidationChainErrorMessage, Field: "name.first", Value: "Tom"},
-		// 	},
-		// 	validationResultErr: nil,
-		// 	matchedData:         MatchedData{"body": matchedDataFieldValues{"name.first": "Tom"}},
-		// 	matchedDataErr:      nil,
-		// },
-		// {
-		// 	name:        "Test Sanitizer.",
-		// 	method:      "POST",
-		// 	url:         "/test",
-		// 	body:        body,
-		// 	contentType: "application/json",
-		// 	customValidatorsChain: []gin.HandlerFunc{
-		// 		NewBody("name.last", nil).CreateChain().Whitelist("a-z").Validate(),
-		// 	},
-		// 	validationResult:    []ValidationChainError{},
-		// 	validationResultErr: nil,
-		// 	matchedData:         MatchedData{"body": matchedDataFieldValues{"name.last": "nderson"}},
-		// 	matchedDataErr:      nil,
-		// },
+		{
+			name:        "Test Custom Validator(fail).",
+			method:      "POST",
+			url:         "/test",
+			body:        body,
+			contentType: "application/json",
+			customValidatorsChain: []gin.HandlerFunc{
+				NewBody("name.first", nil).Chain().CustomValidator(
+					func(req http.Request, initialValue, sanitizedValue string) bool {
+						data, err := io.ReadAll(req.Body)
+						if err != nil {
+							panic(fmt.Errorf("Custom validator could not read req body err: %w", err))
+						}
+
+						if string(data) != body {
+							panic(fmt.Errorf("Custom validator req bodies do not match body: %s", data))
+						}
+
+						if initialValue != "Tom" {
+							panic(fmt.Errorf("Custom validator initial value is invalid value: %s", initialValue))
+						}
+
+						if sanitizedValue != "Tom" {
+							panic(fmt.Errorf("Custom validator sanitized value is invalid value: %s", sanitizedValue))
+						}
+
+						return false
+					},
+				).Validate(),
+			},
+			validationResult: []ValidationChainError{
+				{Location: "body", Msg: defaultValChainErrMsg, Field: "name.first", Value: "Tom"},
+			},
+			validationResultErr: nil,
+			matchedData:         MatchedData{"body": matchedDataFieldValues{"name.first": "Tom"}},
+			matchedDataErr:      nil,
+		},
+		{
+			name:        "Test Sanitizer.",
+			method:      "POST",
+			url:         "/test",
+			body:        body,
+			contentType: "application/json",
+			customValidatorsChain: []gin.HandlerFunc{
+				NewBody("name.last", nil).Chain().Whitelist("a-z").Validate(),
+			},
+			validationResult:    []ValidationChainError{},
+			validationResultErr: nil,
+			matchedData:         MatchedData{"body": matchedDataFieldValues{"name.last": "nderson"}},
+			matchedDataErr:      nil,
+		},
+		{
+			name:        "Test Custom Sanitizer.",
+			method:      "POST",
+			url:         "/test",
+			body:        body,
+			contentType: "application/json",
+			customValidatorsChain: []gin.HandlerFunc{
+				NewBody("name.last", nil).Chain().CustomSanitizer(
+					func(req http.Request, initialValue, sanitizedValue string) string {
+						data, err := io.ReadAll(req.Body)
+						if err != nil {
+							panic(fmt.Errorf("Custom Sanitizer could not read req body err: %w", err))
+						}
+
+						if string(data) != body {
+							panic(fmt.Errorf("Custom Sanitizer req bodies do not match body: %s", data))
+						}
+
+						if initialValue != "Anderson" {
+							panic(fmt.Errorf("Custom Sanitizer initial value is invalid value: %s", initialValue))
+						}
+
+						if sanitizedValue != "Anderson" {
+							panic(fmt.Errorf("Custom Sanitizer sanitized value is invalid value: %s", sanitizedValue))
+						}
+
+						return "custom-sanitizer"
+					},
+				).Validate(),
+			},
+			validationResult:    []ValidationChainError{},
+			validationResultErr: nil,
+			matchedData:         MatchedData{"body": matchedDataFieldValues{"name.last": "custom-sanitizer"}},
+			matchedDataErr:      nil,
+		},
+		{
+			name:        "Test Modifier(bail).",
+			method:      "POST",
+			url:         "/test",
+			body:        body,
+			contentType: "application/json",
+			customValidatorsChain: []gin.HandlerFunc{
+				NewBody("message", nil).Chain().Alpha(nil).Bail().LowerCase().Validate(),
+			},
+			validationResult: []ValidationChainError{
+				{Location: "body", Msg: defaultValChainErrMsg, Field: "message", Value: "A good saying is 7 comes after ate."},
+			},
+			validationResultErr: nil,
+			matchedData:         MatchedData{"body": matchedDataFieldValues{"message": "A good saying is 7 comes after ate."}},
+			matchedDataErr:      nil,
+		},
+		{
+			name:        "Test Modifier(if/bail).",
+			method:      "POST",
+			url:         "/test",
+			body:        body,
+			contentType: "application/json",
+			customValidatorsChain: []gin.HandlerFunc{
+				NewBody("message", nil).Chain().Alpha(nil).If(
+					func(req http.Request, initialValue, sanitizedValue string) bool {
+						data, err := io.ReadAll(req.Body)
+						if err != nil {
+							panic(fmt.Errorf("If modifier could not read req body err: %w", err))
+						}
+
+						if string(data) != body {
+							panic(fmt.Errorf("If modifier req bodies do not match body: %s", data))
+						}
+
+						if initialValue != "A good saying is 7 comes after ate." {
+							panic(fmt.Errorf("If modifier initial value is invalid value: %s", initialValue))
+						}
+
+						if sanitizedValue != "A good saying is 7 comes after ate." {
+							panic(fmt.Errorf("If modifier sanitized value is invalid value: %s", sanitizedValue))
+						}
+
+						return true
+					},
+				).LowerCase().Validate(),
+			},
+			validationResult: []ValidationChainError{
+				{Location: "body", Msg: defaultValChainErrMsg, Field: "message", Value: "A good saying is 7 comes after ate."},
+			},
+			validationResultErr: nil,
+			matchedData:         MatchedData{"body": matchedDataFieldValues{"message": "A good saying is 7 comes after ate."}},
+			matchedDataErr:      nil,
+		},
+		{
+			name:        "Test Modifier(if/proceed).",
+			method:      "POST",
+			url:         "/test",
+			body:        body,
+			contentType: "application/json",
+			customValidatorsChain: []gin.HandlerFunc{
+				NewBody("message", nil).Chain().Alpha(nil).If(
+					func(req http.Request, initialValue, sanitizedValue string) bool {
+						data, err := io.ReadAll(req.Body)
+						if err != nil {
+							panic(fmt.Errorf("If modifier could not read req body err: %w", err))
+						}
+
+						if string(data) != body {
+							panic(fmt.Errorf("If modifier req bodies do not match body: %s", data))
+						}
+
+						if initialValue != "A good saying is 7 comes after ate." {
+							panic(fmt.Errorf("If modifier initial value is invalid value: %s", initialValue))
+						}
+
+						if sanitizedValue != "A good saying is 7 comes after ate." {
+							panic(fmt.Errorf("If modifier sanitized value is invalid value: %s", sanitizedValue))
+						}
+
+						return false
+					},
+				).LowerCase().Validate(),
+			},
+			validationResult: []ValidationChainError{
+				{Location: "body", Msg: defaultValChainErrMsg, Field: "message", Value: "A good saying is 7 comes after ate."},
+				{Location: "body", Msg: defaultValChainErrMsg, Field: "message", Value: "A good saying is 7 comes after ate."},
+			},
+			validationResultErr: nil,
+			matchedData:         MatchedData{"body": matchedDataFieldValues{"message": "A good saying is 7 comes after ate."}},
+			matchedDataErr:      nil,
+		},
+		{
+			name:        "Test Not(false -> true).",
+			method:      "POST",
+			url:         "/test",
+			body:        body,
+			contentType: "application/json",
+			customValidatorsChain: []gin.HandlerFunc{
+				NewBody("age", nil).Chain().Not().Alpha(nil).Validate(),
+			},
+			validationResult:    []ValidationChainError{},
+			validationResultErr: nil,
+			matchedData:         MatchedData{"body": matchedDataFieldValues{"age": "37"}},
+			matchedDataErr:      nil,
+		},
+		{
+			name:        "Test Not(true -> false).",
+			method:      "POST",
+			url:         "/test",
+			body:        body,
+			contentType: "application/json",
+			customValidatorsChain: []gin.HandlerFunc{
+				NewBody("age", nil).Chain().Not().Numeric(nil).Validate(),
+			},
+			validationResult: []ValidationChainError{
+				{Location: "body", Msg: defaultValChainErrMsg, Field: "age", Value: "37"},
+			},
+			validationResultErr: nil,
+			matchedData:         MatchedData{"body": matchedDataFieldValues{"age": "37"}},
+			matchedDataErr:      nil,
+		},
 		// For "application/x-www-form-urlencoded
 		// For "multipart/form-data"
 	}
@@ -206,7 +378,7 @@ func TestBodyValidationChain(t *testing.T) {
 // 	body := NewBody("message", nil)
 // 	router.GET("/body",
 // 		body.
-// 			CreateChain().
+// 			Chain().
 // 			Contains("errors", nil).
 // 			Blacklist("0-9").
 // 			Alphanumeric(nil).

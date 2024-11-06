@@ -33,7 +33,7 @@ func TestBail(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			body := NewBody(test.field, test.errFmtFunc)
-			chain := body.CreateChain()
+			chain := body.Chain()
 
 			vc := chain.Bail()
 			vcrs := vc.validator.rulesCreatorFuncs
@@ -104,7 +104,7 @@ func TestIf(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			body := NewBody(test.field, test.errFmtFunc)
-			chain := body.CreateChain()
+			chain := body.Chain()
 
 			vc := chain.If(test.imf)
 			vcrs := vc.validator.rulesCreatorFuncs
@@ -155,7 +155,7 @@ func TestNot(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			body := NewBody(test.field, test.errFmtFunc)
-			chain := body.CreateChain()
+			chain := body.Chain()
 
 			vc := chain.Not()
 			vcrs := vc.validator.rulesCreatorFuncs
@@ -228,7 +228,7 @@ func TestSkip(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			body := NewBody(test.field, test.errFmtFunc)
-			chain := body.CreateChain()
+			chain := body.Chain()
 
 			vc := chain.Skip(test.smf)
 			vcrs := vc.validator.rulesCreatorFuncs

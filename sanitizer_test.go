@@ -54,7 +54,7 @@ func TestCustomSanitizer(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			body := NewBody(test.field, test.errFmtFunc)
-			chain := body.CreateChain()
+			chain := body.Chain()
 
 			vc := chain.CustomSanitizer(test.csf)
 			vcrs := vc.validator.rulesCreatorFuncs
@@ -119,7 +119,7 @@ func TestBlacklist(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			body := NewBody(test.field, test.errFmtFunc)
-			chain := body.CreateChain()
+			chain := body.Chain()
 
 			vc := chain.Blacklist(test.blacklistedChars)
 			vcrs := vc.validator.rulesCreatorFuncs
@@ -169,7 +169,7 @@ func TestEscape(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			body := NewBody(test.field, test.errFmtFunc)
-			chain := body.CreateChain()
+			chain := body.Chain()
 
 			vc := chain.Escape()
 			vcrs := vc.validator.rulesCreatorFuncs
@@ -234,7 +234,7 @@ func TestLTrim(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			body := NewBody(test.field, test.errFmtFunc)
-			chain := body.CreateChain()
+			chain := body.Chain()
 
 			vc := chain.LTrim(test.chars)
 			vcrs := vc.validator.rulesCreatorFuncs
@@ -286,7 +286,7 @@ func TestNormalizeEmail(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			body := NewBody(test.field, test.errFmtFunc)
-			chain := body.CreateChain()
+			chain := body.Chain()
 
 			vc := chain.NormalizeEmail(test.opts)
 			vcrs := vc.validator.rulesCreatorFuncs
@@ -351,7 +351,7 @@ func TestRTrim(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			body := NewBody(test.field, test.errFmtFunc)
-			chain := body.CreateChain()
+			chain := body.Chain()
 
 			vc := chain.RTrim(test.chars)
 			vcrs := vc.validator.rulesCreatorFuncs
@@ -416,7 +416,7 @@ func TestStripLow(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			body := NewBody(test.field, test.errFmtFunc)
-			chain := body.CreateChain()
+			chain := body.Chain()
 
 			vc := chain.StripLow(test.keepNewLines)
 			vcrs := vc.validator.rulesCreatorFuncs
@@ -445,17 +445,17 @@ func TestToBoolean(t *testing.T) {
 		field      string
 		errFmtFunc ErrFmtFuncHandler
 
-		strict bool
-		reqOpts      ginCtxReqOpts
+		strict  bool
+		reqOpts ginCtxReqOpts
 
 		want validationChainRule
 	}{
 		{
-			name:         "Creates a Toboolean sanitizer chain rule.",
-			field:        "name",
-			errFmtFunc:   nil,
-			strict: false,
-			reqOpts:      ginCtxReqOpts{body: `{"name": "true"}`, contentType: "application/json"},
+			name:       "Creates a Toboolean sanitizer chain rule.",
+			field:      "name",
+			errFmtFunc: nil,
+			strict:     false,
+			reqOpts:    ginCtxReqOpts{body: `{"name": "true"}`, contentType: "application/json"},
 			want: NewValidationChainRule(
 				withIsValid(true),
 				withNewValue("true"),
@@ -464,11 +464,11 @@ func TestToBoolean(t *testing.T) {
 			),
 		},
 		{
-			name:         "Creates a Toboolean sanitizer chain rule.",
-			field:        "name",
-			errFmtFunc:   nil,
-			strict: true,
-			reqOpts:      ginCtxReqOpts{body: `{"name": "false"}`, contentType: "application/json"},
+			name:       "Creates a Toboolean sanitizer chain rule.",
+			field:      "name",
+			errFmtFunc: nil,
+			strict:     true,
+			reqOpts:    ginCtxReqOpts{body: `{"name": "false"}`, contentType: "application/json"},
 			want: NewValidationChainRule(
 				withIsValid(true),
 				withNewValue("false"),
@@ -481,7 +481,7 @@ func TestToBoolean(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			body := NewBody(test.field, test.errFmtFunc)
-			chain := body.CreateChain()
+			chain := body.Chain()
 
 			vc := chain.ToBoolean(test.strict)
 			vcrs := vc.validator.rulesCreatorFuncs
@@ -531,7 +531,7 @@ func TestToDate(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			body := NewBody(test.field, test.errFmtFunc)
-			chain := body.CreateChain()
+			chain := body.Chain()
 
 			vc := chain.ToDate()
 			vcrs := vc.validator.rulesCreatorFuncs
@@ -581,7 +581,7 @@ func TestToFloat(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			body := NewBody(test.field, test.errFmtFunc)
-			chain := body.CreateChain()
+			chain := body.Chain()
 
 			vc := chain.ToFloat()
 			vcrs := vc.validator.rulesCreatorFuncs
@@ -631,7 +631,7 @@ func TestToInt(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			body := NewBody(test.field, test.errFmtFunc)
-			chain := body.CreateChain()
+			chain := body.Chain()
 
 			vc := chain.ToInt()
 			vcrs := vc.validator.rulesCreatorFuncs
@@ -696,7 +696,7 @@ func TestTrim(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			body := NewBody(test.field, test.errFmtFunc)
-			chain := body.CreateChain()
+			chain := body.Chain()
 
 			vc := chain.Trim(test.chars)
 			vcrs := vc.validator.rulesCreatorFuncs
@@ -746,7 +746,7 @@ func TestUnescape(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			body := NewBody(test.field, test.errFmtFunc)
-			chain := body.CreateChain()
+			chain := body.Chain()
 
 			vc := chain.Unescape()
 			vcrs := vc.validator.rulesCreatorFuncs
@@ -811,7 +811,7 @@ func TestWhitelist(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			body := NewBody(test.field, test.errFmtFunc)
-			chain := body.CreateChain()
+			chain := body.Chain()
 
 			vc := chain.Whitelist(test.whitelistedChars)
 			vcrs := vc.validator.rulesCreatorFuncs

@@ -10,7 +10,7 @@ func TestBail(t *testing.T) {
 		name string
 
 		field      string
-		errFmtFunc *ErrFmtFuncHandler
+		errFmtFunc ErrFmtFuncHandler
 
 		reqOpts ginCtxReqOpts
 
@@ -61,7 +61,7 @@ func TestIf(t *testing.T) {
 
 		imf        IfModifierFunc
 		field      string
-		errFmtFunc *ErrFmtFuncHandler
+		errFmtFunc ErrFmtFuncHandler
 
 		reqOpts ginCtxReqOpts
 
@@ -131,7 +131,7 @@ func TestNot(t *testing.T) {
 		name string
 
 		field      string
-		errFmtFunc *ErrFmtFuncHandler
+		errFmtFunc ErrFmtFuncHandler
 
 		reqOpts ginCtxReqOpts
 
@@ -183,7 +183,7 @@ func TestSkip(t *testing.T) {
 
 		smf        SkipModifierFunc
 		field      string
-		errFmtFunc *ErrFmtFuncHandler
+		errFmtFunc ErrFmtFuncHandler
 
 		reqOpts ginCtxReqOpts
 

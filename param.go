@@ -3,7 +3,7 @@ package ginvalidator
 // Param is used to validate data from the `http.Request` params.
 type Param struct {
 	field      string             // the field to be specified
-	errFmtFunc *ErrFmtFuncHandler // the function to create the error message
+	errFmtFunc ErrFmtFuncHandler // the function to create the error message
 }
 
 // CreateChain initializes a validation chain for the given body field.
@@ -19,7 +19,7 @@ func (p Param) CreateChain() ValidationChain {
 // Parameters:
 //   - field: the name of the field to validate.
 //   - errFmtFunc: a handler for formatting error messages.
-func NewParam(field string, errFmtFunc *ErrFmtFuncHandler) Param {
+func NewParam(field string, errFmtFunc ErrFmtFuncHandler) Param {
 	return Param{
 		field:      field,
 		errFmtFunc: errFmtFunc,

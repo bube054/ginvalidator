@@ -3,7 +3,7 @@ package ginvalidator
 // Query is used to validate data from the `http.Request` queries.
 type Query struct {
 	field      string             // the field to be specified
-	errFmtFunc *ErrFmtFuncHandler // the function to create the error message
+	errFmtFunc ErrFmtFuncHandler // the function to create the error message
 }
 
 // CreateChain initializes a validation chain for the given body field.
@@ -19,7 +19,7 @@ func (q Query) CreateChain() ValidationChain {
 // Parameters:
 //   - field: the name of the field to validate.
 //   - errFmtFunc: a handler for formatting error messages.
-func NewQuery(field string, errFmtFunc *ErrFmtFuncHandler) Query {
+func NewQuery(field string, errFmtFunc ErrFmtFuncHandler) Query {
 	return Query{
 		field:      field,
 		errFmtFunc: errFmtFunc,

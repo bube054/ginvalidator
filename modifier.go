@@ -16,7 +16,7 @@ const (
 // A modifier is simply a piece of the validation chain that can manipulate the whole validation chain.
 type modifier struct {
 	field      string             // the field to be specified
-	errFmtFunc *ErrFmtFuncHandler // the function to create the error message
+	errFmtFunc ErrFmtFuncHandler // the function to create the error message
 
 	reqLoc            requestLocation  // the HTTP request location (e.g., body, headers, cookies, params, or queries)
 	rulesCreatorFuncs ruleCreatorFuncs // the list of functions that creates the validation rules.
@@ -156,7 +156,7 @@ func (m modifier) Skip(smf SkipModifierFunc) ValidationChain {
 //   - field: The field to validate from the HTTP request data location (e.g., body, headers, cookies, params, or queries).
 //   - errFmtFunc: A function that returns a custom error message. If nil, a generic error message will be used.
 //   - reqLoc: The location in the HTTP request from where the field is extracted (e.g., body, headers, cookies, params, or queries).
-func newModifier(field string, errFmtFunc *ErrFmtFuncHandler, reqLoc requestLocation) modifier {
+func newModifier(field string, errFmtFunc ErrFmtFuncHandler, reqLoc requestLocation) modifier {
 	return modifier{
 		field:      field,
 		errFmtFunc: errFmtFunc,

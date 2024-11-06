@@ -2,13 +2,14 @@ package ginvalidator
 
 import "github.com/gin-gonic/gin"
 
+// A validationChainRule is a rule that will control the the final flow in the validate function.
 type validationChainRule struct {
-	isValid             bool
-	newValue            string
-	validationChainName string
-	validationChainType validationChainType
-	shouldBail          bool
-	shouldSkip          bool
+	isValid             bool                // the values validity
+	newValue            string              // the new sanitized value to be forwarded to the new rule creator func
+	validationChainName string              // the name of the validator
+	validationChainType validationChainType // the type of chain
+	shouldBail          bool                // whether to  end the validation cahin
+	shouldSkip          bool                // whether to skip a chain
 }
 
 func NewValidationChainRule(opts ...func(*validationChainRule)) validationChainRule {

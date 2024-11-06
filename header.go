@@ -3,7 +3,7 @@ package ginvalidator
 // Header is used to validate data from the `http.Request` headers.
 type Header struct {
 	field      string             // the field to be specified
-	errFmtFunc *ErrFmtFuncHandler // the function to create the error message
+	errFmtFunc ErrFmtFuncHandler // the function to create the error message
 }
 
 // CreateChain initializes a validation chain for the given body field.
@@ -19,7 +19,7 @@ func (h Header) CreateChain() ValidationChain {
 // Parameters:
 //   - field: the name of the field to validate.
 //   - errFmtFunc: a handler for formatting error messages.
-func NewHeader(field string, errFmtFunc *ErrFmtFuncHandler) Header {
+func NewHeader(field string, errFmtFunc ErrFmtFuncHandler) Header {
 	return Header{
 		field:      field,
 		errFmtFunc: errFmtFunc,

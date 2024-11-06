@@ -9,6 +9,7 @@ import (
 	"strings"
 	"testing"
 
+	// vgo "github.com/bube054/validatorgo"
 	"github.com/gin-gonic/gin"
 )
 
@@ -46,36 +47,30 @@ func TestBodyValidationChain(t *testing.T) {
 			url:                   "/test",
 			body:                  body,
 			contentType:           "application/json",
-			customValidatorsChain: []gin.HandlerFunc{NewBody("name.first", nil).CreateChain().Ascii().Validate()},
+			customValidatorsChain: []gin.HandlerFunc{
+				NewBody("name.first", nil).CreateChain().Ascii().Validate(),
+			},
 			validationResult:      []ValidationChainError{},
 			validationResultErr:   nil,
 			matchedData:           MatchedData{"body": matchedDataFieldValues{"name.first": "Tom"}},
 			matchedDataErr:        nil,
 		},
-		// {
-		// 	name:                  "Test Modifier.",
-		// 	method:                "post",
-		// 	url:                   "/test",
-		// 	body:                  body,
-		// 	contentType:           "application/json",
-		// 	customValidatorsChain: NewBody("name.first", nil).CreateChain().Not().Validate(),
-		// 	validationResult:      []ValidationChainError{},
-		// 	validationResultErr:   nil,
-		// 	matchedData:           MatchedData{},
-		// 	matchedDataErr:        nil,
-		// },
-		// {
-		// 	name:                  "Test Sanitizer.",
-		// 	method:                "post",
-		// 	url:                   "/test",
-		// 	body:                  body,
-		// 	contentType:           "application/json",
-		// 	customValidatorsChain: NewBody("name.first", nil).CreateChain().ToInt().Validate(),
-		// 	validationResult:      []ValidationChainError{},
-		// 	validationResultErr:   nil,
-		// 	matchedData:           MatchedData{},
-		// 	matchedDataErr:        nil,
-		// },
+		{
+			name:                  "Test Validator.",
+			method:                "POST",
+			url:                   "/test",
+			body:                  body,
+			contentType:           "application/json",
+			customValidatorsChain: []gin.HandlerFunc{
+				NewBody("name.first", nil).CreateChain().Numeric(nil).Validate(),
+			},
+			validationResult:      []ValidationChainError{
+				{Location: "body", Msg: defaultValidationChainErrorMessage, Field: "name.first", Value: "Tom"},
+			},
+			validationResultErr:   nil,
+			matchedData:           MatchedData{"body": matchedDataFieldValues{"name.first": "Tom"}},
+			matchedDataErr:        nil,
+		},
 		// For "application/x-www-form-urlencoded
 		// For "multipart/form-data"
 	}
@@ -91,11 +86,11 @@ func TestBodyValidationChain(t *testing.T) {
 
 				if test.validationResultErr != nil {
 					if !errors.Is(test.validationResultErr, err) {
-						t.Errorf("got error %v, wanted error %v", err, test.validationResultErr)
+						t.Errorf("got %v, wanted %v", err, test.validationResultErr)
 					}
 				} else {
 					if !slices.Equal(test.validationResult, validationResult) {
-						t.Errorf("got slice %+v, wanted slice %+v", validationResult, test.validationResult)
+						t.Errorf("got %+v, wanted %+v", validationResult, test.validationResult)
 					}
 				}
 

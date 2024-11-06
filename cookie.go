@@ -3,7 +3,7 @@ package ginvalidator
 // Cookie is used to validate data from the `http.Request` cookies.
 type Cookie struct {
 	field      string             // the field to be specified
-	errFmtFunc *ErrFmtFuncHandler // the function to create the error message
+	errFmtFunc ErrFmtFuncHandler // the function to create the error message
 }
 
 // CreateChain initializes a validation chain for the given body field.
@@ -19,7 +19,7 @@ func (c Cookie) CreateChain() ValidationChain {
 // Parameters:
 //   - field: the name of the field to validate.
 //   - errFmtFunc: a handler for formatting error messages.
-func NewCookie(field string, errFmtFunc *ErrFmtFuncHandler) Cookie {
+func NewCookie(field string, errFmtFunc ErrFmtFuncHandler) Cookie {
 	return Cookie{
 		field:      field,
 		errFmtFunc: errFmtFunc,

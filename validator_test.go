@@ -12,7 +12,7 @@ func TestCustomValidator(t *testing.T) {
 		name string
 
 		field      string
-		errFmtFunc *ErrFmtFuncHandler
+		errFmtFunc ErrFmtFuncHandler
 
 		cvf     CustomValidatorFunc
 		reqOpts ginCtxReqOpts
@@ -81,7 +81,7 @@ func TestContains(t *testing.T) {
 		name string
 
 		field      string
-		errFmtFunc *ErrFmtFuncHandler
+		errFmtFunc ErrFmtFuncHandler
 
 		seed string
 		opts *vgo.ContainsOpt

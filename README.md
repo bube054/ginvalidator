@@ -4,7 +4,7 @@
 
 ## Overview
 
-ginvalidator is a set of [Gin](https://github.com/gin-gonic/gin) middlewares that wraps the extensive collection of validators and sanitizers offered by [validatorgo](https://github.com/bube054/validatorgo).
+ginvalidator is a set of [Gin](https://github.com/gin-gonic/gin) middlewares that wraps the extensive collection of validators and sanitizers offered by my other open source package [validatorgo](https://github.com/bube054/validatorgo).
 
 It allows you to combine them in many ways so that you can validate and sanitize your express requests, and offers tools to determine if the request is valid or not, which data was matched according to your validators, and so on.
 

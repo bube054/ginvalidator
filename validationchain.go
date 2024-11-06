@@ -17,6 +17,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+const defaultValidationChainErrorMessage string = "Invalid value"
+
 type ValidationChain struct {
 	validator
 	modifier
@@ -26,34 +28,31 @@ type ValidationChain struct {
 func (v ValidationChain) Validate() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
+		var (
+			initialValue   string
+			sanitizedValue string
+			extractionErr  error
+		)
+
 		field := v.validator.field
 		reqLoc := v.validator.reqLoc
 		location := reqLoc.string()
 		errFmtFunc := v.validator.errFmtFunc
 
-		var initialValue, sanitizedValue string
-		var extractionErr error
-
-		if v.validator.reqLoc == 0 {
+		switch v.validator.reqLoc {
+		case 0:
 			initialValue, extractionErr = extractFieldValFromBody(field, ctx)
-			sanitizedValue = initialValue
-		}
-		if v.validator.reqLoc == 1 {
+		case 1:
 			initialValue, extractionErr = extractFieldValFromCookie(field, ctx)
-			sanitizedValue = initialValue
-		}
-		if v.validator.reqLoc == 2 {
+		case 2:
 			initialValue, extractionErr = extractFieldValFromHeader(field, ctx)
-			sanitizedValue = initialValue
-		}
-		if v.validator.reqLoc == 3 {
+		case 3:
 			initialValue, extractionErr = extractFieldValFromParam(field, ctx)
-			sanitizedValue = initialValue
-		}
-		if v.validator.reqLoc == 4 {
+		case 4:
 			initialValue, extractionErr = extractFieldValFromQuery(field, ctx)
-			sanitizedValue = initialValue
 		}
+
+		sanitizedValue = initialValue
 
 		if extractionErr != nil {
 			panic(fmt.Errorf("for request location: %q, could not extract field: %q", reqLoc.string(), field))
@@ -62,9 +61,9 @@ func (v ValidationChain) Validate() gin.HandlerFunc {
 		ruleCreators := v.validator.rulesCreatorFuncs
 		valErrs := make([]ValidationChainError, 0, len(ruleCreators))
 
-		numOfPreviousValidatorsFailed := 0
-		shouldNegateNextValidator := false
-		shouldSkipNextValidator := false
+		numOfPreviousValidatorsFailed := 0 // counter for dealing with previous failed validations, used by bail.
+		shouldNegateNextValidator := false // state for dealing with the immediate previous validation validity and negating it, used by not.
+		shouldSkipNextValidator := false   // state for dealing with whether to skip next link in the validation chain.
 
 		for _, ruleCreator := range ruleCreators {
 			if shouldSkipNextValidator {
@@ -73,28 +72,28 @@ func (v ValidationChain) Validate() gin.HandlerFunc {
 			}
 
 			rule := ruleCreator(ctx, initialValue, sanitizedValue)
+			// fmt.Printf("%+v\n", rule)
 			vcn := rule.validationChainName
 			valid := rule.isValid
 			newValue := rule.newValue
 			shouldBail := rule.shouldBail
 			shouldSkip := rule.shouldSkip
 
-			if shouldNegateNextValidator {
-				valid = !valid
-				shouldNegateNextValidator = false
-			}
-
 			var errMsg string
 
 			if errFmtFunc == nil {
-				errMsg = "Invalid value"
+				errMsg = defaultValidationChainErrorMessage
 			} else {
-				eff := *errFmtFunc
-				errMsg = eff(initialValue, sanitizedValue, vcn)
+				errMsg = errFmtFunc(initialValue, sanitizedValue, vcn)
 			}
 
 			// rule is for validators
 			if rule.validationChainType == 0 {
+				if shouldNegateNextValidator {
+					valid = !valid
+					shouldNegateNextValidator = false
+				}
+
 				if !valid {
 					numOfPreviousValidatorsFailed++
 
@@ -147,7 +146,7 @@ func (v ValidationChain) Validate() gin.HandlerFunc {
 	}
 }
 
-func NewValidationChain(field string, errFmtFunc *ErrFmtFuncHandler, reqLoc requestLocation) ValidationChain {
+func NewValidationChain(field string, errFmtFunc ErrFmtFuncHandler, reqLoc requestLocation) ValidationChain {
 	return ValidationChain{
 		validator: newValidator(field, errFmtFunc, reqLoc),
 		modifier:  newModifier(field, errFmtFunc, reqLoc),

@@ -12,7 +12,7 @@ func TestCustomSanitizer(t *testing.T) {
 		name string
 
 		field      string
-		errFmtFunc *ErrFmtFuncHandler
+		errFmtFunc ErrFmtFuncHandler
 
 		csf     CustomSanitizerFunc
 		reqOpts ginCtxReqOpts
@@ -81,7 +81,7 @@ func TestBlacklist(t *testing.T) {
 		name string
 
 		field      string
-		errFmtFunc *ErrFmtFuncHandler
+		errFmtFunc ErrFmtFuncHandler
 
 		blacklistedChars string
 		reqOpts          ginCtxReqOpts
@@ -146,7 +146,7 @@ func TestEscape(t *testing.T) {
 		name string
 
 		field      string
-		errFmtFunc *ErrFmtFuncHandler
+		errFmtFunc ErrFmtFuncHandler
 
 		reqOpts ginCtxReqOpts
 
@@ -196,7 +196,7 @@ func TestLTrim(t *testing.T) {
 		name string
 
 		field      string
-		errFmtFunc *ErrFmtFuncHandler
+		errFmtFunc ErrFmtFuncHandler
 
 		chars   string
 		reqOpts ginCtxReqOpts
@@ -261,7 +261,7 @@ func TestNormalizeEmail(t *testing.T) {
 		name string
 
 		field      string
-		errFmtFunc *ErrFmtFuncHandler
+		errFmtFunc ErrFmtFuncHandler
 
 		opts    *san.NormalizeEmailOpts
 		reqOpts ginCtxReqOpts
@@ -313,7 +313,7 @@ func TestRTrim(t *testing.T) {
 		name string
 
 		field      string
-		errFmtFunc *ErrFmtFuncHandler
+		errFmtFunc ErrFmtFuncHandler
 
 		chars   string
 		reqOpts ginCtxReqOpts
@@ -378,7 +378,7 @@ func TestStripLow(t *testing.T) {
 		name string
 
 		field      string
-		errFmtFunc *ErrFmtFuncHandler
+		errFmtFunc ErrFmtFuncHandler
 
 		keepNewLines bool
 		reqOpts      ginCtxReqOpts
@@ -443,7 +443,7 @@ func TestToBoolean(t *testing.T) {
 		name string
 
 		field      string
-		errFmtFunc *ErrFmtFuncHandler
+		errFmtFunc ErrFmtFuncHandler
 
 		strict bool
 		reqOpts      ginCtxReqOpts
@@ -508,7 +508,7 @@ func TestToDate(t *testing.T) {
 		name string
 
 		field      string
-		errFmtFunc *ErrFmtFuncHandler
+		errFmtFunc ErrFmtFuncHandler
 
 		reqOpts ginCtxReqOpts
 
@@ -558,7 +558,7 @@ func TestToFloat(t *testing.T) {
 		name string
 
 		field      string
-		errFmtFunc *ErrFmtFuncHandler
+		errFmtFunc ErrFmtFuncHandler
 
 		reqOpts ginCtxReqOpts
 
@@ -608,7 +608,7 @@ func TestToInt(t *testing.T) {
 		name string
 
 		field      string
-		errFmtFunc *ErrFmtFuncHandler
+		errFmtFunc ErrFmtFuncHandler
 
 		reqOpts ginCtxReqOpts
 
@@ -658,7 +658,7 @@ func TestTrim(t *testing.T) {
 		name string
 
 		field      string
-		errFmtFunc *ErrFmtFuncHandler
+		errFmtFunc ErrFmtFuncHandler
 
 		chars   string
 		reqOpts ginCtxReqOpts
@@ -723,7 +723,7 @@ func TestUnescape(t *testing.T) {
 		name string
 
 		field      string
-		errFmtFunc *ErrFmtFuncHandler
+		errFmtFunc ErrFmtFuncHandler
 
 		reqOpts ginCtxReqOpts
 
@@ -773,7 +773,7 @@ func TestWhitelist(t *testing.T) {
 		name string
 
 		field      string
-		errFmtFunc *ErrFmtFuncHandler
+		errFmtFunc ErrFmtFuncHandler
 
 		whitelistedChars string
 		reqOpts          ginCtxReqOpts

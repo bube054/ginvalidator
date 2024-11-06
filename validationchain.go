@@ -41,15 +41,15 @@ func (v ValidationChain) Validate() gin.HandlerFunc {
 
 		switch v.validator.reqLoc {
 		case 0:
-			initialValue, extractionErr = extractFieldValFromBody(field, ctx)
+			initialValue, extractionErr = extractFieldValFromBody(ctx, field)
 		case 1:
-			initialValue, extractionErr = extractFieldValFromCookie(field, ctx)
+			initialValue, extractionErr = extractFieldValFromCookie(ctx, field)
 		case 2:
-			initialValue, extractionErr = extractFieldValFromHeader(field, ctx)
+			initialValue, extractionErr = extractFieldValFromHeader(ctx, field)
 		case 3:
-			initialValue, extractionErr = extractFieldValFromParam(field, ctx)
+			initialValue, extractionErr = extractFieldValFromParam(ctx, field)
 		case 4:
-			initialValue, extractionErr = extractFieldValFromQuery(field, ctx)
+			initialValue, extractionErr = extractFieldValFromQuery(ctx, field)
 		}
 
 		sanitizedValue = initialValue
@@ -63,7 +63,7 @@ func (v ValidationChain) Validate() gin.HandlerFunc {
 
 		numOfPreviousValidatorsFailed := 0 // counter for dealing with previous failed validations, used by bail.
 		shouldNegateNextValidator := false // state for dealing with the immediate previous validation validity and negating it, used by not.
-		shouldSkipNextValidator := false   // state for dealing with whether to skip next link in the validation chain.
+		shouldSkipNextValidator := false   // state for dealing with whether to skip next link in the validation chain. used by skip.
 
 		for _, ruleCreator := range ruleCreators {
 			if shouldSkipNextValidator {

@@ -121,7 +121,7 @@ func TestExtractFieldValFromBody(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			ctx := createTestGinCtx(test.opts)
-			ans, err := extractFieldValFromBody(test.field, ctx)
+			ans, err := extractFieldValFromBody(ctx, test.field)
 
 			if err != nil {
 				if !errors.Is(test.err, test.err) {
@@ -158,7 +158,7 @@ func TestExtractFieldValFromCookie(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			ctx := createTestGinCtx(test.opts)
-			ans, err := extractFieldValFromCookie(test.field, ctx)
+			ans, err := extractFieldValFromCookie(ctx, test.field)
 
 			if err != nil {
 				if !errors.Is(test.err, test.err) {
@@ -193,7 +193,7 @@ func TestExtractFieldValFromHeader(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			ctx := createTestGinCtx(test.opts)
-			ans, err := extractFieldValFromHeader(test.field, ctx)
+			ans, err := extractFieldValFromHeader(ctx, test.field)
 
 			if err != nil {
 				if !errors.Is(test.err, test.err) {
@@ -228,7 +228,7 @@ func TestExtractFieldValFromParam(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			ctx := createTestGinCtx(test.opts)
-			ans, err := extractFieldValFromParam(test.field, ctx)
+			ans, err := extractFieldValFromParam(ctx, test.field)
 
 			if err != nil {
 				if !errors.Is(test.err, test.err) {
@@ -263,7 +263,7 @@ func TestExtractFieldValFromQuery(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			ctx := createTestGinCtx(test.opts)
-			ans, err := extractFieldValFromQuery(test.field, ctx)
+			ans, err := extractFieldValFromQuery(ctx, test.field)
 
 			if err != nil {
 				if !errors.Is(test.err, test.err) {

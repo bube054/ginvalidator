@@ -1,9 +1,11 @@
 package ginvalidator
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"strings"
 
 	"net/url"
@@ -40,40 +42,75 @@ const (
 	modifierType
 )
 
-func extractFieldValFromBody(field string, ctx *gin.Context) (string, error) {
+// func extractFieldValFromBody(ctx *gin.Context, field string) (string, error) {
+// 	if ctx == nil {
+// 		return "", ErrExtractionFromNilCtx
+// 	}
+
+// 	contentType := ctx.GetHeader("Content-Type")
+
+// 	if contentType == "application/json" {
+// 		data, err := ctx.GetRawData()
+
+// 		if err != nil {
+// 			return "", err
+// 		}
+
+// 		jsonStr := string(data)
+// 		validJson := json.Valid([]byte(jsonStr))
+
+// 		if !validJson {
+// 			return "", fmt.Errorf("%s is %w", jsonStr, ErrExtractionInvalidJson)
+// 		}
+
+// 		result := gjson.Get(jsonStr, field)
+
+// 		return result.String(), nil
+// 	}
+
+// 	if contentType == "application/x-www-form-urlencoded" || strings.HasPrefix(contentType, "multipart/form-data") {
+// 		return ctx.PostForm(field), nil
+// 	}
+
+// 	return "", fmt.Errorf("%s is %w", contentType, ErrExtractionInvalidContentType)
+// }
+
+func extractFieldValFromBody(ctx *gin.Context, field string) (string, error) {
 	if ctx == nil {
 		return "", ErrExtractionFromNilCtx
 	}
 
+	data, err := ctx.GetRawData()
+	if err != nil {
+		return "", err
+	}
+
+	ctx.Request.Body = io.NopCloser(bytes.NewBuffer(data))
+
 	contentType := ctx.GetHeader("Content-Type")
 
 	if contentType == "application/json" {
-		data, err := ctx.GetRawData()
-
-		if err != nil {
-			return "", err
-		}
-
 		jsonStr := string(data)
-		validJson := json.Valid([]byte(jsonStr))
 
-		if !validJson {
+		if !json.Valid(data) {
 			return "", fmt.Errorf("%s is %w", jsonStr, ErrExtractionInvalidJson)
 		}
 
 		result := gjson.Get(jsonStr, field)
-
 		return result.String(), nil
 	}
 
 	if contentType == "application/x-www-form-urlencoded" || strings.HasPrefix(contentType, "multipart/form-data") {
+		ctx.Request.Body = io.NopCloser(bytes.NewBuffer(data))
+
 		return ctx.PostForm(field), nil
 	}
 
+	// Invalid content type
 	return "", fmt.Errorf("%s is %w", contentType, ErrExtractionInvalidContentType)
 }
 
-func extractFieldValFromCookie(field string, ctx *gin.Context) (string, error) {
+func extractFieldValFromCookie(ctx *gin.Context, field string) (string, error) {
 	if ctx == nil {
 		return "", ErrExtractionFromNilCtx
 	}
@@ -93,7 +130,7 @@ func extractFieldValFromCookie(field string, ctx *gin.Context) (string, error) {
 	return cookie, nil
 }
 
-func extractFieldValFromHeader(field string, ctx *gin.Context) (string, error) {
+func extractFieldValFromHeader(ctx *gin.Context, field string) (string, error) {
 	if ctx == nil {
 		return "", ErrExtractionFromNilCtx
 	}
@@ -109,7 +146,7 @@ func extractFieldValFromHeader(field string, ctx *gin.Context) (string, error) {
 	return header, nil
 }
 
-func extractFieldValFromParam(field string, ctx *gin.Context) (string, error) {
+func extractFieldValFromParam(ctx *gin.Context, field string) (string, error) {
 	if ctx == nil {
 		return "", ErrExtractionFromNilCtx
 	}
@@ -125,7 +162,7 @@ func extractFieldValFromParam(field string, ctx *gin.Context) (string, error) {
 	return param, nil
 }
 
-func extractFieldValFromQuery(field string, ctx *gin.Context) (string, error) {
+func extractFieldValFromQuery(ctx *gin.Context, field string) (string, error) {
 	if ctx == nil {
 		return "", ErrExtractionFromNilCtx
 	}

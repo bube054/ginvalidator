@@ -66,7 +66,7 @@ func TestCustomSanitizer(t *testing.T) {
 
 			ctx := createTestGinCtx(test.reqOpts)
 			vcr := vcrs[0]
-			value, _ := extractFieldValFromBody(test.field, ctx)
+			value, _ := extractFieldValFromBody(ctx, test.field)
 			r := vcr(ctx, value, value)
 
 			if r != test.want {
@@ -131,7 +131,7 @@ func TestBlacklist(t *testing.T) {
 
 			ctx := createTestGinCtx(test.reqOpts)
 			vcr := vcrs[0]
-			value, _ := extractFieldValFromBody(test.field, ctx)
+			value, _ := extractFieldValFromBody(ctx, test.field)
 			r := vcr(ctx, value, value)
 
 			if r != test.want {
@@ -181,7 +181,7 @@ func TestEscape(t *testing.T) {
 
 			ctx := createTestGinCtx(test.reqOpts)
 			vcr := vcrs[0]
-			value, _ := extractFieldValFromBody(test.field, ctx)
+			value, _ := extractFieldValFromBody(ctx, test.field)
 			r := vcr(ctx, value, value)
 
 			if r != test.want {
@@ -246,7 +246,7 @@ func TestLTrim(t *testing.T) {
 
 			ctx := createTestGinCtx(test.reqOpts)
 			vcr := vcrs[0]
-			value, _ := extractFieldValFromBody(test.field, ctx)
+			value, _ := extractFieldValFromBody(ctx, test.field)
 			r := vcr(ctx, value, value)
 
 			if r != test.want {
@@ -298,7 +298,7 @@ func TestNormalizeEmail(t *testing.T) {
 
 			ctx := createTestGinCtx(test.reqOpts)
 			vcr := vcrs[0]
-			value, _ := extractFieldValFromBody(test.field, ctx)
+			value, _ := extractFieldValFromBody(ctx, test.field)
 			r := vcr(ctx, value, value)
 
 			if r != test.want {
@@ -363,7 +363,7 @@ func TestRTrim(t *testing.T) {
 
 			ctx := createTestGinCtx(test.reqOpts)
 			vcr := vcrs[0]
-			value, _ := extractFieldValFromBody(test.field, ctx)
+			value, _ := extractFieldValFromBody(ctx, test.field)
 			r := vcr(ctx, value, value)
 
 			if r != test.want {
@@ -428,7 +428,7 @@ func TestStripLow(t *testing.T) {
 
 			ctx := createTestGinCtx(test.reqOpts)
 			vcr := vcrs[0]
-			value, _ := extractFieldValFromBody(test.field, ctx)
+			value, _ := extractFieldValFromBody(ctx, test.field)
 			r := vcr(ctx, value, value)
 
 			if r != test.want {
@@ -493,7 +493,7 @@ func TestToBoolean(t *testing.T) {
 
 			ctx := createTestGinCtx(test.reqOpts)
 			vcr := vcrs[0]
-			value, _ := extractFieldValFromBody(test.field, ctx)
+			value, _ := extractFieldValFromBody(ctx, test.field)
 			r := vcr(ctx, value, value)
 
 			if r != test.want {
@@ -543,7 +543,7 @@ func TestToDate(t *testing.T) {
 
 			ctx := createTestGinCtx(test.reqOpts)
 			vcr := vcrs[0]
-			value, _ := extractFieldValFromBody(test.field, ctx)
+			value, _ := extractFieldValFromBody(ctx, test.field)
 			r := vcr(ctx, value, value)
 
 			if r != test.want {
@@ -593,7 +593,7 @@ func TestToFloat(t *testing.T) {
 
 			ctx := createTestGinCtx(test.reqOpts)
 			vcr := vcrs[0]
-			value, _ := extractFieldValFromBody(test.field, ctx)
+			value, _ := extractFieldValFromBody(ctx, test.field)
 			r := vcr(ctx, value, value)
 
 			if r != test.want {
@@ -643,7 +643,7 @@ func TestToInt(t *testing.T) {
 
 			ctx := createTestGinCtx(test.reqOpts)
 			vcr := vcrs[0]
-			value, _ := extractFieldValFromBody(test.field, ctx)
+			value, _ := extractFieldValFromBody(ctx, test.field)
 			r := vcr(ctx, value, value)
 
 			if r != test.want {
@@ -708,7 +708,7 @@ func TestTrim(t *testing.T) {
 
 			ctx := createTestGinCtx(test.reqOpts)
 			vcr := vcrs[0]
-			value, _ := extractFieldValFromBody(test.field, ctx)
+			value, _ := extractFieldValFromBody(ctx, test.field)
 			r := vcr(ctx, value, value)
 
 			if r != test.want {
@@ -758,7 +758,7 @@ func TestUnescape(t *testing.T) {
 
 			ctx := createTestGinCtx(test.reqOpts)
 			vcr := vcrs[0]
-			value, _ := extractFieldValFromBody(test.field, ctx)
+			value, _ := extractFieldValFromBody(ctx, test.field)
 			r := vcr(ctx, value, value)
 
 			if r != test.want {
@@ -823,7 +823,7 @@ func TestWhitelist(t *testing.T) {
 
 			ctx := createTestGinCtx(test.reqOpts)
 			vcr := vcrs[0]
-			value, _ := extractFieldValFromBody(test.field, ctx)
+			value, _ := extractFieldValFromBody(ctx, test.field)
 			r := vcr(ctx, value, value)
 
 			if r != test.want {

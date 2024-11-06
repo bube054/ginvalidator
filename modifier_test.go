@@ -45,7 +45,7 @@ func TestBail(t *testing.T) {
 
 			ctx := createTestGinCtx(test.reqOpts)
 			vcr := vcrs[0]
-			value, _ := extractFieldValFromBody(test.field, ctx)
+			value, _ := extractFieldValFromBody(ctx, test.field)
 			r := vcr(ctx, value, value)
 
 			if r != test.want {
@@ -116,7 +116,7 @@ func TestIf(t *testing.T) {
 
 			ctx := createTestGinCtx(test.reqOpts)
 			vcr := vcrs[0]
-			value, _ := extractFieldValFromBody(test.field, ctx)
+			value, _ := extractFieldValFromBody(ctx, test.field)
 			r := vcr(ctx, value, value)
 
 			if r != test.want {
@@ -167,7 +167,7 @@ func TestNot(t *testing.T) {
 
 			ctx := createTestGinCtx(test.reqOpts)
 			vcr := vcrs[0]
-			value, _ := extractFieldValFromBody(test.field, ctx)
+			value, _ := extractFieldValFromBody(ctx, test.field)
 			r := vcr(ctx, value, value)
 
 			if r != test.want {
@@ -240,7 +240,7 @@ func TestSkip(t *testing.T) {
 
 			ctx := createTestGinCtx(test.reqOpts)
 			vcr := vcrs[0]
-			value, _ := extractFieldValFromBody(test.field, ctx)
+			value, _ := extractFieldValFromBody(ctx, test.field)
 			r := vcr(ctx, value, value)
 
 			if r != test.want {

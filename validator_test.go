@@ -66,7 +66,7 @@ func TestCustomValidator(t *testing.T) {
 
 			ctx := createTestGinCtx(test.reqOpts)
 			vcr := vcrs[0]
-			value, _ := extractFieldValFromBody(test.field, ctx)
+			value, _ := extractFieldValFromBody(ctx, test.field)
 			r := vcr(ctx, value, value)
 
 			if r != test.want {
@@ -121,7 +121,7 @@ func TestContains(t *testing.T) {
 
 			ctx := createTestGinCtx(test.reqOpts)
 			vcr := vcrs[0]
-			value, _ := extractFieldValFromBody(test.field, ctx)
+			value, _ := extractFieldValFromBody(ctx, test.field)
 			r := vcr(ctx, value, value)
 
 			if r != test.want {

@@ -27,7 +27,7 @@ const (
 
 // A sanitizer is simply a piece of the validation chain that can sanitize values from the specified field.
 type sanitizer struct {
-	field      string             // the field to be specified
+	field      string            // the field to be specified
 	errFmtFunc ErrFmtFuncHandler // the function to create the error message
 
 	reqLoc            requestLocation  // the HTTP request location (e.g., body, headers, cookies, params, or queries)
@@ -66,7 +66,7 @@ func (s *sanitizer) recreateValidationChainFromSanitizer(ruleCreatorFunc ruleCre
 //   - req: The HTTP request context derived from `http.Request`.
 //   - initialValue: The original value derived from the specified field.
 //   - sanitizedValue: The current sanitized value after applying previous sanitizers.
-type CustomSanitizerFunc func(req http.Request, initialValue, sanitizedValue string) string
+type CustomSanitizerFunc func(req *http.Request, initialValue, sanitizedValue string) string
 
 // CustomSanitizer applies a custom sanitizer function to compute the new sanitized value.
 //
@@ -74,8 +74,7 @@ type CustomSanitizerFunc func(req http.Request, initialValue, sanitizedValue str
 //   - csf: The [CustomSanitizerFunc] used to compute the new sanitized value.
 func (s sanitizer) CustomSanitizer(csf CustomSanitizerFunc) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		httpRequest := ctx.Request
-		newValue := csf(*httpRequest, initialValue, sanitizedValue)
+		newValue := csf(ctx.Request, initialValue, sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(true),

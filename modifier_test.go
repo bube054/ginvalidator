@@ -69,7 +69,7 @@ func TestIf(t *testing.T) {
 	}{
 		{
 			name: "Creates an If modifier validation chain rule. It returns true, breaking the chain.",
-			imf: func(req http.Request, initialValue, sanitizedValue string) bool {
+			imf: func(req *http.Request, initialValue, sanitizedValue string) bool {
 				return true
 			},
 			field:      "name",
@@ -85,7 +85,7 @@ func TestIf(t *testing.T) {
 		},
 		{
 			name: "Creates an If modifier validation chain rule. It returns false, continuing the chain.",
-			imf: func(req http.Request, initialValue, sanitizedValue string) bool {
+			imf: func(req *http.Request, initialValue, sanitizedValue string) bool {
 				return false
 			},
 			field:      "name",
@@ -191,7 +191,7 @@ func TestSkip(t *testing.T) {
 	}{
 		{
 			name: "Creates a Skip modifier validation chain rule. It returns true, skipping the next chain rule.",
-			smf: func(req http.Request, initialValue, sanitizedValue string) bool {
+			smf: func(req *http.Request, initialValue, sanitizedValue string) bool {
 				return true
 			},
 			field:      "name",
@@ -208,7 +208,7 @@ func TestSkip(t *testing.T) {
 		},
 		{
 			name: "Creates a Skip modifier validation chain rule. It returns false, continuing to the next chain rule.",
-			smf: func(req http.Request, initialValue, sanitizedValue string) bool {
+			smf: func(req *http.Request, initialValue, sanitizedValue string) bool {
 				return false
 			},
 			field:      "name",

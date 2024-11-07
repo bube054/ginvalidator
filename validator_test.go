@@ -23,7 +23,7 @@ func TestCustomValidator(t *testing.T) {
 			name:       "Creates a CustomValidator chain rule. Returns true.",
 			field:      "name",
 			errFmtFunc: nil,
-			cvf: func(req http.Request, initialValue, sanitizedValue string) bool {
+			cvf: func(req *http.Request, initialValue, sanitizedValue string) bool {
 				return true
 			},
 			reqOpts: ginCtxReqOpts{body: `{"name": "John"}`, contentType: "application/json"},
@@ -38,7 +38,7 @@ func TestCustomValidator(t *testing.T) {
 			name:       "Creates a CustomValidator chain rule. Returns false.",
 			field:      "name",
 			errFmtFunc: nil,
-			cvf: func(req http.Request, initialValue, sanitizedValue string) bool {
+			cvf: func(req *http.Request, initialValue, sanitizedValue string) bool {
 				return false
 			},
 			reqOpts: ginCtxReqOpts{body: `{"name": "John"}`, contentType: "application/json"},

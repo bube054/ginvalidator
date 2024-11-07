@@ -2,7 +2,6 @@ package ginvalidator
 
 import (
 	"errors"
-	"fmt"
 	"sort"
 
 	"github.com/gin-gonic/gin"
@@ -47,8 +46,6 @@ func ValidationResult(ctx *gin.Context) ([]ValidationChainError, error) {
 	}
 
 	sortErrorsByCreatedAt(allErrs)
-
-	fmt.Println("sorted slice:", allErrs)
 
 	return allErrs, nil
 }

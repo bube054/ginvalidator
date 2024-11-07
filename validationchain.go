@@ -56,7 +56,7 @@ func (v ValidationChain) Validate() gin.HandlerFunc {
 		sanitizedValue = initialValue
 
 		if extractionErr != nil {
-			panic(fmt.Errorf("for request location: %q, could not extract field: %q", reqLoc.string(), field))
+			panic(fmt.Errorf("for request location: %q, could not extract field: %q, err: %w", location, field, extractionErr))
 		}
 
 		ruleCreators := v.validator.rulesCreatorFuncs

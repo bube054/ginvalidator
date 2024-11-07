@@ -104,7 +104,7 @@ const (
 
 // A validator is simply a piece of the validation chain that can validate values from the specified field.
 type validator struct {
-	field      string             // the field to be specified
+	field      string            // the field to be specified
 	errFmtFunc ErrFmtFuncHandler // the function to create the error message
 
 	reqLoc            requestLocation  // the HTTP request location (e.g., body, headers, cookies, params, or queries)
@@ -157,7 +157,7 @@ func (v *validator) recreateValidationChainFromValidator(ruleCreatorFunc ruleCre
 //   - req: The HTTP request context derived from `http.Request`.
 //   - initialValue: The original value derived from the specified field.
 //   - sanitizedValue: The current sanitized value after applying previous sanitizers.
-type CustomValidatorFunc func(req http.Request, initialValue, sanitizedValue string) bool
+type CustomValidatorFunc func(req *http.Request, initialValue, sanitizedValue string) bool
 
 // CustomValidator applies a custom validator function.
 //
@@ -165,8 +165,7 @@ type CustomValidatorFunc func(req http.Request, initialValue, sanitizedValue str
 //   - cvf: The [CustomValidatorFunc] used to evaluate the validity.
 func (v validator) CustomValidator(cvf CustomValidatorFunc) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		httpRequest := ctx.Request
-		isValid := cvf(*httpRequest, initialValue, sanitizedValue)
+		isValid := cvf(ctx.Request, initialValue, sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),

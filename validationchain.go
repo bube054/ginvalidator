@@ -13,6 +13,7 @@ package ginvalidator
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -101,6 +102,7 @@ func (v ValidationChain) Validate() gin.HandlerFunc {
 						vceWithMsg(errMsg),
 						vceWithField(field),
 						vceWithValue(initialValue),
+						vceWithCreatedAt(time.Now()),
 					)
 
 					valErrs = append(valErrs, vce)

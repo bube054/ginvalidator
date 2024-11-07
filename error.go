@@ -1,10 +1,13 @@
 package ginvalidator
 
+import "time"
+
 type ValidationChainError struct {
-	Location string
-	Msg      string
-	Field    string
-	Value    string
+	Location  string
+	Msg       string
+	Field     string
+	Value     string
+	createdAt time.Time
 }
 
 func vceWithLocation(location string) func(*ValidationChainError) {
@@ -28,6 +31,12 @@ func vceWithField(field string) func(*ValidationChainError) {
 func vceWithValue(value string) func(*ValidationChainError) {
 	return func(vce *ValidationChainError) {
 		vce.Value = value
+	}
+}
+
+func vceWithCreatedAt(time time.Time) func(*ValidationChainError) {
+	return func(vce *ValidationChainError) {
+		vce.createdAt = time
 	}
 }
 

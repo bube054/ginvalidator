@@ -2,13 +2,15 @@ package ginvalidator
 
 import (
 	"errors"
+	"fmt"
+	"sort"
 
 	"github.com/gin-gonic/gin"
 )
 
 var (
-	ErrNilCtxValidationResult     = errors.New("nil ctx provided can not extract validation result")
-	ErrNoValidationResult         = errors.New("can not get validation result")
+	ErrNilCtxValidationResult = errors.New("nil ctx provided can not extract validation result")
+	ErrNoValidationResult     = errors.New("can not get validation result")
 )
 
 // GinValidatorCtxErrorsStoreName is the key, where the validation errors are stored.
@@ -44,7 +46,9 @@ func ValidationResult(ctx *gin.Context) ([]ValidationChainError, error) {
 		}
 	}
 
-	// createErrNewStore(ctx)
+	sortErrorsByCreatedAt(allErrs)
+
+	fmt.Println("sorted slice:", allErrs)
 
 	return allErrs, nil
 }
@@ -107,4 +111,10 @@ func saveValidationErrorsToCtx(ctx *gin.Context, errs []ValidationChainError) {
 
 		ctx.Set(GinValidatorCtxErrorsStoreName, store)
 	}
+}
+
+func sortErrorsByCreatedAt(errors []ValidationChainError) {
+	sort.Slice(errors, func(i, j int) bool {
+		return errors[i].createdAt.Before(errors[j].createdAt)
+	})
 }

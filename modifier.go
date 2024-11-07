@@ -128,7 +128,7 @@ type SkipModifierFunc func(req http.Request, initialValue, sanitizedValue string
 // Skip adds a conditional check to decide whether the next validator, modifier or sanitizer in validation chain should be skipped.
 //
 // The condition is evaluated by the provided [SkipModifierFunc] and the result determines
-// if the next validation chain should be skipped out (`true`) or proceed (`false`).
+// if the next link in validation chain should be skipped out (`true`) or proceed (`false`).
 //
 // Parameters:
 //   - smf: The [SkipModifierFunc] used to evaluate the condition.

@@ -18,7 +18,7 @@ import (
 )
 
 func TestBodyValidationChain(t *testing.T) {
-	body := `{
+	jsonBody := `{
 		"name": {"first": "Tom", "last": "Anderson"},
 		"age":37,
 		"message": "A good saying is 7 comes after ate.",
@@ -30,6 +30,19 @@ func TestBodyValidationChain(t *testing.T) {
 			{"first": "Jane", "last": "Murphy", "age": 47, "nets": ["ig", "tw"]}
 		]
 	}`
+
+	urlEncodedBody := "name=John&age=30&email=john@example.com"
+
+	formDataBody := `--6c55825619090769257acc8079eeba85e5e9874c7116b71da35065945dd9
+Content-Disposition: form-data; name="name"
+
+John
+--6c55825619090769257acc8079eeba85e5e9874c7116b71da35065945dd9
+Content-Disposition: form-data; name="email"
+
+john@example.com
+--6c55825619090769257acc8079eeba85e5e9874c7116b71da35065945dd9--
+`
 
 	tests := []struct {
 		name        string
@@ -49,7 +62,7 @@ func TestBodyValidationChain(t *testing.T) {
 			name:        "Test Validator(pass).",
 			method:      "POST",
 			url:         "/test",
-			body:        body,
+			body:        jsonBody,
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody("name.first", nil).Chain().Ascii().Validate(),
@@ -63,7 +76,7 @@ func TestBodyValidationChain(t *testing.T) {
 			name:        "Test Validator(fail).",
 			method:      "POST",
 			url:         "/test",
-			body:        body,
+			body:        jsonBody,
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody("name.first", nil).Chain().Numeric(nil).Validate(),
@@ -79,7 +92,7 @@ func TestBodyValidationChain(t *testing.T) {
 			name:        "Test Validator(pass) multiple fields.",
 			method:      "POST",
 			url:         "/test",
-			body:        body,
+			body:        jsonBody,
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody("name.first", nil).Chain().Ascii().Validate(),
@@ -94,7 +107,7 @@ func TestBodyValidationChain(t *testing.T) {
 			name:        "Test Validator(fail) multiple fields.",
 			method:      "POST",
 			url:         "/test",
-			body:        body,
+			body:        jsonBody,
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody("name.first", nil).Chain().Numeric(nil).Validate(),
@@ -112,7 +125,7 @@ func TestBodyValidationChain(t *testing.T) {
 			name:        "Test Custom Validator(pass).",
 			method:      "POST",
 			url:         "/test",
-			body:        body,
+			body:        jsonBody,
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody("name.first", nil).Chain().CustomValidator(
@@ -122,7 +135,7 @@ func TestBodyValidationChain(t *testing.T) {
 							panic(fmt.Errorf("Custom validator could not read req body err: %w", err))
 						}
 
-						if string(data) != body {
+						if string(data) != jsonBody {
 							panic(fmt.Errorf("Custom validator req bodies do not match body: %s", data))
 						}
 
@@ -147,7 +160,7 @@ func TestBodyValidationChain(t *testing.T) {
 			name:        "Test Custom Validator(fail).",
 			method:      "POST",
 			url:         "/test",
-			body:        body,
+			body:        jsonBody,
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody("name.first", nil).Chain().CustomValidator(
@@ -157,7 +170,7 @@ func TestBodyValidationChain(t *testing.T) {
 							panic(fmt.Errorf("Custom validator could not read req body err: %w", err))
 						}
 
-						if string(data) != body {
+						if string(data) != jsonBody {
 							panic(fmt.Errorf("Custom validator req bodies do not match body: %s", data))
 						}
 
@@ -184,7 +197,7 @@ func TestBodyValidationChain(t *testing.T) {
 			name:        "Test Custom Validator(pass) multiple fields.",
 			method:      "POST",
 			url:         "/test",
-			body:        body,
+			body:        jsonBody,
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody("name.first", nil).Chain().CustomValidator(
@@ -196,7 +209,7 @@ func TestBodyValidationChain(t *testing.T) {
 
 						req.Body = io.NopCloser(bytes.NewBuffer(data))
 
-						if string(data) != body {
+						if string(data) != jsonBody {
 							panic(fmt.Errorf("Custom validator req bodies do not match body: %s", data))
 						}
 
@@ -218,7 +231,7 @@ func TestBodyValidationChain(t *testing.T) {
 							panic(fmt.Errorf("Custom validator could not read req body err: %w", err))
 						}
 
-						if string(data) != body {
+						if string(data) != jsonBody {
 							panic(fmt.Errorf("Custom validator req bodies do not match body: %s", data))
 						}
 
@@ -243,7 +256,7 @@ func TestBodyValidationChain(t *testing.T) {
 			name:        "Test Custom Validator(fail) multiple fields.",
 			method:      "POST",
 			url:         "/test",
-			body:        body,
+			body:        jsonBody,
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody("name.first", nil).Chain().CustomValidator(
@@ -255,7 +268,7 @@ func TestBodyValidationChain(t *testing.T) {
 
 						req.Body = io.NopCloser(bytes.NewBuffer(data))
 
-						if string(data) != body {
+						if string(data) != jsonBody {
 							panic(fmt.Errorf("Custom validator req bodies do not match body: %s", data))
 						}
 
@@ -277,7 +290,7 @@ func TestBodyValidationChain(t *testing.T) {
 							panic(fmt.Errorf("Custom validator could not read req body err: %w", err))
 						}
 
-						if string(data) != body {
+						if string(data) != jsonBody {
 							panic(fmt.Errorf("Custom validator req bodies do not match body: %s", data))
 						}
 
@@ -305,7 +318,7 @@ func TestBodyValidationChain(t *testing.T) {
 			name:        "Test Sanitizer.",
 			method:      "POST",
 			url:         "/test",
-			body:        body,
+			body:        jsonBody,
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody("name.last", nil).Chain().Whitelist("a-z").Validate(),
@@ -319,7 +332,7 @@ func TestBodyValidationChain(t *testing.T) {
 			name:        "Test Sanitizer multiple fields.",
 			method:      "POST",
 			url:         "/test",
-			body:        body,
+			body:        jsonBody,
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody("name.last", nil).Chain().Whitelist("a-z").Validate(),
@@ -334,7 +347,7 @@ func TestBodyValidationChain(t *testing.T) {
 			name:        "Test Custom Sanitizer.",
 			method:      "POST",
 			url:         "/test",
-			body:        body,
+			body:        jsonBody,
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody("name.last", nil).Chain().CustomSanitizer(
@@ -344,7 +357,7 @@ func TestBodyValidationChain(t *testing.T) {
 							panic(fmt.Errorf("Custom Sanitizer could not read req body err: %w", err))
 						}
 
-						if string(data) != body {
+						if string(data) != jsonBody {
 							panic(fmt.Errorf("Custom Sanitizer req bodies do not match body: %s", data))
 						}
 
@@ -369,7 +382,7 @@ func TestBodyValidationChain(t *testing.T) {
 			name:        "Test Custom Sanitizer multiple fields.",
 			method:      "POST",
 			url:         "/test",
-			body:        body,
+			body:        jsonBody,
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody("name.last", nil).Chain().CustomSanitizer(
@@ -381,7 +394,7 @@ func TestBodyValidationChain(t *testing.T) {
 
 						req.Body = io.NopCloser(bytes.NewBuffer(data))
 
-						if string(data) != body {
+						if string(data) != jsonBody {
 							panic(fmt.Errorf("Custom Sanitizer req bodies do not match body: %s", data))
 						}
 
@@ -403,7 +416,7 @@ func TestBodyValidationChain(t *testing.T) {
 							panic(fmt.Errorf("Custom Sanitizer could not read req body err: %w", err))
 						}
 
-						if string(data) != body {
+						if string(data) != jsonBody {
 							panic(fmt.Errorf("Custom Sanitizer req bodies do not match body: %s", data))
 						}
 
@@ -428,7 +441,7 @@ func TestBodyValidationChain(t *testing.T) {
 			name:        "Test Modifier(bail).",
 			method:      "POST",
 			url:         "/test",
-			body:        body,
+			body:        jsonBody,
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody("message", nil).Chain().Alpha(nil).Bail().LowerCase().Validate(),
@@ -444,7 +457,7 @@ func TestBodyValidationChain(t *testing.T) {
 			name:        "Test Modifier(bail) multiple fields.",
 			method:      "POST",
 			url:         "/test",
-			body:        body,
+			body:        jsonBody,
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody("message", nil).Chain().Alpha(nil).Bail().LowerCase().Validate(),
@@ -462,7 +475,7 @@ func TestBodyValidationChain(t *testing.T) {
 			name:        "Test Modifier(if/bail).",
 			method:      "POST",
 			url:         "/test",
-			body:        body,
+			body:        jsonBody,
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody("message", nil).Chain().Alpha(nil).If(
@@ -472,7 +485,7 @@ func TestBodyValidationChain(t *testing.T) {
 							panic(fmt.Errorf("If modifier could not read req body err: %w", err))
 						}
 
-						if string(data) != body {
+						if string(data) != jsonBody {
 							panic(fmt.Errorf("If modifier req bodies do not match body: %s", data))
 						}
 
@@ -499,7 +512,7 @@ func TestBodyValidationChain(t *testing.T) {
 			name:        "Test Modifier(if/bail) multiple fields.",
 			method:      "POST",
 			url:         "/test",
-			body:        body,
+			body:        jsonBody,
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody("message", nil).Chain().Alpha(nil).If(
@@ -511,7 +524,7 @@ func TestBodyValidationChain(t *testing.T) {
 
 						req.Body = io.NopCloser(bytes.NewBuffer(data))
 
-						if string(data) != body {
+						if string(data) != jsonBody {
 							panic(fmt.Errorf("If modifier req bodies do not match body: %s", data))
 						}
 
@@ -533,7 +546,7 @@ func TestBodyValidationChain(t *testing.T) {
 							panic(fmt.Errorf("If modifier could not read req body err: %w", err))
 						}
 
-						if string(data) != body {
+						if string(data) != jsonBody {
 							panic(fmt.Errorf("If modifier req bodies do not match body: %s", data))
 						}
 
@@ -561,7 +574,7 @@ func TestBodyValidationChain(t *testing.T) {
 			name:        "Test Modifier(if/proceed).",
 			method:      "POST",
 			url:         "/test",
-			body:        body,
+			body:        jsonBody,
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody("message", nil).Chain().Alpha(nil).If(
@@ -571,7 +584,7 @@ func TestBodyValidationChain(t *testing.T) {
 							panic(fmt.Errorf("If modifier could not read req body err: %w", err))
 						}
 
-						if string(data) != body {
+						if string(data) != jsonBody {
 							panic(fmt.Errorf("If modifier req bodies do not match body: %s", data))
 						}
 
@@ -599,7 +612,7 @@ func TestBodyValidationChain(t *testing.T) {
 			name:        "Test Modifier(if/proceed) multiple fields.",
 			method:      "POST",
 			url:         "/test",
-			body:        body,
+			body:        jsonBody,
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody("message", nil).Chain().Alpha(nil).If(
@@ -611,7 +624,7 @@ func TestBodyValidationChain(t *testing.T) {
 
 						req.Body = io.NopCloser(bytes.NewBuffer(data))
 
-						if string(data) != body {
+						if string(data) != jsonBody {
 							panic(fmt.Errorf("If modifier req bodies do not match body: %s", data))
 						}
 
@@ -635,7 +648,7 @@ func TestBodyValidationChain(t *testing.T) {
 
 						req.Body = io.NopCloser(bytes.NewBuffer(data))
 
-						if string(data) != body {
+						if string(data) != jsonBody {
 							panic(fmt.Errorf("If modifier req bodies do not match body: %s", data))
 						}
 
@@ -665,7 +678,7 @@ func TestBodyValidationChain(t *testing.T) {
 			name:        "Test Not(false -> true).",
 			method:      "POST",
 			url:         "/test",
-			body:        body,
+			body:        jsonBody,
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody("age", nil).Chain().Not().Alpha(nil).Validate(),
@@ -679,7 +692,7 @@ func TestBodyValidationChain(t *testing.T) {
 			name:        "Test Not(false -> true) multiple fields.",
 			method:      "POST",
 			url:         "/test",
-			body:        body,
+			body:        jsonBody,
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody("age", nil).Chain().Not().Alpha(nil).Validate(),
@@ -694,7 +707,7 @@ func TestBodyValidationChain(t *testing.T) {
 			name:        "Test Not(true -> false).",
 			method:      "POST",
 			url:         "/test",
-			body:        body,
+			body:        jsonBody,
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody("age", nil).Chain().Not().Numeric(nil).Validate(),
@@ -710,7 +723,7 @@ func TestBodyValidationChain(t *testing.T) {
 			name:        "Test Not(true -> false) multiple fields.",
 			method:      "POST",
 			url:         "/test",
-			body:        body,
+			body:        jsonBody,
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody("age", nil).Chain().Not().Numeric(nil).Validate(),
@@ -728,7 +741,7 @@ func TestBodyValidationChain(t *testing.T) {
 			name:        "Test Skip(true).",
 			method:      "POST",
 			url:         "/test",
-			body:        body,
+			body:        jsonBody,
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody(`fav\.movie`, nil).Chain().Skip(
@@ -738,7 +751,7 @@ func TestBodyValidationChain(t *testing.T) {
 							panic(fmt.Errorf("Skip modifier could not read req body err: %w", err))
 						}
 
-						if string(data) != body {
+						if string(data) != jsonBody {
 							panic(fmt.Errorf("Skip modifier req bodies do not match body: %s", data))
 						}
 
@@ -763,7 +776,7 @@ func TestBodyValidationChain(t *testing.T) {
 			name:        "Test Skip(true) multiple fields.",
 			method:      "POST",
 			url:         "/test",
-			body:        body,
+			body:        jsonBody,
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody(`fav\.movie`, nil).Chain().Skip(
@@ -775,7 +788,7 @@ func TestBodyValidationChain(t *testing.T) {
 
 						req.Body = io.NopCloser(bytes.NewBuffer(data))
 
-						if string(data) != body {
+						if string(data) != jsonBody {
 							panic(fmt.Errorf("Skip modifier req bodies do not match body: %s", data))
 						}
 
@@ -799,7 +812,7 @@ func TestBodyValidationChain(t *testing.T) {
 
 						req.Body = io.NopCloser(bytes.NewBuffer(data))
 
-						if string(data) != body {
+						if string(data) != jsonBody {
 							panic(fmt.Errorf("Skip modifier req bodies do not match body: %s", data))
 						}
 
@@ -826,7 +839,7 @@ func TestBodyValidationChain(t *testing.T) {
 			name:        "Test Skip(false).",
 			method:      "POST",
 			url:         "/test",
-			body:        body,
+			body:        jsonBody,
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody(`fav\.movie`, nil).Chain().Skip(
@@ -836,7 +849,7 @@ func TestBodyValidationChain(t *testing.T) {
 							panic(fmt.Errorf("Skip modifier could not read req body err: %w", err))
 						}
 
-						if string(data) != body {
+						if string(data) != jsonBody {
 							panic(fmt.Errorf("Skip modifier req bodies do not match body: %s", data))
 						}
 
@@ -863,7 +876,7 @@ func TestBodyValidationChain(t *testing.T) {
 			name:        "Test Skip(true) just one.",
 			method:      "POST",
 			url:         "/test",
-			body:        body,
+			body:        jsonBody,
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody(`fav\.movie`, nil).Chain().Skip(
@@ -873,7 +886,7 @@ func TestBodyValidationChain(t *testing.T) {
 							panic(fmt.Errorf("Skip modifier could not read req body err: %w", err))
 						}
 
-						if string(data) != body {
+						if string(data) != jsonBody {
 							panic(fmt.Errorf("Skip modifier req bodies do not match body: %s", data))
 						}
 
@@ -900,7 +913,7 @@ func TestBodyValidationChain(t *testing.T) {
 			name:        "Test Skip(false) just one.",
 			method:      "POST",
 			url:         "/test",
-			body:        body,
+			body:        jsonBody,
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody(`fav\.movie`, nil).Chain().Skip(
@@ -910,7 +923,7 @@ func TestBodyValidationChain(t *testing.T) {
 							panic(fmt.Errorf("Skip modifier could not read req body err: %w", err))
 						}
 
-						if string(data) != body {
+						if string(data) != jsonBody {
 							panic(fmt.Errorf("Skip modifier req bodies do not match body: %s", data))
 						}
 
@@ -934,9 +947,68 @@ func TestBodyValidationChain(t *testing.T) {
 			matchedData:         MatchedData{"body": matchedDataFieldValues{`fav\.movie`: "Deer Hunter"}},
 			matchedDataErr:      nil,
 		},
-
 		// For "application/x-www-form-urlencoded
+		{
+			name:        "Test Validator(pass).",
+			method:      "POST",
+			url:         "/test",
+			body:        urlEncodedBody,
+			contentType: "application/x-www-form-urlencoded",
+			customValidatorsChain: []gin.HandlerFunc{
+				NewBody("name", nil).Chain().Ascii().Validate(),
+			},
+			validationResult:    []ValidationChainError{},
+			validationResultErr: nil,
+			matchedData:         MatchedData{"body": matchedDataFieldValues{"name": "John"}},
+			matchedDataErr:      nil,
+		},
+		{
+			name:        "Test Validator(fail).",
+			method:      "POST",
+			url:         "/test",
+			body:        urlEncodedBody,
+			contentType: "application/x-www-form-urlencoded",
+			customValidatorsChain: []gin.HandlerFunc{
+				NewBody("email", nil).Chain().Numeric(nil).Validate(),
+			},
+			validationResult: []ValidationChainError{
+				{Location: "body", Msg: defaultValChainErrMsg, Field: "email", Value: "john@example.com"},
+			},
+			validationResultErr: nil,
+			matchedData:         MatchedData{"body": matchedDataFieldValues{"email": "john@example.com"}},
+			matchedDataErr:      nil,
+		},
 		// For "multipart/form-data"
+		{
+			name:        "Test Validator(pass).",
+			method:      "POST",
+			url:         "/test",
+			body:        formDataBody,
+			contentType: "multipart/form-data; boundary=6c55825619090769257acc8079eeba85e5e9874c7116b71da35065945dd9",
+			customValidatorsChain: []gin.HandlerFunc{
+				NewBody("name", nil).Chain().Ascii().Validate(),
+			},
+			validationResult:    []ValidationChainError{},
+			validationResultErr: nil,
+			matchedData:         MatchedData{"body": matchedDataFieldValues{"name": "John"}},
+			matchedDataErr:      nil,
+		},
+		{
+			name:        "Test Validator(fail).",
+			method:      "POST",
+			url:         "/test",
+			body:        formDataBody,
+			contentType: "multipart/form-data; boundary=6c55825619090769257acc8079eeba85e5e9874c7116b71da35065945dd9",
+			customValidatorsChain: []gin.HandlerFunc{
+				NewBody("email", nil).Chain().Numeric(nil).Validate(),
+			},
+			validationResult: []ValidationChainError{
+				{Location: "body", Msg: defaultValChainErrMsg, Field: "email", Value: "john@example.com"},
+			},
+			validationResultErr: nil,
+			matchedData:         MatchedData{"body": matchedDataFieldValues{"email": "john@example.com"}},
+			matchedDataErr:      nil,
+		},
 	}
 
 	for _, test := range tests {

@@ -15,7 +15,7 @@ import (
 )
 
 var (
-	ErrExtractionFromNilCtx         = errors.New("gin context is nil")
+	ErrFieldExtractionFromNilCtx    = errors.New("gin context is nil")
 	ErrExtractionInvalidContentType = errors.New("invalid content-type header")
 	ErrExtractionInvalidJson        = errors.New("invalid json")
 )
@@ -45,7 +45,7 @@ const (
 // not escaped
 func extractFieldValFromBody(ctx *gin.Context, field string) (string, error) {
 	if ctx == nil {
-		return "", ErrExtractionFromNilCtx
+		return "", ErrFieldExtractionFromNilCtx
 	}
 
 	data, err := ctx.GetRawData()
@@ -79,7 +79,7 @@ func extractFieldValFromBody(ctx *gin.Context, field string) (string, error) {
 // auto escape
 func extractFieldValFromCookie(ctx *gin.Context, field string) (string, error) {
 	if ctx == nil {
-		return "", ErrExtractionFromNilCtx
+		return "", ErrFieldExtractionFromNilCtx
 	}
 
 	cookie, err := ctx.Cookie(field)
@@ -94,7 +94,7 @@ func extractFieldValFromCookie(ctx *gin.Context, field string) (string, error) {
 // not escaped
 func extractFieldValFromHeader(ctx *gin.Context, field string) (string, error) {
 	if ctx == nil {
-		return "", ErrExtractionFromNilCtx
+		return "", ErrFieldExtractionFromNilCtx
 	}
 
 	header := ctx.GetHeader(field)
@@ -105,7 +105,7 @@ func extractFieldValFromHeader(ctx *gin.Context, field string) (string, error) {
 // i escaped
 func extractFieldValFromParam(ctx *gin.Context, field string) (string, error) {
 	if ctx == nil {
-		return "", ErrExtractionFromNilCtx
+		return "", ErrFieldExtractionFromNilCtx
 	}
 
 	param := ctx.Param(field)
@@ -122,7 +122,7 @@ func extractFieldValFromParam(ctx *gin.Context, field string) (string, error) {
 // auto escaped
 func extractFieldValFromQuery(ctx *gin.Context, field string) (string, error) {
 	if ctx == nil {
-		return "", ErrExtractionFromNilCtx
+		return "", ErrFieldExtractionFromNilCtx
 	}
 
 	query := ctx.Query(field)

@@ -7,15 +7,16 @@ import (
 )
 
 const (
-	BailModifierFuncName string = "Bail"
-	IfModifierFuncName   string = "If"
-	NotModifierFuncName  string = "Not"
-	SkipModifierFuncName string = "Skip"
+	BailModifierFuncName     string = "Bail"
+	IfModifierFuncName       string = "If"
+	NotModifierFuncName      string = "Not"
+	SkipModifierFuncName     string = "Skip"
+	OptionalModifierFuncName string = "Optional"
 )
 
 // A modifier is simply a piece of the validation chain that can manipulate the whole validation chain.
 type modifier struct {
-	field      string             // the field to be specified
+	field      string            // the field to be specified
 	errFmtFunc ErrFmtFuncHandler // the function to create the error message
 
 	reqLoc            requestLocation  // the HTTP request location (e.g., body, headers, cookies, params, or queries)
@@ -142,6 +143,22 @@ func (m modifier) Skip(smf SkipModifierFunc) ValidationChain {
 			withValidationChainType(modifierType),
 			withShouldBail(false),
 			withShouldSkip(shouldSkip),
+		)
+	}
+
+	return m.recreateValidationChainFromModifier(ruleCreator)
+}
+
+// Optional ignores validation if the value is not present/empty, instead of failing it.
+func (m modifier) Optional() ValidationChain {
+	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
+		return NewValidationChainRule(
+			withIsValid(true),
+			withNewValue(sanitizedValue),
+			withValidationChainName(OptionalModifierFuncName),
+			withValidationChainType(modifierType),
+			withShouldBail(false),
+			withShouldSkip(false),
 		)
 	}
 

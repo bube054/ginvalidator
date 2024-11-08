@@ -137,6 +137,13 @@ func (v ValidationChain) Validate() gin.HandlerFunc {
 				if vcn == "Skip" {
 					shouldSkipNextValidator = shouldSkip
 				}
+
+				if vcn == "Optional" {
+					if sanitizedValue == "" {
+						valErrs = make([]ValidationChainError, 0, len(ruleCreators))
+						break
+					}
+				}
 			}
 		}
 

@@ -129,18 +129,3 @@ func extractFieldValFromQuery(ctx *gin.Context, field string) (string, error) {
 
 	return query, nil
 }
-
-// Body (JSON, URL-encoded, multipart):
-
-// JSON: Values are already parsed and extracted from JSON, so no URL decoding is needed.
-// URL-encoded: Express’s express.urlencoded() middleware automatically URL-decodes data if it’s encoded in application/x-www-form-urlencoded format.
-// Multipart: Multipart form data (e.g., file uploads) is handled separately, typically by using a package like multer. For URL-decoding, you may need to apply custom decoding logic if there are URL-encoded values within the multipart data fields.
-// Headers:
-
-// Headers are usually raw strings, and express-validator doesn’t apply URL decoding. For fields where URL encoding is expected (like custom headers with encoded values), you’ll need to manually decode them.
-// Cookies:
-
-// Cookies are extracted as raw strings, with no URL decoding applied. If cookies are URL-encoded, you’ll need to decode them manually.
-// Query:
-
-// Query string parameters are typically URL-decoded by Express’s express.query() middleware, so express-validator should receive decoded values.

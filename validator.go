@@ -432,7 +432,7 @@ func (v validator) Bic() ValidationChain {
 	return v.recreateValidationChainFromValidator(ruleCreator)
 }
 
-// Boolean validator that check if the string is a boolean.
+// Boolean validator that checks if the string is a boolean.
 //
 // This function uses the [IsBoolean] from [validatorgo] package to perform the validation logic.
 //
@@ -579,7 +579,7 @@ func (v validator) Date(opts *vgo.IsDateOpts) ValidationChain {
 	return v.recreateValidationChainFromValidator(ruleCreator)
 }
 
-// Decimal is a validator that check if the string represents a decimal number, such as 0.1, .3, 1.1, 1.00003, 4.0, etc.
+// Decimal is a validator that checks if the string represents a decimal number, such as 0.1, .3, 1.1, 1.00003, 4.0, etc.
 //
 // This function uses the [IsDecimal] from [validatorgo] package to perform the validation logic.
 //
@@ -1545,7 +1545,7 @@ func (v validator) Multibyte() ValidationChain {
 	return v.recreateValidationChainFromValidator(ruleCreator)
 }
 
-// Numeric is a validator that check if a string is a number.
+// Numeric is a validator that checks if a string is a number.
 //
 // This function uses the [IsNumeric] from [validatorgo] package to perform the validation logic.
 //

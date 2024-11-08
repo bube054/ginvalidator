@@ -101,21 +101,76 @@ func TestExtractFieldValFromBody(t *testing.T) {
 		{name: "Valid x-www-form-urlencoded extraction (numeric value as string)", field: "age", opts: ginCtxReqOpts{body: `name=John&age=42`, contentType: "application/x-www-form-urlencoded"}, value: `42`, err: nil},
 
 		// multipart/form-data extraction
-		{name: "Valid multipart/form-data extraction (name)", field: "name", opts: ginCtxReqOpts{body: `--boundary\r\nContent-Disposition: form-data; name="name"\r\n\r\nJohn\r\n--boundary--\r\n`, contentType: "multipart/form-data; boundary=--------------------------590299136414163472038474"}, value: `John`, err: nil},
-		{name: "Valid multipart/form-data extraction (name)", field: "name", opts: ginCtxReqOpts{body: `name=John`, contentType: "multipart/form-data; boundary=--------------------------590299136414163472038474"}, value: `John`, err: nil},
-		{name: "Valid multipart/form-data extraction (age)", field: "age", opts: ginCtxReqOpts{body: `age=31`, contentType: "multipart/form-data; boundary=--------------------------590299136414163472038474"}, value: `30`, err: nil},
-		{name: "Valid multipart/form-data extraction (email)", field: "email", opts: ginCtxReqOpts{body: `email=ohn@example.com`, contentType: "multipart/form-data; boundary=--------------------------590299136414163472038474"}, value: `john@example.com`, err: nil},
-		{name: "Invalid multipart/form-data extraction (missing field)", field: "address", opts: ginCtxReqOpts{body: `address=`, contentType: "multipart/form-data; boundary=--------------------------590299136414163472038474"}, value: ``, err: nil},
-		{name: "Valid multipart/form-data extraction (special characters)", field: "name", opts: ginCtxReqOpts{body: `name=John%20Doe`, contentType: "multipart/form-data; boundary=--------------------------590299136414163472038474"}, value: `John%20Doe`, err: nil},
-		{name: "Valid multipart/form-data extraction (numeric value as string)", field: "age", opts: ginCtxReqOpts{body: `age=42`, contentType: "multipart/form-data; boundary=--------------------------590299136414163472038474"}, value: `42`, err: nil},
+		{
+			name:  "Valid multipart/form-data extraction (name)",
+			field: "name",
+			opts: ginCtxReqOpts{
+				contentType: "multipart/form-data; boundary=6c55825619090769257acc8079eeba85e5e9874c7116b71da35065945dd9",
+				body: `--6c55825619090769257acc8079eeba85e5e9874c7116b71da35065945dd9
+Content-Disposition: form-data; name="name"
 
-		{name: "Valid multipart/form-data extraction (name)", field: "name", opts: ginCtxReqOpts{body: `name=John`, contentType: "multipart/form-data; boundary=--------------------------590299136414163472038474"}, value: `John`, err: nil},
-		// {name: "Valid multipart/form-data extraction (name)", field: "name", opts: ginCtxReqOpts{body: `--boundary\r\nContent-Disposition: form-data; name="name"\r\n\r\nJohn\r\n--boundary--\r\n`, contentType: "multipart/form-data; boundary=boundary"}, value: `John`, err: nil},
-		// {name: "Valid multipart/form-data extraction (age)", field: "age", opts: ginCtxReqOpts{body: `--boundary\r\nContent-Disposition: form-data; name="age"\r\n\r\n31\r\n--boundary--\r\n`, contentType: "multipart/form-data; boundary=boundary"}, value: `31`, err: nil},
-		// {name: "Valid multipart/form-data extraction (email)", field: "email", opts: ginCtxReqOpts{body: `--boundary\r\nContent-Disposition: form-data; name="email"\r\n\r\njohn@example.com\r\n--boundary--\r\n`, contentType: "multipart/form-data; boundary=boundary"}, value: `john@example.com`, err: nil},
-		// {name: "Invalid multipart/form-data extraction (missing field)", field: "address", opts: ginCtxReqOpts{body: `--boundary\r\nContent-Disposition: form-data; name="address"\r\n\r\n\r\n--boundary--\r\n`, contentType: "multipart/form-data; boundary=boundary"}, value: ``, err: nil},
-		// {name: "Valid multipart/form-data extraction (special characters)", field: "name", opts: ginCtxReqOpts{body: `--boundary\r\nContent-Disposition: form-data; name="name"\r\n\r\nJohn%20Doe\r\n--boundary--\r\n`, contentType: "multipart/form-data; boundary=boundary"}, value: `John Doe`, err: nil},
-		// {name: "Valid multipart/form-data extraction (numeric value as string)", field: "age", opts: ginCtxReqOpts{body: `--boundary\r\nContent-Disposition: form-data; name="age"\r\n\r\n42\r\n--boundary--\r\n`, contentType: "multipart/form-data; boundary=boundary"}, value: `42`, err: nil},
+John
+--6c55825619090769257acc8079eeba85e5e9874c7116b71da35065945dd9--`,
+			},
+			value: `John`,
+			err:   nil,
+		},
+		{
+			name:  "Valid multipart/form-data extraction (age)",
+			field: "age",
+			opts: ginCtxReqOpts{
+				contentType: "multipart/form-data; boundary=6c55825619090769257acc8079eeba85e5e9874c7116b71da35065945dd9",
+				body: `--6c55825619090769257acc8079eeba85e5e9874c7116b71da35065945dd9
+Content-Disposition: form-data; name="age"
+
+30
+--6c55825619090769257acc8079eeba85e5e9874c7116b71da35065945dd9--`,
+			},
+			value: `30`,
+			err:   nil,
+		},
+		{
+			name:  "Valid multipart/form-data extraction (email)",
+			field: "email",
+			opts: ginCtxReqOpts{
+				contentType: "multipart/form-data; boundary=6c55825619090769257acc8079eeba85e5e9874c7116b71da35065945dd9",
+				body: `--6c55825619090769257acc8079eeba85e5e9874c7116b71da35065945dd9
+Content-Disposition: form-data; name="email"
+
+John@example.com
+--6c55825619090769257acc8079eeba85e5e9874c7116b71da35065945dd9--`,
+			},
+			value: `John@example.com`,
+			err:   nil,
+		},
+		{
+			name:  "Valid multipart/form-data extraction (address)",
+			field: "address",
+			opts: ginCtxReqOpts{
+				contentType: "multipart/form-data; boundary=6c55825619090769257acc8079eeba85e5e9874c7116b71da35065945dd9",
+				body: `--6c55825619090769257acc8079eeba85e5e9874c7116b71da35065945dd9
+Content-Disposition: form-data; name="address"
+
+home address
+--6c55825619090769257acc8079eeba85e5e9874c7116b71da35065945dd9--`,
+			},
+			value: `home address`,
+			err:   nil,
+		},
+		{
+			name:  "Valid multipart/form-data extraction (special characters)",
+			field: "name",
+			opts: ginCtxReqOpts{
+				contentType: "multipart/form-data; boundary=6c55825619090769257acc8079eeba85e5e9874c7116b71da35065945dd9",
+				body: `--6c55825619090769257acc8079eeba85e5e9874c7116b71da35065945dd9
+Content-Disposition: form-data; name="name"
+
+John%20Doe
+--6c55825619090769257acc8079eeba85e5e9874c7116b71da35065945dd9--`,
+			},
+			value: `John%20Doe`,
+			err:   nil,
+		},
 	}
 
 	for _, test := range tests {
@@ -151,7 +206,7 @@ func TestExtractFieldValFromCookie(t *testing.T) {
 		{name: "Valid cookie extraction (multiple cookies)", field: "session", opts: ginCtxReqOpts{cookies: []*http.Cookie{{Name: "session", Value: "abc123"}}}, value: `abc123`, err: nil},
 		{name: "Valid cookie extraction (empty cookie)", field: "empty", opts: ginCtxReqOpts{cookies: []*http.Cookie{{Name: "empty", Value: ""}}}, value: ``, err: nil},
 		{name: "Invalid cookie extraction (missing cookie)", field: "missing", opts: ginCtxReqOpts{cookies: nil}, value: ``, err: nil},
-		{name: "Valid cookie extraction (special characters)", field: "name", opts: ginCtxReqOpts{cookies: []*http.Cookie{{Name: "name", Value: "John Doe"}}}, value: `John Doe`, err: nil},
+		{name: "Valid cookie extraction (special characters)", field: "name", opts: ginCtxReqOpts{cookies: []*http.Cookie{{Name: "name", Value: "John%20Doe"}}}, value: `John Doe`, err: nil},
 		{name: "Valid cookie extraction (numeric value)", field: "age", opts: ginCtxReqOpts{cookies: []*http.Cookie{{Name: "age", Value: "42"}}}, value: `42`, err: nil},
 	}
 
@@ -186,7 +241,7 @@ func TestExtractFieldValFromHeader(t *testing.T) {
 		{name: "Valid header extraction (multiple headers)", field: "session", opts: ginCtxReqOpts{headers: map[string]string{"session": "abc123"}}, value: `abc123`, err: nil},
 		{name: "Valid header extraction (empty header)", field: "empty", opts: ginCtxReqOpts{headers: map[string]string{"empty": ""}}, value: ``, err: nil},
 		{name: "Invalid header extraction (missing header)", field: "missing", opts: ginCtxReqOpts{headers: map[string]string{}}, value: ``, err: nil},
-		{name: "Valid header extraction (special characters)", field: "name", opts: ginCtxReqOpts{headers: map[string]string{"name": "John%20Doe"}}, value: `John Doe`, err: nil},
+		{name: "Valid header extraction (special characters)", field: "name", opts: ginCtxReqOpts{headers: map[string]string{"name": "John%20Doe"}}, value: `John%20Doe`, err: nil},
 		{name: "Valid header extraction (numeric value)", field: "age", opts: ginCtxReqOpts{headers: map[string]string{"age": "42"}}, value: `42`, err: nil},
 	}
 

@@ -249,3 +249,57 @@ func TestSkip(t *testing.T) {
 		})
 	}
 }
+
+func TestOptional(t *testing.T) {
+	tests := []struct {
+		name string
+
+		smf        SkipModifierFunc
+		field      string
+		errFmtFunc ErrFmtFuncHandler
+
+		reqOpts ginCtxReqOpts
+
+		want validationChainRule
+	}{
+		{
+			name: "Creates an Optional modifier validation chain rule.",
+
+			field:      "name",
+			errFmtFunc: nil,
+			reqOpts:    ginCtxReqOpts{body: `{"name": "John"}`, contentType: "application/json"},
+			want: NewValidationChainRule(
+				withIsValid(true),
+				withNewValue("John"),
+				withValidationChainName(OptionalModifierFuncName),
+				withValidationChainType(modifierType),
+				withShouldBail(false),
+				withShouldSkip(false),
+			),
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			body := NewBody(test.field, test.errFmtFunc)
+			chain := body.Chain()
+
+			vc := chain.Optional()
+			vcrs := vc.validator.rulesCreatorFuncs
+
+			if len(vcrs) != 1 {
+				t.Errorf("rule creators length invalid.")
+				return
+			}
+
+			ctx := createTestGinCtx(test.reqOpts)
+			vcr := vcrs[0]
+			value, _ := extractFieldValFromBody(ctx, test.field)
+			r := vcr(ctx, value, value)
+
+			if r != test.want {
+				t.Errorf("got %+v, want %+v", r, test.want)
+			}
+		})
+	}
+}

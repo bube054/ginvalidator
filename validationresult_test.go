@@ -4,8 +4,11 @@ import (
 	"errors"
 	"slices"
 	"testing"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/go-cmp/cmp"
+	"github.com/google/go-cmp/cmp/cmpopts"
 )
 
 func TestValidationResult(t *testing.T) {
@@ -110,5 +113,145 @@ func TestValidationResult(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+func TestSortErrorsByCreatedAt(t *testing.T) {
+	tests := []struct {
+		name           string
+		initial        []ValidationChainError
+		expectedResult []ValidationChainError
+	}{
+		{
+			name: "slice of 1 errors",
+			initial: []ValidationChainError{
+				NewValidationChainError(
+					vceWithLocation("body"),
+					vceWithMsg(defaultValChainErrMsg),
+					vceWithField("field"),
+					vceWithValue("value"),
+					vceWithCreatedAt(time.Date(2024, time.November, 8, 12, 50, 50, 0, time.Local))),
+			},
+			expectedResult: []ValidationChainError{
+				NewValidationChainError(
+					vceWithLocation("body"),
+					vceWithMsg(defaultValChainErrMsg),
+					vceWithField("field"),
+					vceWithValue("value"),
+					vceWithCreatedAt(time.Date(2024, time.November, 8, 12, 50, 50, 0, time.Local))),
+			},
+		},
+		{
+			name: "slice of 2 errors already ordered",
+			initial: []ValidationChainError{
+				NewValidationChainError(
+					vceWithLocation("body"),
+					vceWithMsg(defaultValChainErrMsg),
+					vceWithField("field"),
+					vceWithValue("value"),
+					vceWithCreatedAt(time.Date(2024, time.November, 8, 12, 50, 50, 0, time.Local))),
+				NewValidationChainError(
+					vceWithLocation("body"),
+					vceWithMsg(defaultValChainErrMsg),
+					vceWithField("field"),
+					vceWithValue("value"),
+					vceWithCreatedAt(time.Date(2024, time.November, 8, 12, 51, 50, 0, time.Local))),
+			},
+			expectedResult: []ValidationChainError{
+				NewValidationChainError(
+					vceWithLocation("body"),
+					vceWithMsg(defaultValChainErrMsg),
+					vceWithField("field"),
+					vceWithValue("value"),
+					vceWithCreatedAt(time.Date(2024, time.November, 8, 12, 50, 50, 0, time.Local))),
+				NewValidationChainError(
+					vceWithLocation("body"),
+					vceWithMsg(defaultValChainErrMsg),
+					vceWithField("field"),
+					vceWithValue("value"),
+					vceWithCreatedAt(time.Date(2024, time.November, 8, 12, 51, 50, 0, time.Local))),
+			},
+		},
+		{
+			name: "slice of 2 errors not already ordered",
+			initial: []ValidationChainError{
+				NewValidationChainError(
+					vceWithLocation("body"),
+					vceWithMsg(defaultValChainErrMsg),
+					vceWithField("field"),
+					vceWithValue("value"),
+					vceWithCreatedAt(time.Date(2024, time.November, 8, 12, 51, 50, 0, time.Local))),
+				NewValidationChainError(
+					vceWithLocation("body"),
+					vceWithMsg(defaultValChainErrMsg),
+					vceWithField("field"),
+					vceWithValue("value"),
+					vceWithCreatedAt(time.Date(2024, time.November, 8, 12, 50, 50, 0, time.Local))),
+			},
+			expectedResult: []ValidationChainError{
+				NewValidationChainError(
+					vceWithLocation("body"),
+					vceWithMsg(defaultValChainErrMsg),
+					vceWithField("field"),
+					vceWithValue("value"),
+					vceWithCreatedAt(time.Date(2024, time.November, 8, 12, 50, 50, 0, time.Local))),
+				NewValidationChainError(
+					vceWithLocation("body"),
+					vceWithMsg(defaultValChainErrMsg),
+					vceWithField("field"),
+					vceWithValue("value"),
+					vceWithCreatedAt(time.Date(2024, time.November, 8, 12, 51, 50, 0, time.Local))),
+			},
+		},
+		{
+			name: "slice of 3 errors not already ordered",
+			initial: []ValidationChainError{
+				NewValidationChainError(
+					vceWithLocation("body"),
+					vceWithMsg(defaultValChainErrMsg),
+					vceWithField("field"),
+					vceWithValue("value"),
+					vceWithCreatedAt(time.Date(2024, time.November, 8, 12, 51, 50, 0, time.Local))),
+				NewValidationChainError(
+					vceWithLocation("body"),
+					vceWithMsg(defaultValChainErrMsg),
+					vceWithField("field"),
+					vceWithValue("value"),
+					vceWithCreatedAt(time.Date(2024, time.November, 8, 12, 50, 50, 0, time.Local))),
+				NewValidationChainError(
+					vceWithLocation("body"),
+					vceWithMsg(defaultValChainErrMsg),
+					vceWithField("field"),
+					vceWithValue("value"),
+					vceWithCreatedAt(time.Date(2024, time.November, 8, 12, 49, 35, 0, time.Local))),
+			},
+			expectedResult: []ValidationChainError{
+				NewValidationChainError(
+					vceWithLocation("body"),
+					vceWithMsg(defaultValChainErrMsg),
+					vceWithField("field"),
+					vceWithValue("value"),
+					vceWithCreatedAt(time.Date(2024, time.November, 8, 12, 49, 35, 0, time.Local))),
+				NewValidationChainError(
+					vceWithLocation("body"),
+					vceWithMsg(defaultValChainErrMsg),
+					vceWithField("field"),
+					vceWithValue("value"),
+					vceWithCreatedAt(time.Date(2024, time.November, 8, 12, 50, 50, 0, time.Local))),
+				NewValidationChainError(
+					vceWithLocation("body"),
+					vceWithMsg(defaultValChainErrMsg),
+					vceWithField("field"),
+					vceWithValue("value"),
+					vceWithCreatedAt(time.Date(2024, time.November, 8, 12, 51, 50, 0, time.Local))),
+			},
+		},
+	}
+
+	for _, test := range tests {
+		sortErrorsByCreatedAt(test.initial)
+		if !cmp.Equal(test.initial, test.expectedResult, cmpopts.IgnoreUnexported(ValidationChainError{}), cmpopts.EquateEmpty()) {
+			t.Errorf("got %+v, wanted %+v", test.initial, test.expectedResult)
+		}
 	}
 }

@@ -65,3 +65,10 @@ If you are unhappy using the long validatorgo package name, you can do this.
 # License
 
 This project is licensed under the [MIT](https://opensource.org/license/mit). See the [LICENSE](https://github.com/bube054/validatorgo/blob/master/LICENSE) file for details.
+
+got [
+  {Location:body Msg:Invalid value Field:age Value:37 createdAt:{wall:13962207013182452868 ext:23103701 loc:0xd93720}} 
+  {Location:body Msg:Invalid value Field:message Value:A good saying is 7 comes after ate. createdAt:{wall:13962207013182452868 ext:23103701 loc:0xd93720}}]
+
+  [{Location:body Msg:Invalid value Field:message Value:A good saying is 7 comes after ate. createdAt:{wall:0 ext:0 loc:<nil>}} 
+  {Location:body Msg:Invalid value Field:age Value:37 createdAt:{wall:0 ext:0 loc:<nil>}}]

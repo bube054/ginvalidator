@@ -947,6 +947,38 @@ john@example.com
 			matchedData:         MatchedData{"body": matchedDataFieldValues{`fav\.movie`: "Deer Hunter"}},
 			matchedDataErr:      nil,
 		},
+		{
+			name:        "Test Optional(present)",
+			method:      "POST",
+			url:         "/test",
+			body:        jsonBody,
+			contentType: "application/json",
+			customValidatorsChain: []gin.HandlerFunc{
+				NewBody("age", nil).Chain().Alpha(nil).Optional().Validate(),
+			},
+			validationResult: []ValidationChainError{
+				{Location: "body", Msg: defaultValChainErrMsg, Field: "age", Value: "37"},
+			},
+			validationResultErr: nil,
+			matchedData:         MatchedData{"body": matchedDataFieldValues{"age": "37"}},
+			matchedDataErr:      nil,
+		},
+		{
+			name:        "Test Optional(not-present)",
+			method:      "POST",
+			url:         "/test",
+			body:        jsonBody,
+			contentType: "application/json",
+			customValidatorsChain: []gin.HandlerFunc{
+				NewBody("num-brothers", nil).Chain().Alpha(nil).Optional().Validate(),
+			},
+			validationResult: []ValidationChainError{
+				// {Location: "body", Msg: defaultValChainErrMsg, Field: "num-brothers", Value: ""},
+			},
+			validationResultErr: nil,
+			matchedData:         MatchedData{"body": matchedDataFieldValues{"num-brothers": ""}},
+			matchedDataErr:      nil,
+		},
 		// For "application/x-www-form-urlencoded
 		{
 			name:        "Test Validator(pass).",
@@ -1012,7 +1044,7 @@ john@example.com
 	}
 
 	for _, test := range tests {
-		test := test
+		// test := test
 		t.Run(test.name, func(t *testing.T) {
 			// t.Parallel()
 			router := setupRouter()

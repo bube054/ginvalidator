@@ -6,8 +6,10 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"strings"
 
+	"net/http"
 	"net/url"
 
 	"github.com/gin-gonic/gin"
@@ -99,6 +101,10 @@ func extractFieldValFromHeader(ctx *gin.Context, field string) (string, error) {
 
 	header := ctx.GetHeader(field)
 
+	if header == "" {
+		return getOriginalHeaderValue(ctx.Request.Header, field), nil
+	}
+
 	return header, nil
 }
 
@@ -128,4 +134,15 @@ func extractFieldValFromQuery(ctx *gin.Context, field string) (string, error) {
 	query := ctx.Query(field)
 
 	return query, nil
+}
+
+func getOriginalHeaderValue(headers http.Header, key string) string {
+	for k, v := range headers {
+		if strings.EqualFold(k, key) {
+			canonicalKey := http.CanonicalHeaderKey(key)
+			log.Printf("Warning: Non-canonical header key '%s' used. Expected '%s'.", key, canonicalKey)
+			return v[0]
+		}
+	}
+	return ""
 }

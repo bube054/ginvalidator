@@ -45,7 +45,9 @@ func ValidationResult(ctx *gin.Context) ([]ValidationChainError, error) {
 		}
 	}
 
+	// fmt.Printf("Unsorted: %+v\n", allErrs)
 	sortErrorsByCreatedAt(allErrs)
+	// fmt.Printf("Sorted: %+v\n", allErrs)
 
 	return allErrs, nil
 }

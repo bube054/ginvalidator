@@ -11,7 +11,6 @@ import (
 	"strings"
 	"testing"
 
-	// vgo "github.com/bube054/validatorgo"
 	"github.com/gin-gonic/gin"
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
@@ -116,6 +115,28 @@ john@example.com
 			validationResult: []ValidationChainError{
 				{Location: "body", Msg: defaultValChainErrMsg, Field: "name.first", Value: "Tom"},
 				{Location: "body", Msg: defaultValChainErrMsg, Field: "name.last", Value: "Anderson"},
+			},
+			validationResultErr: nil,
+			matchedData:         MatchedData{"body": matchedDataFieldValues{"name.first": "Tom", "name.last": "Anderson"}},
+			matchedDataErr:      nil,
+		},
+		{
+			name:        "Test Validator(fail) multiple fields, with error message.",
+			method:      "POST",
+			url:         "/test",
+			body:        jsonBody,
+			contentType: "application/json",
+			customValidatorsChain: []gin.HandlerFunc{
+				NewBody("name.first", func(initialValue, sanitizedValue, validatorName string) string {
+					return "Invalid first name" + " " + validatorName
+				}).Chain().Numeric(nil).Validate(),
+				NewBody("name.last", func(initialValue, sanitizedValue, validatorName string) string {
+					return "Invalid last name"  + " " + validatorName
+				}).Chain().Currency(nil).Validate(),
+			},
+			validationResult: []ValidationChainError{
+				{Location: "body", Msg: "Invalid first name Numeric", Field: "name.first", Value: "Tom"},
+				{Location: "body", Msg: "Invalid last name Currency", Field: "name.last", Value: "Anderson"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"body": matchedDataFieldValues{"name.first": "Tom", "name.last": "Anderson"}},
@@ -973,7 +994,6 @@ john@example.com
 				NewBody("num-brothers", nil).Chain().Alpha(nil).Optional().Validate(),
 			},
 			validationResult: []ValidationChainError{
-				// {Location: "body", Msg: defaultValChainErrMsg, Field: "num-brothers", Value: ""},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"body": matchedDataFieldValues{"num-brothers": ""}},

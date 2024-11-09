@@ -1,0 +1,8 @@
+# got [
+# {Location:headers Msg:Currency Field:JSESSIONID Value:D4E4B8CD58F4B5205E013B0B4467D5DF createdAt:{wall:13962307181402904804 ext:19937201 loc:0x11ef760}} 
+# {Location:headers Msg:Numeric Field:PHPSESSID Value:f25g9kvjlou432vmc0ht createdAt:{wall:13962307181402904804 ext:19937201 loc:0x11ef760}}]
+# ]
+#  [
+#   {Location:headers Msg:Numeric Field:PHPSESSID Value:f25g9kvjlou432vmc0ht createdAt:{wall:0 ext:0 loc:<nil>}} 
+#   {Location:headers Msg:Currency Field:JSESSIONID Value:D4E4B8CD58F4B5205E013B0B4467D5DF createdAt:{wall:0 ext:0 loc:<nil>}}
+#   ]

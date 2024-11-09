@@ -33,7 +33,7 @@ const (
 )
 
 func (l requestLocation) string() string {
-	return [...]string{"body", "cookies", "headers", "params", "query"}[l]
+	return [...]string{"body", "cookies", "headers", "params", "queries"}[l]
 }
 
 type validationChainType int

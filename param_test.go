@@ -649,7 +649,6 @@ func generateDynamicURL(params gin.Params) (string, string) {
 		pathValues = append(pathValues, param.Value)
 	}
 
-	// Join the path templates and values to form the URLs
 	dynamicPath := "/" + strings.Join(pathTemplate, "/")
 	finalURL := "/" + strings.Join(pathValues, "/")
 

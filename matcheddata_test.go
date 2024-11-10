@@ -26,42 +26,42 @@ func TestMatchedData(t *testing.T) {
 			name:                "Nil ctx provided",
 			ctx:                 nil,
 			insertedData:        []data{{location: "body", field: "testField", value: "testValue"}},
-			expectedMatchedData: MatchedData{"body": matchedDataFieldValues{"testField": "testValue"}},
+			expectedMatchedData: MatchedData{"body": MatchedDataFieldValues{"testField": "testValue"}},
 			expectedErr:         ErrNilCtxMatchedData,
 		},
 		{
 			name:                "Extracted matched body data",
 			ctx:                 createTestGinCtx(ginCtxReqOpts{}),
 			insertedData:        []data{{location: "body", field: "testField", value: "testValue"}},
-			expectedMatchedData: MatchedData{"body": matchedDataFieldValues{"testField": "testValue"}},
+			expectedMatchedData: MatchedData{"body": MatchedDataFieldValues{"testField": "testValue"}},
 			expectedErr:         nil,
 		},
 		{
 			name:                "Extracted matched cookies data",
 			ctx:                 createTestGinCtx(ginCtxReqOpts{}),
 			insertedData:        []data{{location: "cookies", field: "testField", value: "testValue"}},
-			expectedMatchedData: MatchedData{"cookies": matchedDataFieldValues{"testField": "testValue"}},
+			expectedMatchedData: MatchedData{"cookies": MatchedDataFieldValues{"testField": "testValue"}},
 			expectedErr:         nil,
 		},
 		{
 			name:                "Extracted matched headers data",
 			ctx:                 createTestGinCtx(ginCtxReqOpts{}),
 			insertedData:        []data{{location: "headers", field: "testField", value: "testValue"}},
-			expectedMatchedData: MatchedData{"headers": matchedDataFieldValues{"testField": "testValue"}},
+			expectedMatchedData: MatchedData{"headers": MatchedDataFieldValues{"testField": "testValue"}},
 			expectedErr:         nil,
 		},
 		{
 			name:                "Extracted matched params data",
 			ctx:                 createTestGinCtx(ginCtxReqOpts{}),
 			insertedData:        []data{{location: "params", field: "testField", value: "testValue"}},
-			expectedMatchedData: MatchedData{"params": matchedDataFieldValues{"testField": "testValue"}},
+			expectedMatchedData: MatchedData{"params": MatchedDataFieldValues{"testField": "testValue"}},
 			expectedErr:         nil,
 		},
 		{
 			name:                "Extracted matched query data",
 			ctx:                 createTestGinCtx(ginCtxReqOpts{}),
 			insertedData:        []data{{location: "query", field: "testField", value: "testValue"}},
-			expectedMatchedData: MatchedData{"query": matchedDataFieldValues{"testField": "testValue"}},
+			expectedMatchedData: MatchedData{"query": MatchedDataFieldValues{"testField": "testValue"}},
 			expectedErr:         nil,
 		},
 		{
@@ -73,7 +73,7 @@ func TestMatchedData(t *testing.T) {
 				{location: "body", field: "field3", value: "value3"},
 			},
 			expectedMatchedData: MatchedData{
-				"body": matchedDataFieldValues{
+				"body": MatchedDataFieldValues{
 					"field1": "value1",
 					"field2": "value2",
 					"field3": "value3",
@@ -92,11 +92,11 @@ func TestMatchedData(t *testing.T) {
 				{location: "query", field: "queryField", value: "queryValue"},
 			},
 			expectedMatchedData: MatchedData{
-				"body":    matchedDataFieldValues{"bodyField": "bodyValue"},
-				"cookies": matchedDataFieldValues{"cookieField": "cookieValue"},
-				"headers": matchedDataFieldValues{"headerField": "headerValue"},
-				"params":  matchedDataFieldValues{"paramField": "paramValue"},
-				"query":   matchedDataFieldValues{"queryField": "queryValue"},
+				"body":    MatchedDataFieldValues{"bodyField": "bodyValue"},
+				"cookies": MatchedDataFieldValues{"cookieField": "cookieValue"},
+				"headers": MatchedDataFieldValues{"headerField": "headerValue"},
+				"params":  MatchedDataFieldValues{"paramField": "paramValue"},
+				"query":   MatchedDataFieldValues{"queryField": "queryValue"},
 			},
 			expectedErr: nil,
 		},
@@ -110,11 +110,11 @@ func TestMatchedData(t *testing.T) {
 				{location: "headers", field: "header2", value: "headerValue2"},
 			},
 			expectedMatchedData: MatchedData{
-				"cookies": matchedDataFieldValues{
+				"cookies": MatchedDataFieldValues{
 					"cookie1": "cookieValue1",
 					"cookie2": "cookieValue2",
 				},
-				"headers": matchedDataFieldValues{
+				"headers": MatchedDataFieldValues{
 					"header1": "headerValue1",
 					"header2": "headerValue2",
 				},
@@ -131,11 +131,11 @@ func TestMatchedData(t *testing.T) {
 				{location: "query", field: "query2", value: "queryValue2"},
 			},
 			expectedMatchedData: MatchedData{
-				"params": matchedDataFieldValues{
+				"params": MatchedDataFieldValues{
 					"param1": "paramValue1",
 					"param2": "paramValue2",
 				},
-				"query": matchedDataFieldValues{
+				"query": MatchedDataFieldValues{
 					"query1": "queryValue1",
 					"query2": "queryValue2",
 				},
@@ -153,15 +153,15 @@ func TestMatchedData(t *testing.T) {
 				{location: "query", field: "queryField2", value: "queryValue2"},
 			},
 			expectedMatchedData: MatchedData{
-				"body": matchedDataFieldValues{
+				"body": MatchedDataFieldValues{
 					"bodyField1": "bodyValue1",
 					"bodyField2": "bodyValue2",
 				},
-				"query": matchedDataFieldValues{
+				"query": MatchedDataFieldValues{
 					"queryField1": "queryValue1",
 					"queryField2": "queryValue2",
 				},
-				"headers": matchedDataFieldValues{
+				"headers": MatchedDataFieldValues{
 					"headerField1": "headerValue1",
 				},
 			},
@@ -175,7 +175,7 @@ func TestMatchedData(t *testing.T) {
 				{location: "body", field: "field1", value: "overriddenValue"},
 			},
 			expectedMatchedData: MatchedData{
-				"body": matchedDataFieldValues{
+				"body": MatchedDataFieldValues{
 					"field1": "overriddenValue",
 				},
 			},
@@ -189,7 +189,7 @@ func TestMatchedData(t *testing.T) {
 				{location: "cookies", field: "cookieField", value: "cookieValue2"},
 			},
 			expectedMatchedData: MatchedData{
-				"cookies": matchedDataFieldValues{
+				"cookies": MatchedDataFieldValues{
 					"cookieField": "cookieValue2",
 				},
 			},
@@ -204,10 +204,10 @@ func TestMatchedData(t *testing.T) {
 				{location: "body", field: "headerField", value: "bodyValue2"},
 			},
 			expectedMatchedData: MatchedData{
-				"headers": matchedDataFieldValues{
+				"headers": MatchedDataFieldValues{
 					"headerField": "headerValue1",
 				},
-				"body": matchedDataFieldValues{
+				"body": MatchedDataFieldValues{
 					"headerField": "bodyValue2",
 				},
 			},
@@ -221,7 +221,7 @@ func TestMatchedData(t *testing.T) {
 				{location: "params", field: "param1", value: "overriddenParamValue1"},
 			},
 			expectedMatchedData: MatchedData{
-				"params": matchedDataFieldValues{
+				"params": MatchedDataFieldValues{
 					"param1": "overriddenParamValue1",
 				},
 			},
@@ -237,10 +237,10 @@ func TestMatchedData(t *testing.T) {
 				{location: "query", field: "field1", value: "overriddenQueryValue"},
 			},
 			expectedMatchedData: MatchedData{
-				"body": matchedDataFieldValues{
+				"body": MatchedDataFieldValues{
 					"field1": "overriddenBodyValue",
 				},
-				"query": matchedDataFieldValues{
+				"query": MatchedDataFieldValues{
 					"field1": "overriddenQueryValue",
 				},
 			},

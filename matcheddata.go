@@ -13,9 +13,29 @@ var (
 
 const GinValidatorCtxMatchedDataStoreName string = "__ginvalidator__matched__data__"
 
-type matchedDataFieldValues map[string]string
-type MatchedData map[string]matchedDataFieldValues
+// MatchedDataFieldValues is a map of fields and their values for a request location.
+type MatchedDataFieldValues map[string]string
 
+// MatchedData is a map of request locations and fields.
+// The keys in MatchedData represent the request locations where fields can be found.
+// Possible locations include:
+//   - "body": Data from the request body.
+//   - "cookies": Data from request cookies.
+//   - "headers": Data from request headers.
+//   - "params": Data from URL parameters.
+//   - "queries": Data from URL query parameters.
+type MatchedData map[string]MatchedDataFieldValues
+
+// GetMatchedData extracts and returns matched data from various locations in the request context.
+// It retrieves fields and values from predefined request locations such as query parameters, body,
+// URL parameters, and headers.
+//
+// Parameters:
+//   - ctx: The Gin context, which provides access to the HTTP request and response.
+//
+// Returns:
+//   - MatchedData: A map containing fields and their values organized by request location.
+//   - error: An error if there was an issue extracting data from the context; otherwise, nil.
 func GetMatchedData(ctx *gin.Context) (MatchedData, error) {
 	if ctx == nil {
 		return nil, ErrNilCtxMatchedData
@@ -72,7 +92,7 @@ func saveSanitizedDataToCtx(ctx *gin.Context, location, field, value string) {
 	specificLocationStore, ok := store[location]
 
 	if !ok {
-		specificLocationStore = make(matchedDataFieldValues)
+		specificLocationStore = make(MatchedDataFieldValues)
 		store[location] = specificLocationStore
 	}
 

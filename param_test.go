@@ -60,7 +60,7 @@ func TestParamValidationChain(t *testing.T) {
 			},
 			validationResult:    []ValidationChainError{},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"params": matchedDataFieldValues{"PHPSESSID": "f25g9kvjlou432vmc0ht"}},
+			matchedData:         MatchedData{"params": MatchedDataFieldValues{"PHPSESSID": "f25g9kvjlou432vmc0ht"}},
 			matchedDataErr:      nil,
 		},
 		{
@@ -75,7 +75,7 @@ func TestParamValidationChain(t *testing.T) {
 				{Location: "params", Msg: defaultValChainErrMsg, Field: "PHPSESSID", Value: "f25g9kvjlou432vmc0ht"},
 			},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"params": matchedDataFieldValues{"PHPSESSID": "f25g9kvjlou432vmc0ht"}},
+			matchedData:         MatchedData{"params": MatchedDataFieldValues{"PHPSESSID": "f25g9kvjlou432vmc0ht"}},
 			matchedDataErr:      nil,
 		},
 		{
@@ -89,7 +89,7 @@ func TestParamValidationChain(t *testing.T) {
 			},
 			validationResult:    []ValidationChainError{},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"params": matchedDataFieldValues{"PHPSESSID": "f25g9kvjlou432vmc0ht", "JSESSIONID": "D4E4B8CD58F4B5205E013B0B4467D5DF"}},
+			matchedData:         MatchedData{"params": MatchedDataFieldValues{"PHPSESSID": "f25g9kvjlou432vmc0ht", "JSESSIONID": "D4E4B8CD58F4B5205E013B0B4467D5DF"}},
 			matchedDataErr:      nil,
 		},
 		{
@@ -106,7 +106,7 @@ func TestParamValidationChain(t *testing.T) {
 				{Location: "params", Msg: defaultValChainErrMsg, Field: "JSESSIONID", Value: "D4E4B8CD58F4B5205E013B0B4467D5DF"},
 			},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"params": matchedDataFieldValues{"PHPSESSID": "f25g9kvjlou432vmc0ht", "JSESSIONID": "D4E4B8CD58F4B5205E013B0B4467D5DF"}},
+			matchedData:         MatchedData{"params": MatchedDataFieldValues{"PHPSESSID": "f25g9kvjlou432vmc0ht", "JSESSIONID": "D4E4B8CD58F4B5205E013B0B4467D5DF"}},
 			matchedDataErr:      nil,
 		},
 		{
@@ -127,7 +127,7 @@ func TestParamValidationChain(t *testing.T) {
 				{Location: "params", Msg: "Currency", Field: "JSESSIONID", Value: "D4E4B8CD58F4B5205E013B0B4467D5DF"},
 			},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"params": matchedDataFieldValues{"PHPSESSID": "f25g9kvjlou432vmc0ht", "JSESSIONID": "D4E4B8CD58F4B5205E013B0B4467D5DF"}},
+			matchedData:         MatchedData{"params": MatchedDataFieldValues{"PHPSESSID": "f25g9kvjlou432vmc0ht", "JSESSIONID": "D4E4B8CD58F4B5205E013B0B4467D5DF"}},
 			matchedDataErr:      nil,
 		},
 		{
@@ -142,7 +142,7 @@ func TestParamValidationChain(t *testing.T) {
 			},
 			validationResult:    []ValidationChainError{},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"params": matchedDataFieldValues{"PHPSESSID": "f25g9kvjlou432vmc0ht"}},
+			matchedData:         MatchedData{"params": MatchedDataFieldValues{"PHPSESSID": "f25g9kvjlou432vmc0ht"}},
 			matchedDataErr:      nil,
 		},
 		{
@@ -161,7 +161,7 @@ func TestParamValidationChain(t *testing.T) {
 				{Location: "params", Msg: defaultValChainErrMsg, Field: "PHPSESSID", Value: "f25g9kvjlou432vmc0ht"},
 			},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"params": matchedDataFieldValues{"PHPSESSID": "f25g9kvjlou432vmc0ht"}},
+			matchedData:         MatchedData{"params": MatchedDataFieldValues{"PHPSESSID": "f25g9kvjlou432vmc0ht"}},
 			matchedDataErr:      nil,
 		},
 		{
@@ -183,7 +183,7 @@ func TestParamValidationChain(t *testing.T) {
 			},
 			validationResult:    []ValidationChainError{},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"params": matchedDataFieldValues{"PHPSESSID": "f25g9kvjlou432vmc0ht", "JSESSIONID": "D4E4B8CD58F4B5205E013B0B4467D5DF"}},
+			matchedData:         MatchedData{"params": MatchedDataFieldValues{"PHPSESSID": "f25g9kvjlou432vmc0ht", "JSESSIONID": "D4E4B8CD58F4B5205E013B0B4467D5DF"}},
 			matchedDataErr:      nil,
 		},
 		{
@@ -208,7 +208,7 @@ func TestParamValidationChain(t *testing.T) {
 				{Location: "params", Msg: defaultValChainErrMsg, Field: "JSESSIONID", Value: "D4E4B8CD58F4B5205E013B0B4467D5DF"},
 			},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"params": matchedDataFieldValues{"PHPSESSID": "f25g9kvjlou432vmc0ht", "JSESSIONID": "D4E4B8CD58F4B5205E013B0B4467D5DF"}},
+			matchedData:         MatchedData{"params": MatchedDataFieldValues{"PHPSESSID": "f25g9kvjlou432vmc0ht", "JSESSIONID": "D4E4B8CD58F4B5205E013B0B4467D5DF"}},
 			matchedDataErr:      nil,
 		},
 		{
@@ -221,7 +221,7 @@ func TestParamValidationChain(t *testing.T) {
 			},
 			validationResult:    []ValidationChainError{},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"params": matchedDataFieldValues{"locale": "en"}},
+			matchedData:         MatchedData{"params": MatchedDataFieldValues{"locale": "en"}},
 			matchedDataErr:      nil,
 		},
 		{
@@ -235,7 +235,7 @@ func TestParamValidationChain(t *testing.T) {
 			},
 			validationResult:    []ValidationChainError{},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"params": matchedDataFieldValues{"locale": "en", "currency": ""}},
+			matchedData:         MatchedData{"params": MatchedDataFieldValues{"locale": "en", "currency": ""}},
 			matchedDataErr:      nil,
 		},
 		{
@@ -252,7 +252,7 @@ func TestParamValidationChain(t *testing.T) {
 			},
 			validationResult:    []ValidationChainError{},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"params": matchedDataFieldValues{"JSESSIONID": "custom-sanitizer"}},
+			matchedData:         MatchedData{"params": MatchedDataFieldValues{"JSESSIONID": "custom-sanitizer"}},
 			matchedDataErr:      nil,
 		},
 		{
@@ -274,7 +274,7 @@ func TestParamValidationChain(t *testing.T) {
 			},
 			validationResult:    []ValidationChainError{},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"params": matchedDataFieldValues{"PHPSESSID": "f25g9kvjlou432vmc0ht", "JSESSIONID": "D4E4B8CD58F4B5205E013B0B4467D5DF"}},
+			matchedData:         MatchedData{"params": MatchedDataFieldValues{"PHPSESSID": "f25g9kvjlou432vmc0ht", "JSESSIONID": "D4E4B8CD58F4B5205E013B0B4467D5DF"}},
 			matchedDataErr:      nil,
 		},
 		{
@@ -289,7 +289,7 @@ func TestParamValidationChain(t *testing.T) {
 				{Location: "params", Msg: defaultValChainErrMsg, Field: "JSESSIONID", Value: "D4E4B8CD58F4B5205E013B0B4467D5DF"},
 			},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"params": matchedDataFieldValues{"JSESSIONID": "D4E4B8CD58F4B5205E013B0B4467D5DF"}},
+			matchedData:         MatchedData{"params": MatchedDataFieldValues{"JSESSIONID": "D4E4B8CD58F4B5205E013B0B4467D5DF"}},
 			matchedDataErr:      nil,
 		},
 		{
@@ -306,7 +306,7 @@ func TestParamValidationChain(t *testing.T) {
 				{Location: "params", Msg: defaultValChainErrMsg, Field: "_fat", Value: "2"},
 			},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"params": matchedDataFieldValues{"JSESSIONID": "D4E4B8CD58F4B5205E013B0B4467D5DF", "_fat": "2"}},
+			matchedData:         MatchedData{"params": MatchedDataFieldValues{"JSESSIONID": "D4E4B8CD58F4B5205E013B0B4467D5DF", "_fat": "2"}},
 			matchedDataErr:      nil,
 		},
 		{
@@ -325,7 +325,7 @@ func TestParamValidationChain(t *testing.T) {
 				{Location: "params", Msg: defaultValChainErrMsg, Field: "PHPSESSID", Value: "f25g9kvjlou432vmc0ht"},
 			},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"params": matchedDataFieldValues{"PHPSESSID": "f25g9kvjlou432vmc0ht"}},
+			matchedData:         MatchedData{"params": MatchedDataFieldValues{"PHPSESSID": "f25g9kvjlou432vmc0ht"}},
 			matchedDataErr:      nil,
 		},
 		{
@@ -350,7 +350,7 @@ func TestParamValidationChain(t *testing.T) {
 				{Location: "params", Msg: defaultValChainErrMsg, Field: "_gat", Value: "1"},
 			},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"params": matchedDataFieldValues{"auth_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...", "_gat": "1"}},
+			matchedData:         MatchedData{"params": MatchedDataFieldValues{"auth_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...", "_gat": "1"}},
 			matchedDataErr:      nil,
 		},
 		{
@@ -370,7 +370,7 @@ func TestParamValidationChain(t *testing.T) {
 				{Location: "params", Msg: defaultValChainErrMsg, Field: "fr", Value: "0aX7v9nZ7EfLXN"},
 			},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"params": matchedDataFieldValues{"fr": "0aX7v9nZ7EfLXN"}},
+			matchedData:         MatchedData{"params": MatchedDataFieldValues{"fr": "0aX7v9nZ7EfLXN"}},
 			matchedDataErr:      nil,
 		},
 		{
@@ -397,7 +397,7 @@ func TestParamValidationChain(t *testing.T) {
 				{Location: "params", Msg: defaultValChainErrMsg, Field: "_gat", Value: "1"},
 			},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"params": matchedDataFieldValues{"csrf_token": "A1B2C3D4E5F6G7H8I9", "_gat": "1"}},
+			matchedData:         MatchedData{"params": MatchedDataFieldValues{"csrf_token": "A1B2C3D4E5F6G7H8I9", "_gat": "1"}},
 			matchedDataErr:      nil,
 		},
 		{
@@ -410,7 +410,7 @@ func TestParamValidationChain(t *testing.T) {
 			},
 			validationResult:    []ValidationChainError{},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"params": matchedDataFieldValues{"_gat": "1"}},
+			matchedData:         MatchedData{"params": MatchedDataFieldValues{"_gat": "1"}},
 			matchedDataErr:      nil,
 		},
 		{
@@ -424,7 +424,7 @@ func TestParamValidationChain(t *testing.T) {
 			},
 			validationResult:    []ValidationChainError{},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"params": matchedDataFieldValues{"_gat": "1", "_fat": "2"}},
+			matchedData:         MatchedData{"params": MatchedDataFieldValues{"_gat": "1", "_fat": "2"}},
 			matchedDataErr:      nil,
 		},
 		{
@@ -439,7 +439,7 @@ func TestParamValidationChain(t *testing.T) {
 				{Location: "params", Msg: defaultValChainErrMsg, Field: "_gat", Value: "1"},
 			},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"params": matchedDataFieldValues{"_gat": "1"}},
+			matchedData:         MatchedData{"params": MatchedDataFieldValues{"_gat": "1"}},
 			matchedDataErr:      nil,
 		},
 		{
@@ -456,7 +456,7 @@ func TestParamValidationChain(t *testing.T) {
 				{Location: "params", Msg: defaultValChainErrMsg, Field: "_fat", Value: "2"},
 			},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"params": matchedDataFieldValues{"_gat": "1", "_fat": "2"}},
+			matchedData:         MatchedData{"params": MatchedDataFieldValues{"_gat": "1", "_fat": "2"}},
 			matchedDataErr:      nil,
 		},
 		{
@@ -473,7 +473,7 @@ func TestParamValidationChain(t *testing.T) {
 			},
 			validationResult:    []ValidationChainError{},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"params": matchedDataFieldValues{`auth_token`: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."}},
+			matchedData:         MatchedData{"params": MatchedDataFieldValues{`auth_token`: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."}},
 			matchedDataErr:      nil,
 		},
 		{
@@ -495,7 +495,7 @@ func TestParamValidationChain(t *testing.T) {
 			},
 			validationResult:    []ValidationChainError{},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"params": matchedDataFieldValues{`currency`: "USD", "_gat": "1"}},
+			matchedData:         MatchedData{"params": MatchedDataFieldValues{`currency`: "USD", "_gat": "1"}},
 			matchedDataErr:      nil,
 		},
 		{
@@ -514,7 +514,7 @@ func TestParamValidationChain(t *testing.T) {
 				{Location: "params", Msg: defaultValChainErrMsg, Field: `currency`, Value: "USD"},
 			},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"params": matchedDataFieldValues{`currency`: "USD"}},
+			matchedData:         MatchedData{"params": MatchedDataFieldValues{`currency`: "USD"}},
 			matchedDataErr:      nil,
 		},
 		{
@@ -533,7 +533,7 @@ func TestParamValidationChain(t *testing.T) {
 				{Location: "params", Msg: defaultValChainErrMsg, Field: `auth_token`, Value: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."},
 			},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"params": matchedDataFieldValues{`auth_token`: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."}},
+			matchedData:         MatchedData{"params": MatchedDataFieldValues{`auth_token`: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."}},
 			matchedDataErr:      nil,
 		},
 		{
@@ -553,7 +553,7 @@ func TestParamValidationChain(t *testing.T) {
 				{Location: "params", Msg: defaultValChainErrMsg, Field: `access_token`, Value: "ya29.A0AfH6SMB..."},
 			},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"params": matchedDataFieldValues{`access_token`: "ya29.A0AfH6SMB..."}},
+			matchedData:         MatchedData{"params": MatchedDataFieldValues{`access_token`: "ya29.A0AfH6SMB..."}},
 			matchedDataErr:      nil,
 		},
 		{
@@ -568,7 +568,7 @@ func TestParamValidationChain(t *testing.T) {
 				{Location: "params", Msg: defaultValChainErrMsg, Field: "_gat", Value: "1"},
 			},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"params": matchedDataFieldValues{"_gat": "1"}},
+			matchedData:         MatchedData{"params": MatchedDataFieldValues{"_gat": "1"}},
 			matchedDataErr:      nil,
 		},
 		{
@@ -581,7 +581,7 @@ func TestParamValidationChain(t *testing.T) {
 			},
 			validationResult:    []ValidationChainError{},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"params": matchedDataFieldValues{"tax_id": ""}},
+			matchedData:         MatchedData{"params": MatchedDataFieldValues{"tax_id": ""}},
 			matchedDataErr:      nil,
 		},
 	}

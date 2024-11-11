@@ -770,12 +770,12 @@ Validate()
 
 - [bube054](https://github.com/bube054) - Attah Gbubemi David (author)
 
-<!-- # Other related projects
+# Other related projects
 
 - [ginvalidator](https://github.com/bube054/ginvalidator)
 - [echovalidator](https://github.com/bube054/echovalidator)
 - [fibervalidator](https://github.com/bube054/fibervalidator)
-- [chivalidator](https://github.com/bube054/chivalidator) -->
+- [chivalidator](https://github.com/bube054/chivalidator)
 
 # License
 

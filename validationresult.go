@@ -8,9 +8,13 @@ import (
 )
 
 var (
-	ErrNilCtxValidationResult = errors.New("nil ctx provided can not extract validation result")
-	ErrNoValidationResult     = errors.New("can not get validation result")
+	// ErrNilCtxValidationResult is returned when a nil context is provided, making it impossible to extract validation results.
+	ErrNilCtxValidationResult = errors.New("nil context provided: unable to extract validation result")
+
+	// ErrNoValidationResult is returned when no validation result is found in the context.
+	ErrNoValidationResult = errors.New("validation result not found in context")
 )
+
 
 // GinValidatorCtxErrorsStoreName is the key, where the validation errors are stored.
 const GinValidatorCtxErrorsStoreName string = "__ginvalidator__ctx__errors__"
@@ -74,12 +78,15 @@ func ValidationResult(ctx *gin.Context) ([]ValidationChainError, error) {
 	return allErrs, nil
 }
 
+// createErrNewStore initializes an empty ctxStoreErrs store and adds it to the context
+// under the key specified by GinValidatorCtxErrorsStoreName.
 func createErrNewStore(ctx *gin.Context) {
 	var newStore ctxStoreErrs
 
 	ctx.Set(GinValidatorCtxErrorsStoreName, newStore)
 }
 
+// saveValidationErrorsToCtx saves validation errors into the Gin context.
 func saveValidationErrorsToCtx(ctx *gin.Context, errs []ValidationChainError) {
 	if ctx == nil {
 		return

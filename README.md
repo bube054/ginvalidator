@@ -4,7 +4,7 @@
 
 ## Overview
 
-ginvalidator is a set of [Gin](https://github.com/gin-gonic/gin) middlewares that wraps the extensive collection of validators and sanitizers offered by my other open source package [validatorgo](https://github.com/bube054/validatorgo).
+ginvalidator is a set of [Gin](https://github.com/gin-gonic/gin) middlewares that wraps the extensive collection of validators and sanitizers offered by my other open source package [validatorgo](https://github.com/bube054/validatorgo). It also uses the popular open-source package [gjson](https://github.com/tidwall/gjson) for JSON field syntax, providing efficient querying and extraction of data from JSON objects. 
 
 It allows you to combine them in many ways so that you can validate and sanitize your express requests, and offers tools to determine if the request is valid or not, which data was matched according to your validators, and so on.
 
@@ -28,7 +28,7 @@ Why not use?
 
 ## Installation
 
-Create an empty folder then run.
+Create an empty folder with a name of your choice, cd into it then run.
 
 ```
 $ go mod init example.com/learning
@@ -374,7 +374,7 @@ Sanitizers persist the updated fields value back into the gin Contexts, so that 
 
 ### Standard validators/sanitizers
 
-All of the functionality exposed by the validation chain actually comes from [validatorgo](github.com/bube054/validatorgo), one of my other open source go packages which specializes in string validation/sanitation. Please checkout, star and share 🙏🙏🙏, Thank You.
+All of the functionality exposed by the validation chain actually comes from [validatorgo](github.com/bube054/validatorgo), one of my other open source go packages which specializes in string validation/sanitation. Please check it out, star and share 🙏🙏🙏, Thank You.
 
 This includes all of validatorgo validators and sanitizers, from commonly used `IsEmail`, `IsLength`, and `Trim` to the more niche `IsISBN`, `IsMultibyte` and `StripLow`!
 
@@ -578,12 +578,12 @@ gv.NewBody("email", func(initialValue, sanitizedValue, validatorName string) str
 
 - [bube054](https://github.com/bube054) - Attah Gbubemi David (author)
 
-# Other related projects
+<!-- # Other related projects
 
 - [ginvalidator](https://github.com/bube054/ginvalidator)
 - [echovalidator](https://github.com/bube054/echovalidator)
 - [fibervalidator](https://github.com/bube054/fibervalidator)
-- [chivalidator](https://github.com/bube054/chivalidator)
+- [chivalidator](https://github.com/bube054/chivalidator) -->
 
 # License
 

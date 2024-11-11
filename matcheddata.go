@@ -7,8 +7,11 @@ import (
 )
 
 var (
-	ErrNilCtxMatchedData = errors.New("nil ctx provided can not extract matched data")
-	ErrNoMatchedData     = errors.New("no matched data present")
+	// ErrNilCtxMatchedData is returned when a nil context is passed, preventing extraction of matched data.
+	ErrNilCtxMatchedData = errors.New("nil context provided: unable to extract matched data")
+
+	// ErrNoMatchedData is returned when no matched data is found in the context.
+	ErrNoMatchedData = errors.New("no matched data available in context")
 )
 
 const GinValidatorCtxMatchedDataStoreName string = "__ginvalidator__matched__data__"
@@ -57,13 +60,16 @@ func GetMatchedData(ctx *gin.Context) (MatchedData, error) {
 	return store, nil
 }
 
-func createSanitizedDataStore(ctx *gin.Context) {
+// createMatchedDataStore initializes an empty MatchedData store and adds it to the context
+// under the key specified by GinValidatorCtxMatchedDataStoreName.
+func createMatchedDataStore(ctx *gin.Context) {
 	var newStore MatchedData
 
 	ctx.Set(GinValidatorCtxMatchedDataStoreName, newStore)
 }
 
-func saveSanitizedDataToCtx(ctx *gin.Context, location, field, value string) {
+// saveMatchedDataToCtx saves validated/sanitized data into the Gin context under the specified location and field.
+func saveMatchedDataToCtx(ctx *gin.Context, location, field, value string) {
 	if ctx == nil {
 		return
 	}
@@ -71,8 +77,8 @@ func saveSanitizedDataToCtx(ctx *gin.Context, location, field, value string) {
 	data, ok := ctx.Get(GinValidatorCtxMatchedDataStoreName)
 
 	if !ok {
-		createSanitizedDataStore(ctx)
-		saveSanitizedDataToCtx(ctx, location, field, value)
+		createMatchedDataStore(ctx)
+		saveMatchedDataToCtx(ctx, location, field, value)
 		return
 	}
 
@@ -80,8 +86,8 @@ func saveSanitizedDataToCtx(ctx *gin.Context, location, field, value string) {
 	store, ok = data.(MatchedData)
 
 	if !ok {
-		createSanitizedDataStore(ctx)
-		saveSanitizedDataToCtx(ctx, location, field, value)
+		createMatchedDataStore(ctx)
+		saveMatchedDataToCtx(ctx, location, field, value)
 		return
 	}
 

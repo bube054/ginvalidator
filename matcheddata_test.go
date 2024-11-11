@@ -251,7 +251,7 @@ func TestMatchedData(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			for _, d := range test.insertedData {
-				saveSanitizedDataToCtx(test.ctx, d.location, d.field, d.value)
+				saveMatchedDataToCtx(test.ctx, d.location, d.field, d.value)
 			}
 
 			actualMatchedData, actualErr := GetMatchedData(test.ctx)

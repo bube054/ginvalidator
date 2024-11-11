@@ -148,7 +148,7 @@ func (v ValidationChain) Validate() gin.HandlerFunc {
 		}
 
 		saveValidationErrorsToCtx(ctx, valErrs)
-		saveSanitizedDataToCtx(ctx, location, field, sanitizedValue)
+		saveMatchedDataToCtx(ctx, location, field, sanitizedValue)
 
 		ctx.Next()
 	}

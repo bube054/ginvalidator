@@ -81,7 +81,7 @@ john@example.com
 				NewBody("name.first", nil).Chain().Numeric(nil).Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "body", Msg: defaultValChainErrMsg, Field: "name.first", Value: "Tom"},
+				{Location: "body", Msg: DefaultValChainErrMsg, Field: "name.first", Value: "Tom"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"body": MatchedDataFieldValues{"name.first": "Tom"}},
@@ -113,8 +113,8 @@ john@example.com
 				NewBody("name.last", nil).Chain().Currency(nil).Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "body", Msg: defaultValChainErrMsg, Field: "name.first", Value: "Tom"},
-				{Location: "body", Msg: defaultValChainErrMsg, Field: "name.last", Value: "Anderson"},
+				{Location: "body", Msg: DefaultValChainErrMsg, Field: "name.first", Value: "Tom"},
+				{Location: "body", Msg: DefaultValChainErrMsg, Field: "name.last", Value: "Anderson"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"body": MatchedDataFieldValues{"name.first": "Tom", "name.last": "Anderson"}},
@@ -208,7 +208,7 @@ john@example.com
 				).Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "body", Msg: defaultValChainErrMsg, Field: "name.first", Value: "Tom"},
+				{Location: "body", Msg: DefaultValChainErrMsg, Field: "name.first", Value: "Tom"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"body": MatchedDataFieldValues{"name.first": "Tom"}},
@@ -328,8 +328,8 @@ john@example.com
 				).Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "body", Msg: defaultValChainErrMsg, Field: "name.first", Value: "Tom"},
-				{Location: "body", Msg: defaultValChainErrMsg, Field: "name.last", Value: "Anderson"},
+				{Location: "body", Msg: DefaultValChainErrMsg, Field: "name.first", Value: "Tom"},
+				{Location: "body", Msg: DefaultValChainErrMsg, Field: "name.last", Value: "Anderson"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"body": MatchedDataFieldValues{"name.first": "Tom", "name.last": "Anderson"}},
@@ -468,7 +468,7 @@ john@example.com
 				NewBody("message", nil).Chain().Alpha(nil).Bail().LowerCase().Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "body", Msg: defaultValChainErrMsg, Field: "message", Value: "A good saying is 7 comes after ate."},
+				{Location: "body", Msg: DefaultValChainErrMsg, Field: "message", Value: "A good saying is 7 comes after ate."},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"body": MatchedDataFieldValues{"message": "A good saying is 7 comes after ate."}},
@@ -485,8 +485,8 @@ john@example.com
 				NewBody("friends.0.age", nil).Chain().Alpha(nil).Bail().LowerCase().Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "body", Msg: defaultValChainErrMsg, Field: "message", Value: "A good saying is 7 comes after ate."},
-				{Location: "body", Msg: defaultValChainErrMsg, Field: "friends.0.age", Value: "44"},
+				{Location: "body", Msg: DefaultValChainErrMsg, Field: "message", Value: "A good saying is 7 comes after ate."},
+				{Location: "body", Msg: DefaultValChainErrMsg, Field: "friends.0.age", Value: "44"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"body": MatchedDataFieldValues{"message": "A good saying is 7 comes after ate.", "friends.0.age": "44"}},
@@ -523,7 +523,7 @@ john@example.com
 				).LowerCase().Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "body", Msg: defaultValChainErrMsg, Field: "message", Value: "A good saying is 7 comes after ate."},
+				{Location: "body", Msg: DefaultValChainErrMsg, Field: "message", Value: "A good saying is 7 comes after ate."},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"body": MatchedDataFieldValues{"message": "A good saying is 7 comes after ate."}},
@@ -584,8 +584,8 @@ john@example.com
 				).LowerCase().Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "body", Msg: defaultValChainErrMsg, Field: "message", Value: "A good saying is 7 comes after ate."},
-				{Location: "body", Msg: defaultValChainErrMsg, Field: "age", Value: "37"},
+				{Location: "body", Msg: DefaultValChainErrMsg, Field: "message", Value: "A good saying is 7 comes after ate."},
+				{Location: "body", Msg: DefaultValChainErrMsg, Field: "age", Value: "37"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"body": MatchedDataFieldValues{"message": "A good saying is 7 comes after ate.", "age": "37"}},
@@ -622,8 +622,8 @@ john@example.com
 				).LowerCase().Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "body", Msg: defaultValChainErrMsg, Field: "message", Value: "A good saying is 7 comes after ate."},
-				{Location: "body", Msg: defaultValChainErrMsg, Field: "message", Value: "A good saying is 7 comes after ate."},
+				{Location: "body", Msg: DefaultValChainErrMsg, Field: "message", Value: "A good saying is 7 comes after ate."},
+				{Location: "body", Msg: DefaultValChainErrMsg, Field: "message", Value: "A good saying is 7 comes after ate."},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"body": MatchedDataFieldValues{"message": "A good saying is 7 comes after ate."}},
@@ -686,10 +686,10 @@ john@example.com
 				).LowerCase().Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "body", Msg: defaultValChainErrMsg, Field: "message", Value: "A good saying is 7 comes after ate."},
-				{Location: "body", Msg: defaultValChainErrMsg, Field: "message", Value: "A good saying is 7 comes after ate."},
-				{Location: "body", Msg: defaultValChainErrMsg, Field: "age", Value: "37"},
-				{Location: "body", Msg: defaultValChainErrMsg, Field: "age", Value: "37"},
+				{Location: "body", Msg: DefaultValChainErrMsg, Field: "message", Value: "A good saying is 7 comes after ate."},
+				{Location: "body", Msg: DefaultValChainErrMsg, Field: "message", Value: "A good saying is 7 comes after ate."},
+				{Location: "body", Msg: DefaultValChainErrMsg, Field: "age", Value: "37"},
+				{Location: "body", Msg: DefaultValChainErrMsg, Field: "age", Value: "37"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"body": MatchedDataFieldValues{"message": "A good saying is 7 comes after ate.", "age": "37"}},
@@ -734,7 +734,7 @@ john@example.com
 				NewBody("age", nil).Chain().Not().Numeric(nil).Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "body", Msg: defaultValChainErrMsg, Field: "age", Value: "37"},
+				{Location: "body", Msg: DefaultValChainErrMsg, Field: "age", Value: "37"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"body": MatchedDataFieldValues{"age": "37"}},
@@ -751,8 +751,8 @@ john@example.com
 				NewBody("friends.1.age", nil).Chain().Not().Numeric(nil).Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "body", Msg: defaultValChainErrMsg, Field: "age", Value: "37"},
-				{Location: "body", Msg: defaultValChainErrMsg, Field: "friends.1.age", Value: "68"},
+				{Location: "body", Msg: DefaultValChainErrMsg, Field: "age", Value: "37"},
+				{Location: "body", Msg: DefaultValChainErrMsg, Field: "friends.1.age", Value: "68"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"body": MatchedDataFieldValues{"age": "37", "friends.1.age": "68"}},
@@ -850,7 +850,7 @@ john@example.com
 				).Numeric(nil).Validate(),
 			},
 			validationResult: []ValidationChainError{
-				// {Location: "body", Msg: defaultValChainErrMsg, Field: `fav\.movie`, Value: "Deer Hunter"},
+				// {Location: "body", Msg: DefaultValChainErrMsg, Field: `fav\.movie`, Value: "Deer Hunter"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"body": MatchedDataFieldValues{`fav\.movie`: "Deer Hunter", "age": "37"}},
@@ -887,7 +887,7 @@ john@example.com
 				).Numeric(nil).Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "body", Msg: defaultValChainErrMsg, Field: `fav\.movie`, Value: "Deer Hunter"},
+				{Location: "body", Msg: DefaultValChainErrMsg, Field: `fav\.movie`, Value: "Deer Hunter"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"body": MatchedDataFieldValues{`fav\.movie`: "Deer Hunter"}},
@@ -924,7 +924,7 @@ john@example.com
 				).Numeric(nil).Currency(nil).Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "body", Msg: defaultValChainErrMsg, Field: `fav\.movie`, Value: "Deer Hunter"},
+				{Location: "body", Msg: DefaultValChainErrMsg, Field: `fav\.movie`, Value: "Deer Hunter"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"body": MatchedDataFieldValues{`fav\.movie`: "Deer Hunter"}},
@@ -961,8 +961,8 @@ john@example.com
 				).Numeric(nil).Currency(nil).Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "body", Msg: defaultValChainErrMsg, Field: `fav\.movie`, Value: "Deer Hunter"},
-				{Location: "body", Msg: defaultValChainErrMsg, Field: `fav\.movie`, Value: "Deer Hunter"},
+				{Location: "body", Msg: DefaultValChainErrMsg, Field: `fav\.movie`, Value: "Deer Hunter"},
+				{Location: "body", Msg: DefaultValChainErrMsg, Field: `fav\.movie`, Value: "Deer Hunter"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"body": MatchedDataFieldValues{`fav\.movie`: "Deer Hunter"}},
@@ -978,7 +978,7 @@ john@example.com
 				NewBody("age", nil).Chain().Alpha(nil).Optional().Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "body", Msg: defaultValChainErrMsg, Field: "age", Value: "37"},
+				{Location: "body", Msg: DefaultValChainErrMsg, Field: "age", Value: "37"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"body": MatchedDataFieldValues{"age": "37"}},
@@ -1023,7 +1023,7 @@ john@example.com
 				NewBody("email", nil).Chain().Numeric(nil).Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "body", Msg: defaultValChainErrMsg, Field: "email", Value: "john@example.com"},
+				{Location: "body", Msg: DefaultValChainErrMsg, Field: "email", Value: "john@example.com"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"body": MatchedDataFieldValues{"email": "john@example.com"}},
@@ -1054,7 +1054,7 @@ john@example.com
 				NewBody("email", nil).Chain().Numeric(nil).Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "body", Msg: defaultValChainErrMsg, Field: "email", Value: "john@example.com"},
+				{Location: "body", Msg: DefaultValChainErrMsg, Field: "email", Value: "john@example.com"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"body": MatchedDataFieldValues{"email": "john@example.com"}},

@@ -1,6 +1,6 @@
 package ginvalidator
 
-// Param is used to validate data from the `http.Request` params.
+// Param is used to validate data from the gins route parameters.
 type Param struct {
 	field      string            // the field to be specified
 	errFmtFunc ErrFmtFuncHandler // the function to create the error message

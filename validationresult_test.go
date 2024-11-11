@@ -127,7 +127,7 @@ func TestSortErrorsByCreatedAt(t *testing.T) {
 			initial: []ValidationChainError{
 				NewValidationChainError(
 					vceWithLocation("body"),
-					vceWithMsg(defaultValChainErrMsg),
+					vceWithMsg(DefaultValChainErrMsg),
 					vceWithField("field"),
 					vceWithValue("value"),
 					vceWithCreatedAt(time.Date(2024, time.November, 8, 12, 50, 50, 0, time.Local))),
@@ -135,7 +135,7 @@ func TestSortErrorsByCreatedAt(t *testing.T) {
 			expectedResult: []ValidationChainError{
 				NewValidationChainError(
 					vceWithLocation("body"),
-					vceWithMsg(defaultValChainErrMsg),
+					vceWithMsg(DefaultValChainErrMsg),
 					vceWithField("field"),
 					vceWithValue("value"),
 					vceWithCreatedAt(time.Date(2024, time.November, 8, 12, 50, 50, 0, time.Local))),
@@ -146,13 +146,13 @@ func TestSortErrorsByCreatedAt(t *testing.T) {
 			initial: []ValidationChainError{
 				NewValidationChainError(
 					vceWithLocation("body"),
-					vceWithMsg(defaultValChainErrMsg),
+					vceWithMsg(DefaultValChainErrMsg),
 					vceWithField("field"),
 					vceWithValue("value"),
 					vceWithCreatedAt(time.Date(2024, time.November, 8, 12, 50, 50, 0, time.Local))),
 				NewValidationChainError(
 					vceWithLocation("body"),
-					vceWithMsg(defaultValChainErrMsg),
+					vceWithMsg(DefaultValChainErrMsg),
 					vceWithField("field"),
 					vceWithValue("value"),
 					vceWithCreatedAt(time.Date(2024, time.November, 8, 12, 51, 50, 0, time.Local))),
@@ -160,13 +160,13 @@ func TestSortErrorsByCreatedAt(t *testing.T) {
 			expectedResult: []ValidationChainError{
 				NewValidationChainError(
 					vceWithLocation("body"),
-					vceWithMsg(defaultValChainErrMsg),
+					vceWithMsg(DefaultValChainErrMsg),
 					vceWithField("field"),
 					vceWithValue("value"),
 					vceWithCreatedAt(time.Date(2024, time.November, 8, 12, 50, 50, 0, time.Local))),
 				NewValidationChainError(
 					vceWithLocation("body"),
-					vceWithMsg(defaultValChainErrMsg),
+					vceWithMsg(DefaultValChainErrMsg),
 					vceWithField("field"),
 					vceWithValue("value"),
 					vceWithCreatedAt(time.Date(2024, time.November, 8, 12, 51, 50, 0, time.Local))),
@@ -177,13 +177,13 @@ func TestSortErrorsByCreatedAt(t *testing.T) {
 			initial: []ValidationChainError{
 				NewValidationChainError(
 					vceWithLocation("body"),
-					vceWithMsg(defaultValChainErrMsg),
+					vceWithMsg(DefaultValChainErrMsg),
 					vceWithField("field"),
 					vceWithValue("value"),
 					vceWithCreatedAt(time.Date(2024, time.November, 8, 12, 51, 50, 0, time.Local))),
 				NewValidationChainError(
 					vceWithLocation("body"),
-					vceWithMsg(defaultValChainErrMsg),
+					vceWithMsg(DefaultValChainErrMsg),
 					vceWithField("field"),
 					vceWithValue("value"),
 					vceWithCreatedAt(time.Date(2024, time.November, 8, 12, 50, 50, 0, time.Local))),
@@ -191,13 +191,13 @@ func TestSortErrorsByCreatedAt(t *testing.T) {
 			expectedResult: []ValidationChainError{
 				NewValidationChainError(
 					vceWithLocation("body"),
-					vceWithMsg(defaultValChainErrMsg),
+					vceWithMsg(DefaultValChainErrMsg),
 					vceWithField("field"),
 					vceWithValue("value"),
 					vceWithCreatedAt(time.Date(2024, time.November, 8, 12, 50, 50, 0, time.Local))),
 				NewValidationChainError(
 					vceWithLocation("body"),
-					vceWithMsg(defaultValChainErrMsg),
+					vceWithMsg(DefaultValChainErrMsg),
 					vceWithField("field"),
 					vceWithValue("value"),
 					vceWithCreatedAt(time.Date(2024, time.November, 8, 12, 51, 50, 0, time.Local))),
@@ -208,19 +208,19 @@ func TestSortErrorsByCreatedAt(t *testing.T) {
 			initial: []ValidationChainError{
 				NewValidationChainError(
 					vceWithLocation("body"),
-					vceWithMsg(defaultValChainErrMsg),
+					vceWithMsg(DefaultValChainErrMsg),
 					vceWithField("field"),
 					vceWithValue("value"),
 					vceWithCreatedAt(time.Date(2024, time.November, 8, 12, 51, 50, 0, time.Local))),
 				NewValidationChainError(
 					vceWithLocation("body"),
-					vceWithMsg(defaultValChainErrMsg),
+					vceWithMsg(DefaultValChainErrMsg),
 					vceWithField("field"),
 					vceWithValue("value"),
 					vceWithCreatedAt(time.Date(2024, time.November, 8, 12, 50, 50, 0, time.Local))),
 				NewValidationChainError(
 					vceWithLocation("body"),
-					vceWithMsg(defaultValChainErrMsg),
+					vceWithMsg(DefaultValChainErrMsg),
 					vceWithField("field"),
 					vceWithValue("value"),
 					vceWithCreatedAt(time.Date(2024, time.November, 8, 12, 49, 35, 0, time.Local))),
@@ -228,19 +228,19 @@ func TestSortErrorsByCreatedAt(t *testing.T) {
 			expectedResult: []ValidationChainError{
 				NewValidationChainError(
 					vceWithLocation("body"),
-					vceWithMsg(defaultValChainErrMsg),
+					vceWithMsg(DefaultValChainErrMsg),
 					vceWithField("field"),
 					vceWithValue("value"),
 					vceWithCreatedAt(time.Date(2024, time.November, 8, 12, 49, 35, 0, time.Local))),
 				NewValidationChainError(
 					vceWithLocation("body"),
-					vceWithMsg(defaultValChainErrMsg),
+					vceWithMsg(DefaultValChainErrMsg),
 					vceWithField("field"),
 					vceWithValue("value"),
 					vceWithCreatedAt(time.Date(2024, time.November, 8, 12, 50, 50, 0, time.Local))),
 				NewValidationChainError(
 					vceWithLocation("body"),
-					vceWithMsg(defaultValChainErrMsg),
+					vceWithMsg(DefaultValChainErrMsg),
 					vceWithField("field"),
 					vceWithValue("value"),
 					vceWithCreatedAt(time.Date(2024, time.November, 8, 12, 51, 50, 0, time.Local))),

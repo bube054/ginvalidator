@@ -18,7 +18,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const defaultValChainErrMsg string = "Invalid value"
+const DefaultValChainErrMsg string = "Invalid value"
 
 type ValidationChain struct {
 	validator
@@ -82,7 +82,7 @@ func (v ValidationChain) Validate() gin.HandlerFunc {
 			var errMsg string
 
 			if errFmtFunc == nil {
-				errMsg = defaultValChainErrMsg
+				errMsg = DefaultValChainErrMsg
 			} else {
 				errMsg = errFmtFunc(initialValue, sanitizedValue, vcn)
 			}

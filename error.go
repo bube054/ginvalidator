@@ -67,4 +67,15 @@ func NewValidationChainError(opts ...func(*ValidationChainError)) ValidationChai
 	return *vce
 }
 
+// ErrFmtFuncHandler is a function type used to format validation error messages.
+// It takes in the initial and sanitized values of a field, along with the name of the validator
+// that triggered the error, and returns a formatted error message as a string.
+//
+// Parameters:
+//   - initialValue: The original value of the field before sanitization.
+//   - sanitizedValue: The value of the field after applying sanitization or validation.
+//   - validatorName: The name of the validator that was applied and caused the error.
+//
+// Returns:
+//   - A string representing the formatted error message based on the provided values and validator.
 type ErrFmtFuncHandler func(initialValue, sanitizedValue, validatorName string) string

@@ -71,7 +71,7 @@ func TestHeaderValidationChain(t *testing.T) {
 				NewHeader("PHPSESSID", nil).Chain().Numeric(nil).Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "headers", Msg: defaultValChainErrMsg, Field: "PHPSESSID", Value: "f25g9kvjlou432vmc0ht"},
+				{Location: "headers", Msg: DefaultValChainErrMsg, Field: "PHPSESSID", Value: "f25g9kvjlou432vmc0ht"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"headers": MatchedDataFieldValues{"PHPSESSID": "f25g9kvjlou432vmc0ht"}},
@@ -101,8 +101,8 @@ func TestHeaderValidationChain(t *testing.T) {
 				NewHeader("JSESSIONID", nil).Chain().Currency(nil).Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "headers", Msg: defaultValChainErrMsg, Field: "PHPSESSID", Value: "f25g9kvjlou432vmc0ht"},
-				{Location: "headers", Msg: defaultValChainErrMsg, Field: "JSESSIONID", Value: "D4E4B8CD58F4B5205E013B0B4467D5DF"},
+				{Location: "headers", Msg: DefaultValChainErrMsg, Field: "PHPSESSID", Value: "f25g9kvjlou432vmc0ht"},
+				{Location: "headers", Msg: DefaultValChainErrMsg, Field: "JSESSIONID", Value: "D4E4B8CD58F4B5205E013B0B4467D5DF"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"headers": MatchedDataFieldValues{"PHPSESSID": "f25g9kvjlou432vmc0ht", "JSESSIONID": "D4E4B8CD58F4B5205E013B0B4467D5DF"}},
@@ -157,7 +157,7 @@ func TestHeaderValidationChain(t *testing.T) {
 				).Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "headers", Msg: defaultValChainErrMsg, Field: "PHPSESSID", Value: "f25g9kvjlou432vmc0ht"},
+				{Location: "headers", Msg: DefaultValChainErrMsg, Field: "PHPSESSID", Value: "f25g9kvjlou432vmc0ht"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"headers": MatchedDataFieldValues{"PHPSESSID": "f25g9kvjlou432vmc0ht"}},
@@ -203,8 +203,8 @@ func TestHeaderValidationChain(t *testing.T) {
 				).Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "headers", Msg: defaultValChainErrMsg, Field: "PHPSESSID", Value: "f25g9kvjlou432vmc0ht"},
-				{Location: "headers", Msg: defaultValChainErrMsg, Field: "JSESSIONID", Value: "D4E4B8CD58F4B5205E013B0B4467D5DF"},
+				{Location: "headers", Msg: DefaultValChainErrMsg, Field: "PHPSESSID", Value: "f25g9kvjlou432vmc0ht"},
+				{Location: "headers", Msg: DefaultValChainErrMsg, Field: "JSESSIONID", Value: "D4E4B8CD58F4B5205E013B0B4467D5DF"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"headers": MatchedDataFieldValues{"PHPSESSID": "f25g9kvjlou432vmc0ht", "JSESSIONID": "D4E4B8CD58F4B5205E013B0B4467D5DF"}},
@@ -285,7 +285,7 @@ func TestHeaderValidationChain(t *testing.T) {
 				NewHeader("JSESSIONID", nil).Chain().Alpha(nil).Bail().LowerCase().Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "headers", Msg: defaultValChainErrMsg, Field: "JSESSIONID", Value: "D4E4B8CD58F4B5205E013B0B4467D5DF"},
+				{Location: "headers", Msg: DefaultValChainErrMsg, Field: "JSESSIONID", Value: "D4E4B8CD58F4B5205E013B0B4467D5DF"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"headers": MatchedDataFieldValues{"JSESSIONID": "D4E4B8CD58F4B5205E013B0B4467D5DF"}},
@@ -301,8 +301,8 @@ func TestHeaderValidationChain(t *testing.T) {
 				NewHeader("_fat", nil).Chain().Alpha(nil).Bail().LowerCase().Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "headers", Msg: defaultValChainErrMsg, Field: "JSESSIONID", Value: "D4E4B8CD58F4B5205E013B0B4467D5DF"},
-				{Location: "headers", Msg: defaultValChainErrMsg, Field: "_fat", Value: "2"},
+				{Location: "headers", Msg: DefaultValChainErrMsg, Field: "JSESSIONID", Value: "D4E4B8CD58F4B5205E013B0B4467D5DF"},
+				{Location: "headers", Msg: DefaultValChainErrMsg, Field: "_fat", Value: "2"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"headers": MatchedDataFieldValues{"JSESSIONID": "D4E4B8CD58F4B5205E013B0B4467D5DF", "_fat": "2"}},
@@ -321,7 +321,7 @@ func TestHeaderValidationChain(t *testing.T) {
 				).LowerCase().Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "headers", Msg: defaultValChainErrMsg, Field: "PHPSESSID", Value: "f25g9kvjlou432vmc0ht"},
+				{Location: "headers", Msg: DefaultValChainErrMsg, Field: "PHPSESSID", Value: "f25g9kvjlou432vmc0ht"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"headers": MatchedDataFieldValues{"PHPSESSID": "f25g9kvjlou432vmc0ht"}},
@@ -345,8 +345,8 @@ func TestHeaderValidationChain(t *testing.T) {
 				).LowerCase().Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "headers", Msg: defaultValChainErrMsg, Field: "auth_token", Value: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."},
-				{Location: "headers", Msg: defaultValChainErrMsg, Field: "_gat", Value: "1"},
+				{Location: "headers", Msg: DefaultValChainErrMsg, Field: "auth_token", Value: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."},
+				{Location: "headers", Msg: DefaultValChainErrMsg, Field: "_gat", Value: "1"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"headers": MatchedDataFieldValues{"auth_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...", "_gat": "1"}},
@@ -365,8 +365,8 @@ func TestHeaderValidationChain(t *testing.T) {
 				).LowerCase().Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "headers", Msg: defaultValChainErrMsg, Field: "fr", Value: "0aX7v9nZ7EfLXN"},
-				{Location: "headers", Msg: defaultValChainErrMsg, Field: "fr", Value: "0aX7v9nZ7EfLXN"},
+				{Location: "headers", Msg: DefaultValChainErrMsg, Field: "fr", Value: "0aX7v9nZ7EfLXN"},
+				{Location: "headers", Msg: DefaultValChainErrMsg, Field: "fr", Value: "0aX7v9nZ7EfLXN"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"headers": MatchedDataFieldValues{"fr": "0aX7v9nZ7EfLXN"}},
@@ -390,10 +390,10 @@ func TestHeaderValidationChain(t *testing.T) {
 				).LowerCase().Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "headers", Msg: defaultValChainErrMsg, Field: "csrf_token", Value: "A1B2C3D4E5F6G7H8I9"},
-				{Location: "headers", Msg: defaultValChainErrMsg, Field: "csrf_token", Value: "A1B2C3D4E5F6G7H8I9"},
-				{Location: "headers", Msg: defaultValChainErrMsg, Field: "_gat", Value: "1"},
-				{Location: "headers", Msg: defaultValChainErrMsg, Field: "_gat", Value: "1"},
+				{Location: "headers", Msg: DefaultValChainErrMsg, Field: "csrf_token", Value: "A1B2C3D4E5F6G7H8I9"},
+				{Location: "headers", Msg: DefaultValChainErrMsg, Field: "csrf_token", Value: "A1B2C3D4E5F6G7H8I9"},
+				{Location: "headers", Msg: DefaultValChainErrMsg, Field: "_gat", Value: "1"},
+				{Location: "headers", Msg: DefaultValChainErrMsg, Field: "_gat", Value: "1"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"headers": MatchedDataFieldValues{"csrf_token": "A1B2C3D4E5F6G7H8I9", "_gat": "1"}},
@@ -435,7 +435,7 @@ func TestHeaderValidationChain(t *testing.T) {
 				NewHeader("_gat", nil).Chain().Not().Numeric(nil).Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "headers", Msg: defaultValChainErrMsg, Field: "_gat", Value: "1"},
+				{Location: "headers", Msg: DefaultValChainErrMsg, Field: "_gat", Value: "1"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"headers": MatchedDataFieldValues{"_gat": "1"}},
@@ -451,8 +451,8 @@ func TestHeaderValidationChain(t *testing.T) {
 				NewHeader("_fat", nil).Chain().Not().Numeric(nil).Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "headers", Msg: defaultValChainErrMsg, Field: "_gat", Value: "1"},
-				{Location: "headers", Msg: defaultValChainErrMsg, Field: "_fat", Value: "2"},
+				{Location: "headers", Msg: DefaultValChainErrMsg, Field: "_gat", Value: "1"},
+				{Location: "headers", Msg: DefaultValChainErrMsg, Field: "_fat", Value: "2"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"headers": MatchedDataFieldValues{"_gat": "1", "_fat": "2"}},
@@ -510,7 +510,7 @@ func TestHeaderValidationChain(t *testing.T) {
 				).Numeric(nil).Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "headers", Msg: defaultValChainErrMsg, Field: `currency`, Value: "USD"},
+				{Location: "headers", Msg: DefaultValChainErrMsg, Field: `currency`, Value: "USD"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"headers": MatchedDataFieldValues{`currency`: "USD"}},
@@ -529,7 +529,7 @@ func TestHeaderValidationChain(t *testing.T) {
 				).Numeric(nil).Currency(nil).Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "headers", Msg: defaultValChainErrMsg, Field: `auth_token`, Value: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."},
+				{Location: "headers", Msg: DefaultValChainErrMsg, Field: `auth_token`, Value: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"headers": MatchedDataFieldValues{`auth_token`: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."}},
@@ -548,8 +548,8 @@ func TestHeaderValidationChain(t *testing.T) {
 				).Numeric(nil).Currency(nil).Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "headers", Msg: defaultValChainErrMsg, Field: `access_token`, Value: "ya29.A0AfH6SMB..."},
-				{Location: "headers", Msg: defaultValChainErrMsg, Field: `access_token`, Value: "ya29.A0AfH6SMB..."},
+				{Location: "headers", Msg: DefaultValChainErrMsg, Field: `access_token`, Value: "ya29.A0AfH6SMB..."},
+				{Location: "headers", Msg: DefaultValChainErrMsg, Field: `access_token`, Value: "ya29.A0AfH6SMB..."},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"headers": MatchedDataFieldValues{`access_token`: "ya29.A0AfH6SMB..."}},
@@ -564,7 +564,7 @@ func TestHeaderValidationChain(t *testing.T) {
 				NewHeader("_gat", nil).Chain().Alpha(nil).Optional().Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "headers", Msg: defaultValChainErrMsg, Field: "_gat", Value: "1"},
+				{Location: "headers", Msg: DefaultValChainErrMsg, Field: "_gat", Value: "1"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"headers": MatchedDataFieldValues{"_gat": "1"}},

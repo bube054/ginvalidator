@@ -75,7 +75,7 @@ func TestCookieValidationChain(t *testing.T) {
 				NewCookie("PHPSESSID", nil).Chain().Numeric(nil).Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "cookies", Msg: defaultValChainErrMsg, Field: "PHPSESSID", Value: "f25g9kvjlou432vmc0ht"},
+				{Location: "cookies", Msg: DefaultValChainErrMsg, Field: "PHPSESSID", Value: "f25g9kvjlou432vmc0ht"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"cookies": MatchedDataFieldValues{"PHPSESSID": "f25g9kvjlou432vmc0ht"}},
@@ -107,8 +107,8 @@ func TestCookieValidationChain(t *testing.T) {
 				NewCookie("JSESSIONID", nil).Chain().Currency(nil).Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "cookies", Msg: defaultValChainErrMsg, Field: "PHPSESSID", Value: "f25g9kvjlou432vmc0ht"},
-				{Location: "cookies", Msg: defaultValChainErrMsg, Field: "JSESSIONID", Value: "D4E4B8CD58F4B5205E013B0B4467D5DF"},
+				{Location: "cookies", Msg: DefaultValChainErrMsg, Field: "PHPSESSID", Value: "f25g9kvjlou432vmc0ht"},
+				{Location: "cookies", Msg: DefaultValChainErrMsg, Field: "JSESSIONID", Value: "D4E4B8CD58F4B5205E013B0B4467D5DF"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"cookies": MatchedDataFieldValues{"PHPSESSID": "f25g9kvjlou432vmc0ht", "JSESSIONID": "D4E4B8CD58F4B5205E013B0B4467D5DF"}},
@@ -166,7 +166,7 @@ func TestCookieValidationChain(t *testing.T) {
 				).Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "cookies", Msg: defaultValChainErrMsg, Field: "PHPSESSID", Value: "f25g9kvjlou432vmc0ht"},
+				{Location: "cookies", Msg: DefaultValChainErrMsg, Field: "PHPSESSID", Value: "f25g9kvjlou432vmc0ht"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"cookies": MatchedDataFieldValues{"PHPSESSID": "f25g9kvjlou432vmc0ht"}},
@@ -214,8 +214,8 @@ func TestCookieValidationChain(t *testing.T) {
 				).Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "cookies", Msg: defaultValChainErrMsg, Field: "PHPSESSID", Value: "f25g9kvjlou432vmc0ht"},
-				{Location: "cookies", Msg: defaultValChainErrMsg, Field: "JSESSIONID", Value: "D4E4B8CD58F4B5205E013B0B4467D5DF"},
+				{Location: "cookies", Msg: DefaultValChainErrMsg, Field: "PHPSESSID", Value: "f25g9kvjlou432vmc0ht"},
+				{Location: "cookies", Msg: DefaultValChainErrMsg, Field: "JSESSIONID", Value: "D4E4B8CD58F4B5205E013B0B4467D5DF"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"cookies": MatchedDataFieldValues{"PHPSESSID": "f25g9kvjlou432vmc0ht", "JSESSIONID": "D4E4B8CD58F4B5205E013B0B4467D5DF"}},
@@ -301,7 +301,7 @@ func TestCookieValidationChain(t *testing.T) {
 				NewCookie("JSESSIONID", nil).Chain().Alpha(nil).Bail().LowerCase().Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "cookies", Msg: defaultValChainErrMsg, Field: "JSESSIONID", Value: "D4E4B8CD58F4B5205E013B0B4467D5DF"},
+				{Location: "cookies", Msg: DefaultValChainErrMsg, Field: "JSESSIONID", Value: "D4E4B8CD58F4B5205E013B0B4467D5DF"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"cookies": MatchedDataFieldValues{"JSESSIONID": "D4E4B8CD58F4B5205E013B0B4467D5DF"}},
@@ -318,8 +318,8 @@ func TestCookieValidationChain(t *testing.T) {
 				NewCookie("_fat", nil).Chain().Alpha(nil).Bail().LowerCase().Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "cookies", Msg: defaultValChainErrMsg, Field: "JSESSIONID", Value: "D4E4B8CD58F4B5205E013B0B4467D5DF"},
-				{Location: "cookies", Msg: defaultValChainErrMsg, Field: "_fat", Value: "2"},
+				{Location: "cookies", Msg: DefaultValChainErrMsg, Field: "JSESSIONID", Value: "D4E4B8CD58F4B5205E013B0B4467D5DF"},
+				{Location: "cookies", Msg: DefaultValChainErrMsg, Field: "_fat", Value: "2"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"cookies": MatchedDataFieldValues{"JSESSIONID": "D4E4B8CD58F4B5205E013B0B4467D5DF", "_fat": "2"}},
@@ -339,7 +339,7 @@ func TestCookieValidationChain(t *testing.T) {
 				).LowerCase().Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "cookies", Msg: defaultValChainErrMsg, Field: "PHPSESSID", Value: "f25g9kvjlou432vmc0ht"},
+				{Location: "cookies", Msg: DefaultValChainErrMsg, Field: "PHPSESSID", Value: "f25g9kvjlou432vmc0ht"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"cookies": MatchedDataFieldValues{"PHPSESSID": "f25g9kvjlou432vmc0ht"}},
@@ -364,8 +364,8 @@ func TestCookieValidationChain(t *testing.T) {
 				).LowerCase().Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "cookies", Msg: defaultValChainErrMsg, Field: "auth_token", Value: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."},
-				{Location: "cookies", Msg: defaultValChainErrMsg, Field: "_gat", Value: "1"},
+				{Location: "cookies", Msg: DefaultValChainErrMsg, Field: "auth_token", Value: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."},
+				{Location: "cookies", Msg: DefaultValChainErrMsg, Field: "_gat", Value: "1"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"cookies": MatchedDataFieldValues{"auth_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...", "_gat": "1"}},
@@ -385,8 +385,8 @@ func TestCookieValidationChain(t *testing.T) {
 				).LowerCase().Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "cookies", Msg: defaultValChainErrMsg, Field: "fr", Value: "0aX7v9nZ7EfLXN"},
-				{Location: "cookies", Msg: defaultValChainErrMsg, Field: "fr", Value: "0aX7v9nZ7EfLXN"},
+				{Location: "cookies", Msg: DefaultValChainErrMsg, Field: "fr", Value: "0aX7v9nZ7EfLXN"},
+				{Location: "cookies", Msg: DefaultValChainErrMsg, Field: "fr", Value: "0aX7v9nZ7EfLXN"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"cookies": MatchedDataFieldValues{"fr": "0aX7v9nZ7EfLXN"}},
@@ -411,10 +411,10 @@ func TestCookieValidationChain(t *testing.T) {
 				).LowerCase().Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "cookies", Msg: defaultValChainErrMsg, Field: "csrf_token", Value: "A1B2C3D4E5F6G7H8I9"},
-				{Location: "cookies", Msg: defaultValChainErrMsg, Field: "csrf_token", Value: "A1B2C3D4E5F6G7H8I9"},
-				{Location: "cookies", Msg: defaultValChainErrMsg, Field: "_gat", Value: "1"},
-				{Location: "cookies", Msg: defaultValChainErrMsg, Field: "_gat", Value: "1"},
+				{Location: "cookies", Msg: DefaultValChainErrMsg, Field: "csrf_token", Value: "A1B2C3D4E5F6G7H8I9"},
+				{Location: "cookies", Msg: DefaultValChainErrMsg, Field: "csrf_token", Value: "A1B2C3D4E5F6G7H8I9"},
+				{Location: "cookies", Msg: DefaultValChainErrMsg, Field: "_gat", Value: "1"},
+				{Location: "cookies", Msg: DefaultValChainErrMsg, Field: "_gat", Value: "1"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"cookies": MatchedDataFieldValues{"csrf_token": "A1B2C3D4E5F6G7H8I9", "_gat": "1"}},
@@ -459,7 +459,7 @@ func TestCookieValidationChain(t *testing.T) {
 				NewCookie("_gat", nil).Chain().Not().Numeric(nil).Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "cookies", Msg: defaultValChainErrMsg, Field: "_gat", Value: "1"},
+				{Location: "cookies", Msg: DefaultValChainErrMsg, Field: "_gat", Value: "1"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"cookies": MatchedDataFieldValues{"_gat": "1"}},
@@ -476,8 +476,8 @@ func TestCookieValidationChain(t *testing.T) {
 				NewCookie("_fat", nil).Chain().Not().Numeric(nil).Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "cookies", Msg: defaultValChainErrMsg, Field: "_gat", Value: "1"},
-				{Location: "cookies", Msg: defaultValChainErrMsg, Field: "_fat", Value: "2"},
+				{Location: "cookies", Msg: DefaultValChainErrMsg, Field: "_gat", Value: "1"},
+				{Location: "cookies", Msg: DefaultValChainErrMsg, Field: "_fat", Value: "2"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"cookies": MatchedDataFieldValues{"_gat": "1", "_fat": "2"}},
@@ -538,7 +538,7 @@ func TestCookieValidationChain(t *testing.T) {
 				).Numeric(nil).Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "cookies", Msg: defaultValChainErrMsg, Field: `currency`, Value: "USD"},
+				{Location: "cookies", Msg: DefaultValChainErrMsg, Field: `currency`, Value: "USD"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"cookies": MatchedDataFieldValues{`currency`: "USD"}},
@@ -558,7 +558,7 @@ func TestCookieValidationChain(t *testing.T) {
 				).Numeric(nil).Currency(nil).Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "cookies", Msg: defaultValChainErrMsg, Field: `auth_token`, Value: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."},
+				{Location: "cookies", Msg: DefaultValChainErrMsg, Field: `auth_token`, Value: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"cookies": MatchedDataFieldValues{`auth_token`: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."}},
@@ -578,8 +578,8 @@ func TestCookieValidationChain(t *testing.T) {
 				).Numeric(nil).Currency(nil).Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "cookies", Msg: defaultValChainErrMsg, Field: `access_token`, Value: "ya29.A0AfH6SMB..."},
-				{Location: "cookies", Msg: defaultValChainErrMsg, Field: `access_token`, Value: "ya29.A0AfH6SMB..."},
+				{Location: "cookies", Msg: DefaultValChainErrMsg, Field: `access_token`, Value: "ya29.A0AfH6SMB..."},
+				{Location: "cookies", Msg: DefaultValChainErrMsg, Field: `access_token`, Value: "ya29.A0AfH6SMB..."},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"cookies": MatchedDataFieldValues{`access_token`: "ya29.A0AfH6SMB..."}},
@@ -595,7 +595,7 @@ func TestCookieValidationChain(t *testing.T) {
 				NewCookie("_gat", nil).Chain().Alpha(nil).Optional().Validate(),
 			},
 			validationResult: []ValidationChainError{
-				{Location: "cookies", Msg: defaultValChainErrMsg, Field: "_gat", Value: "1"},
+				{Location: "cookies", Msg: DefaultValChainErrMsg, Field: "_gat", Value: "1"},
 			},
 			validationResultErr: nil,
 			matchedData:         MatchedData{"cookies": MatchedDataFieldValues{"_gat": "1"}},

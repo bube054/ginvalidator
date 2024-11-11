@@ -66,6 +66,7 @@ func (v ValidationChain) Validate() gin.HandlerFunc {
 		shouldNegateNextValidator := false // state for dealing with the immediate previous validation validity and negating it, used by not.
 		shouldSkipNextValidator := false   // state for dealing with whether to skip next link in the validation chain. used by skip.
 
+		errorCountId := 0
 		for _, ruleCreator := range ruleCreators {
 			if shouldSkipNextValidator {
 				shouldSkipNextValidator = false
@@ -95,14 +96,17 @@ func (v ValidationChain) Validate() gin.HandlerFunc {
 				}
 
 				if !valid {
+					errorCountId++
 					numOfPreviousValidatorsFailed++
 
+					time.Sleep(time.Nanosecond)
 					vce := NewValidationChainError(
 						vceWithLocation(location),
 						vceWithMsg(errMsg),
 						vceWithField(field),
 						vceWithValue(initialValue),
 						vceWithCreatedAt(time.Now()),
+						vceWithIncID(errorCountId),
 					)
 
 					valErrs = append(valErrs, vce)

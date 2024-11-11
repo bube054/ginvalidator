@@ -12,14 +12,15 @@ import "time"
 //   - Field: The name of the field that failed validation.
 //   - Value: The invalid value that triggered the validation error.
 //   - createdAt: The timestamp when the error was created (used internally for tracking).
+//   - incId: The autoincrement id (used internally for tracking).
 type ValidationChainError struct {
-    Location  string    `json:"location"`
-    Msg       string    `json:"message"`
-    Field     string    `json:"field"`
-    Value     string    `json:"value"`
-    createdAt time.Time
+	Location  string `json:"location"`
+	Msg       string `json:"message"`
+	Field     string `json:"field"`
+	Value     string `json:"value"`
+	createdAt time.Time
+	incId     int
 }
-
 
 func vceWithLocation(location string) func(*ValidationChainError) {
 	return func(vce *ValidationChainError) {
@@ -48,6 +49,12 @@ func vceWithValue(value string) func(*ValidationChainError) {
 func vceWithCreatedAt(time time.Time) func(*ValidationChainError) {
 	return func(vce *ValidationChainError) {
 		vce.createdAt = time
+	}
+}
+
+func vceWithIncID(x int) func(*ValidationChainError) {
+	return func(vce *ValidationChainError) {
+		vce.incId = x
 	}
 }
 

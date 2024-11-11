@@ -2,7 +2,9 @@ package ginvalidator
 
 import (
 	"errors"
+	"math/rand"
 	"sort"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,7 +16,6 @@ var (
 	// ErrNoValidationResult is returned when no validation result is found in the context.
 	ErrNoValidationResult = errors.New("validation result not found in context")
 )
-
 
 // GinValidatorCtxErrorsStoreName is the key, where the validation errors are stored.
 const GinValidatorCtxErrorsStoreName string = "__ginvalidator__ctx__errors__"
@@ -33,7 +34,6 @@ type ctxFieldErrs map[string][]ValidationChainError
 // This structure allows organizing validation errors by request location, making it easier to track and
 // handle errors from different parts of the request context.
 type ctxStoreErrs map[string]ctxFieldErrs
-
 
 // ValidationResult extracts the validation errors from the Gin context.
 // It retrieves any validation errors that have occurred during the request processing,
@@ -71,9 +71,9 @@ func ValidationResult(ctx *gin.Context) ([]ValidationChainError, error) {
 		}
 	}
 
-	// fmt.Printf("Unsorted: %+v\n", allErrs)
-	sortErrorsByCreatedAt(allErrs)
-	// fmt.Printf("Sorted: %+v\n", allErrs)
+	// allErrs = RandomizeErrors(allErrs)
+
+	SortValidationErrors(allErrs)
 
 	return allErrs, nil
 }
@@ -141,8 +141,23 @@ func saveValidationErrorsToCtx(ctx *gin.Context, errs []ValidationChainError) {
 	}
 }
 
-func sortErrorsByCreatedAt(errors []ValidationChainError) {
+func SortValidationErrors(errors []ValidationChainError) {
 	sort.Slice(errors, func(i, j int) bool {
-		return errors[i].createdAt.Before(errors[j].createdAt)
+		if errors[i].createdAt.Before(errors[j].createdAt) {
+			return true
+		}
+		if errors[i].createdAt.Equal(errors[j].createdAt) {
+			return errors[i].incId > errors[j].incId
+		}
+		return false
 	})
+}
+
+func RandomizeErrors(errors []ValidationChainError) []ValidationChainError {
+	rand.Seed(time.Now().UnixNano()) // Seed random number generator with current timep
+	for i := len(errors) - 1; i > 0; i-- {
+		j := rand.Intn(i + 1)
+		errors[i], errors[j] = errors[j], errors[i] // Swap elements
+	}
+	return errors
 }

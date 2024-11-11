@@ -66,8 +66,8 @@ func createTestGinCtx(opts ginCtxReqOpts) *gin.Context {
 func setupRouter() *gin.Engine {
 	gin.SetMode(gin.TestMode)
 	r := gin.Default()
-	r.GET("/ping", func(c *gin.Context) {
-		c.String(200, "pong")
+	r.GET("/ping", func(ctx *gin.Context) {
+		ctx.String(200, "pong")
 	})
 	return r
 }

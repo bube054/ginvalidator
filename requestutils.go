@@ -22,17 +22,17 @@ var (
 	ErrExtractionInvalidJson        = errors.New("invalid json")
 )
 
-type requestLocation int
+type RequestLocation int
 
 const (
-	bodyLocation requestLocation = iota
-	cookieLocation
-	headerLocation
-	paramLocation
-	queryLocation
+	BodyLocation RequestLocation = iota
+	CookieLocation
+	HeaderLocation
+	ParamLocation
+	QueryLocation
 )
 
-func (l requestLocation) string() string {
+func (l RequestLocation) String() string {
 	return [...]string{"body", "cookies", "headers", "params", "queries"}[l]
 }
 

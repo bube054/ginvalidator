@@ -10,7 +10,7 @@ type Param struct {
 // It creates a new ValidationChain object that will validate the specified field
 // and format error messages using the provided ErrFmtFuncHandler.
 func (p Param) Chain() ValidationChain {
-	return NewValidationChain(p.field, p.errFmtFunc, paramLocation)
+	return NewValidationChain(p.field, p.errFmtFunc, ParamLocation)
 }
 
 // NewParam constructs a Param validator for the given field.

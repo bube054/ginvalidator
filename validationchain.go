@@ -37,7 +37,7 @@ func (v ValidationChain) Validate() gin.HandlerFunc {
 
 		field := v.validator.field
 		reqLoc := v.validator.reqLoc
-		location := reqLoc.string()
+		location := reqLoc.String()
 		errFmtFunc := v.validator.errFmtFunc
 
 		switch v.validator.reqLoc {
@@ -139,7 +139,7 @@ func (v ValidationChain) Validate() gin.HandlerFunc {
 				}
 
 				if vcn == "Optional" {
-					if sanitizedValue == "" {
+					if initialValue == "" {
 						valErrs = make([]ValidationChainError, 0, len(ruleCreators))
 						break
 					}
@@ -154,7 +154,7 @@ func (v ValidationChain) Validate() gin.HandlerFunc {
 	}
 }
 
-func NewValidationChain(field string, errFmtFunc ErrFmtFuncHandler, reqLoc requestLocation) ValidationChain {
+func NewValidationChain(field string, errFmtFunc ErrFmtFuncHandler, reqLoc RequestLocation) ValidationChain {
 	return ValidationChain{
 		validator: newValidator(field, errFmtFunc, reqLoc),
 		modifier:  newModifier(field, errFmtFunc, reqLoc),

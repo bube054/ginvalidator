@@ -10,7 +10,7 @@ type Query struct {
 // It creates a new ValidationChain object that will validate the specified field
 // and format error messages using the provided ErrFmtFuncHandler.
 func (q Query) Chain() ValidationChain {
-	return NewValidationChain(q.field, q.errFmtFunc, queryLocation)
+	return NewValidationChain(q.field, q.errFmtFunc, QueryLocation)
 }
 
 // NewQuery constructs a Query validator for the given field.

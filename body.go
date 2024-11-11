@@ -10,7 +10,7 @@ type Body struct {
 // It creates a new ValidationChain object that will validate the specified field
 // and format error messages using the provided ErrFmtFuncHandler.
 func (b Body) Chain() ValidationChain {
-	return NewValidationChain(b.field, b.errFmtFunc, bodyLocation)
+	return NewValidationChain(b.field, b.errFmtFunc, BodyLocation)
 }
 
 // NewBody constructs a Body validator for the given field.

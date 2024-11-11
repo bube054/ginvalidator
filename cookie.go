@@ -10,7 +10,7 @@ type Cookie struct {
 // It creates a new ValidationChain object that will validate the specified field
 // and format error messages using the provided ErrFmtFuncHandler.
 func (c Cookie) Chain() ValidationChain {
-	return NewValidationChain(c.field, c.errFmtFunc, cookieLocation)
+	return NewValidationChain(c.field, c.errFmtFunc, CookieLocation)
 }
 
 // NewCookie constructs a Cookie validator for the given field.

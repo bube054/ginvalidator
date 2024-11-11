@@ -10,7 +10,7 @@ type Header struct {
 // It creates a new ValidationChain object that will validate the specified field
 // and format error messages using the provided ErrFmtFuncHandler.
 func (h Header) Chain() ValidationChain {
-	return NewValidationChain(h.field, h.errFmtFunc, headerLocation)
+	return NewValidationChain(h.field, h.errFmtFunc, HeaderLocation)
 }
 
 // NewHeader constructs a Header validator for the given field.

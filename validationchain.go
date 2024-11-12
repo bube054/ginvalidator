@@ -1,145 +1,167 @@
+// Package ginvalidator is a set of [Gin] middlewares that wraps the
+// extensive collection of validators and sanitizers offered by [validatorgo].
+//
+// It allows you to combine them in many ways so that you can validate and sanitize your express requests,
+// and offers tools to determine if the request is valid or not, which data was matched according to your validators, and so on.
+//
+// It is based on the popular js/express library [express-validator]
+//
+// [Gin]: https://github.com/gin-gonic/gin
+// [validatorgo]: https://github.com/bube054/validatorgo
+// [express-validator]: https://github.com/express-validator/express-validator
 package ginvalidator
 
 import (
-	"fmt"
-	"io"
-
-	// "io"
 	"log"
+	"time"
 
-	"github.com/buger/jsonparser"
 	"github.com/gin-gonic/gin"
 )
 
-// the chain of either validators, sanitizers and modifiers
-type validationChain struct {
+const DefaultValChainErrMsg string = "Invalid value"
+
+type ValidationChain struct {
 	validator
 	modifier
 	sanitizer
 }
 
-func (vc validationChain) Validate() gin.HandlerFunc {
+func (v ValidationChain) Validate() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		field := vc.getFieldToValidate()
-		sanitizedValue, err := vc.getValueToValidate(ctx)
-		responses := make([]validationChainResponse, 0)
 
-		if err != nil {
-			log.Println("a validation error has occurred:", err)
-			ctx.Next()
+		var (
+			initialValue   string
+			sanitizedValue string
+			extractionErr  error
+		)
+
+		field := v.validator.field
+		reqLoc := v.validator.reqLoc
+		location := reqLoc.String()
+		errFmtFunc := v.validator.errFmtFunc
+
+		switch v.validator.reqLoc {
+		case 0:
+			initialValue, extractionErr = extractFieldValFromBody(ctx, field)
+		case 1:
+			initialValue, extractionErr = extractFieldValFromCookie(ctx, field)
+		case 2:
+			initialValue, extractionErr = extractFieldValFromHeader(ctx, field)
+		case 3:
+			initialValue, extractionErr = extractFieldValFromParam(ctx, field)
+		case 4:
+			initialValue, extractionErr = extractFieldValFromQuery(ctx, field)
 		}
 
-		rules := vc.getValidationRules()
-		for i, rules := range rules {
-			response := rules(sanitizedValue, field, ctx)
+		sanitizedValue = initialValue
 
-			if i > 0 {
-				previousResponse := responses[len(responses)-1]
-				if !previousResponse.isValid && response.shouldBail {
-					break
+		if extractionErr != nil {
+			log.Printf("Error extracting field %q from request location %q: %v", field, location, extractionErr)
+		}
+
+		ruleCreators := v.validator.rulesCreatorFuncs
+		valErrs := make([]ValidationChainError, 0, len(ruleCreators))
+
+		numOfPreviousValidatorsFailed := 0 // counter for dealing with previous failed validations, used by bail.
+		shouldNegateNextValidator := false // state for dealing with the immediate previous validation validity and negating it, used by not.
+		shouldSkipNextValidator := false   // state for dealing with whether to skip next link in the validation chain. used by skip.
+
+		errorCountId := 0
+		for _, ruleCreator := range ruleCreators {
+			if shouldSkipNextValidator {
+				shouldSkipNextValidator = false
+				continue
+			}
+
+			rule := ruleCreator(ctx, initialValue, sanitizedValue)
+			vcn := rule.validationChainName
+			valid := rule.isValid
+			newValue := rule.newValue
+			shouldBail := rule.shouldBail
+			shouldSkip := rule.shouldSkip
+
+			var errMsg string
+
+			if errFmtFunc == nil {
+				errMsg = DefaultValChainErrMsg
+			} else {
+				errMsg = errFmtFunc(initialValue, sanitizedValue, vcn)
+			}
+
+			// rule is for validators
+			if rule.validationChainType == 0 {
+				if shouldNegateNextValidator {
+					valid = !valid
+					shouldNegateNextValidator = false
+				}
+
+				if !valid {
+					errorCountId++
+					numOfPreviousValidatorsFailed++
+
+					time.Sleep(time.Nanosecond)
+					vce := NewValidationChainError(
+						vceWithLocation(location),
+						vceWithMsg(errMsg),
+						vceWithField(field),
+						vceWithValue(initialValue),
+						vceWithCreatedAt(time.Now()),
+						vceWithIncID(errorCountId),
+					)
+
+					valErrs = append(valErrs, vce)
 				}
 			}
 
-			if response.shouldBail {
-				break
+			// rule is for sanitizers
+			if rule.validationChainType == 1 {
+				sanitizedValue = newValue
 			}
 
-			sanitizedValue = response.newValue
-			responses = append(responses, response)
+			// rule is for modifiers
+			if rule.validationChainType == 2 {
+				vcn := rule.validationChainName
+
+				if vcn == "Bail" {
+					if numOfPreviousValidatorsFailed > 0 {
+						break
+					}
+				}
+
+				if vcn == "If" {
+					if shouldBail {
+						break
+					}
+				}
+
+				if vcn == "Not" {
+					shouldNegateNextValidator = true
+				}
+
+				if vcn == "Skip" {
+					shouldSkipNextValidator = shouldSkip
+				}
+
+				if vcn == "Optional" {
+					if initialValue == "" {
+						valErrs = make([]ValidationChainError, 0)
+						break
+					}
+				}
+			}
 		}
 
-		vc.saveResponsesToStore(ctx, responses)
+		saveValidationErrorsToCtx(ctx, valErrs)
+		saveMatchedDataToCtx(ctx, location, field, sanitizedValue)
 
-		// fmt.Printf("responses: %+v\n", responses)
 		ctx.Next()
 	}
 }
 
-// gets the validation rules
-func (vc validationChain) getValidationRules() validationChainRules {
-	return vc.validator.rules // could have also access modifier or sanitizer.
-}
-
-// gets the validation location
-func (vc validationChain) getValidationLocation() string {
-	return vc.validator.location // could have also access modifier or sanitizer.
-}
-
-// gets the validation field
-func (vc validationChain) getFieldToValidate() string {
-	return vc.validator.field // could have also access modifier or sanitizer.
-}
-
-// get the field to be validated from validation location
-func (vc validationChain) getValueToValidate(ctx *gin.Context) (string, error) {
-	field := vc.getFieldToValidate()
-	switch vc.getValidationLocation() {
-	case bodyLocation:
-		keys, err := splitJSONFieldSelector(field)
-		if err != nil {
-			return "", err
-		}
-		reqBody, err := ctx.Request.GetBody()
-		if err != nil {
-			return "", err
-		}
-		reqBodyBytes, err := io.ReadAll(reqBody)
-		if err != nil {
-			return "", err
-		}
-		key, _, _, err := jsonparser.Get(reqBodyBytes, keys...)
-		if err != nil {
-			return "", err
-		}
-		return string(key), nil
-	case cookiesLocation:
-		return ctx.Cookie(field)
-	case headersLocation:
-		return ctx.GetHeader(field), nil
-	case paramsLocation:
-		return ctx.Param(field), nil
-	case queryLocation:
-		return ctx.Query(field), nil
-	default:
-		return "", fmt.Errorf("invalid request location for %s", field)
-	}
-}
-
-func (vc validationChain) getStoreName() string {
-	switch vc.getValidationLocation() {
-	case bodyLocation:
-		return bodyLocationStore
-	case cookiesLocation:
-		return cookiesLocationStore
-	case headersLocation:
-		return headersLocationStore
-	case paramsLocation:
-		return paramsLocationStore
-	case queryLocation:
-		return queryLocationStore
-	default:
-		return ""
-	}
-}
-
-type CtxStore map[string][]validationChainResponse
-
-func (vc validationChain) saveResponsesToStore(ctx *gin.Context, responses []validationChainResponse) {
-	defaultCtxStore := make(CtxStore)
-	storeName := vc.getStoreName()
-	field := vc.getFieldToValidate()
-
-	value, exists := ctx.Get(storeName)
-
-	if !exists {
-		defaultCtxStore[field] = responses
-		ctx.Set(storeName, defaultCtxStore)
-	} else {
-		store, ok := value.(CtxStore)
-		if !ok {
-			store = make(CtxStore)
-		}
-		store[field] = responses
-		ctx.Set(storeName, store)
+func NewValidationChain(field string, errFmtFunc ErrFmtFuncHandler, reqLoc RequestLocation) ValidationChain {
+	return ValidationChain{
+		validator: newValidator(field, errFmtFunc, reqLoc),
+		modifier:  newModifier(field, errFmtFunc, reqLoc),
+		sanitizer: newSanitizer(field, errFmtFunc, reqLoc),
 	}
 }

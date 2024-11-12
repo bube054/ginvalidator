@@ -6,83 +6,175 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+const (
+	BailModifierFuncName     string = "Bail"
+	IfModifierFuncName       string = "If"
+	NotModifierFuncName      string = "Not"
+	SkipModifierFuncName     string = "Skip"
+	OptionalModifierFuncName string = "Optional"
+)
+
+// A modifier is simply a piece of the validation chain that can manipulate the whole validation chain.
 type modifier struct {
-	field           string
-	errorMessage    string
-	location        string
-	rules           validationChainRules
-	chainMethodType string
+	field      string            // the field to be specified
+	errFmtFunc ErrFmtFuncHandler // the function to create the error message
+
+	reqLoc            RequestLocation  // the HTTP request location (e.g., body, headers, cookies, params, or queries)
+	rulesCreatorFuncs ruleCreatorFuncs // the list of functions that creates the validation rules.
 }
 
-func (m *modifier) createValidationChainFromModifier() validationChain {
-	return validationChain{
+// recreateValidationChainFromModifier takes the previous modifier and returns a new validation chain.
+func (m *modifier) recreateValidationChainFromModifier(ruleCreatorFunc ruleCreatorFunc) ValidationChain {
+	newRulesCreatorFunc := append(m.rulesCreatorFuncs, ruleCreatorFunc)
+
+	return ValidationChain{
 		validator: validator{
-			field:        m.field,
-			errorMessage: m.errorMessage,
-			location:     m.location,
-			rules:        m.rules,
+			field:             m.field,
+			reqLoc:            m.reqLoc,
+			errFmtFunc:        m.errFmtFunc,
+			rulesCreatorFuncs: newRulesCreatorFunc,
 		},
-		modifier: *m,
+		modifier: modifier{
+			field:             m.field,
+			reqLoc:            m.reqLoc,
+			errFmtFunc:        m.errFmtFunc,
+			rulesCreatorFuncs: newRulesCreatorFunc,
+		},
 		sanitizer: sanitizer{
-			field:        m.field,
-			errorMessage: m.errorMessage,
-			location:     m.location,
-			rules:        m.rules,
+			field:             m.field,
+			reqLoc:            m.reqLoc,
+			errFmtFunc:        m.errFmtFunc,
+			rulesCreatorFuncs: newRulesCreatorFunc,
 		},
 	}
 }
 
-// A modifier that negates the result of the next validator in the chain.
-func (m modifier) Not() validationChain {
-	not := func(value, field string, ctx *gin.Context) validationChainResponse {
-		location := m.location
-		path := field
-		newValue := value
-		funcName := notFunc
-		isValid := true
-
-		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, false)
-	}
-
-	m.rules = append(m.rules, not)
-
-	return m.createValidationChainFromModifier()
-}
-
-// A modifier that stops running the validation chain if any of the previous validators failed.
+// Bail is a modifier that stops running the validation chain if any of the previous validators failed.
+//
 // This is useful to prevent a custom validator that touches a database or external API from running when you know it will fail.
-func (m modifier) Bail() validationChain {
-	bail := func(value, field string, ctx *gin.Context) validationChainResponse {
-		location := m.location
-		path := field
-		newValue := value
-		funcName := bailFunc
-		isValid := true
+//
+// .Bail() can be used multiple times in the same validation chain if desired.
+func (m modifier) Bail() ValidationChain {
+	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 
-		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, true)
+		return NewValidationChainRule(
+			withIsValid(true),
+			withNewValue(sanitizedValue),
+			withValidationChainName(BailModifierFuncName),
+			withValidationChainType(modifierType),
+			withShouldBail(false),
+		)
 	}
 
-	m.rules = append(m.rules, bail)
-
-	return m.createValidationChainFromModifier()
+	return m.recreateValidationChainFromModifier(ruleCreator)
 }
 
-type Continue func(value string, req http.Request, location string) bool
+// IfModifierFunc defines a function that determines whether the validation chain should stop or continue.
+// It returns `true` if the chain should stop, or `false` if it should continue.
+//
+// Parameters:
+//   - req: the HTTP request context derived from `http.Request`.
+//   - initialValue: the original value derived from the specified field.
+//   - sanitizedValue: the current sanitized value after applying previous sanitizers.
+type IfModifierFunc func(req *http.Request, initialValue, sanitizedValue string) bool
 
-// A modifier that adds a condition on whether the validation chain should continue running on a field or not.
-func (m modifier) If(ifFunc Continue) validationChain {
-	iF := func(value, field string, ctx *gin.Context) validationChainResponse {
-		location := m.location
-		path := field
-		newValue := value
-		funcName := iFFunc
-		isValid := true
-		shouldBail := !ifFunc(value, *ctx.Request, location)
+// If adds a conditional check to decide whether the validation chain should continue for a field.
+//
+// The condition is evaluated by the provided [IfModifierFunc] and the result determines
+// if the validation chain should bail out (`true`) or proceed (`false`).
+//
+// Parameters:
+//   - imf: The [IfModifierFunc] used to evaluate the condition.
+func (m modifier) If(imf IfModifierFunc) ValidationChain {
+	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
+		shouldBail := imf(ctx.Request, initialValue, sanitizedValue)
 
-		return newValidationChainResponse(location, "", path, newValue, funcName, isValid, shouldBail)
+		return NewValidationChainRule(
+			withIsValid(true),
+			withNewValue(sanitizedValue),
+			withValidationChainName(IfModifierFuncName),
+			withValidationChainType(modifierType),
+			withShouldBail(shouldBail),
+		)
 	}
 
-	m.rules = append(m.rules, iF)
+	return m.recreateValidationChainFromModifier(ruleCreator)
+}
 
-	return m.createValidationChainFromModifier()
+// Not negates the result of the next validator in the chain.
+func (m modifier) Not() ValidationChain {
+	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
+		return NewValidationChainRule(
+			withIsValid(true),
+			withNewValue(sanitizedValue),
+			withValidationChainName(NotModifierFuncName),
+			withValidationChainType(modifierType),
+			withShouldBail(false),
+		)
+	}
+
+	return m.recreateValidationChainFromModifier(ruleCreator)
+}
+
+// SkipModifierFunc defines a function that determines wwhether the next validator, modifier or sanitizer in validation chain should be skipped.
+// It returns `true` if the next chain should skipped, or `false` if it should continue.
+//
+// Parameters:
+//   - req: the HTTP request context derived from `http.Request`.
+//   - initialValue: the original value derived from the specified field.
+//   - sanitizedValue: the current sanitized value after applying previous sanitizers.
+type SkipModifierFunc func(req *http.Request, initialValue, sanitizedValue string) bool
+
+// Skip adds a conditional check to decide whether the next validator, modifier or sanitizer in validation chain should be skipped.
+//
+// The condition is evaluated by the provided [SkipModifierFunc] and the result determines
+// if the next link in validation chain should be skipped out (`true`) or proceed (`false`).
+//
+// Parameters:
+//   - smf: The [SkipModifierFunc] used to evaluate the condition.
+func (m modifier) Skip(smf SkipModifierFunc) ValidationChain {
+	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
+		shouldSkip := smf(ctx.Request, initialValue, sanitizedValue)
+
+		return NewValidationChainRule(
+			withIsValid(true),
+			withNewValue(sanitizedValue),
+			withValidationChainName(SkipModifierFuncName),
+			withValidationChainType(modifierType),
+			withShouldBail(false),
+			withShouldSkip(shouldSkip),
+		)
+	}
+
+	return m.recreateValidationChainFromModifier(ruleCreator)
+}
+
+// Optional ignores validation if the value is not present/empty, instead of failing it.
+func (m modifier) Optional() ValidationChain {
+	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
+		return NewValidationChainRule(
+			withIsValid(true),
+			withNewValue(sanitizedValue),
+			withValidationChainName(OptionalModifierFuncName),
+			withValidationChainType(modifierType),
+			withShouldBail(false),
+			withShouldSkip(false),
+		)
+	}
+
+	return m.recreateValidationChainFromModifier(ruleCreator)
+}
+
+// newModifier creates and returns a new modifier.
+//
+// Parameters:
+//   - field: The field to validate from the HTTP request data location (e.g., body, headers, cookies, params, or queries).
+//   - errFmtFunc: A function that returns a custom error message. If nil, a generic error message will be used.
+//   - reqLoc: The location in the HTTP request from where the field is extracted (e.g., body, headers, cookies, params, or queries).
+func newModifier(field string, errFmtFunc ErrFmtFuncHandler, reqLoc RequestLocation) modifier {
+	return modifier{
+		field:      field,
+		errFmtFunc: errFmtFunc,
+		reqLoc:     reqLoc,
+	}
 }

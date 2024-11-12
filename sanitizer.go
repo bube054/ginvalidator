@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	CustomSanitizerFuncName         string = "Bail"
+	CustomSanitizerFuncName         string = "CustomSanitizer"
 	BlacklistSanitizerFuncName      string = "Blacklist"
 	EscapeSanitizerFuncName         string = "Escape"
 	LTrimSanitizerFuncName          string = "LTrim"

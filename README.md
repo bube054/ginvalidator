@@ -1,6 +1,6 @@
 # ginvalidator
 
-<img alt="Tag" src="https://img.shields.io/badge/tag-v0.1.0-blue?labelColor=gray"> <img alt="Go Version" src="https://img.shields.io/badge/Go->=1.21-00ADD8?labelColor=gray"> <img alt="Reference" src="https://img.shields.io/badge/-reference-00ADD8?logo=go&labelColor=gray"> <img alt="Tests" src="https://img.shields.io/badge/tests-passing-brightgreen?logo=github&labelColor=gray"> <img alt="Go Report" src="https://img.shields.io/badge/go_report-A%2B-00ADD8"> <img alt="Coverage" src="https://img.shields.io/badge/coverage-87.30%25-brightgreen?logo=codecov"> <img alt="Contributors" src="https://img.shields.io/badge/contributors-1-blueviolet"> <img alt="License" src="https://img.shields.io/badge/license-MIT-yellow">
+<!-- <img alt="Tag" src="https://img.shields.io/badge/tag-v0.1.0-blue?labelColor=gray"> <img alt="Go Version" src="https://img.shields.io/badge/Go->=1.21-00ADD8?labelColor=gray"> <img alt="Reference" src="https://img.shields.io/badge/-reference-00ADD8?logo=go&labelColor=gray"> <img alt="Tests" src="https://img.shields.io/badge/tests-passing-brightgreen?logo=github&labelColor=gray"> <img alt="Go Report" src="https://img.shields.io/badge/go_report-A%2B-00ADD8"> <img alt="Coverage" src="https://img.shields.io/badge/coverage-87.30%25-brightgreen?logo=codecov"> <img alt="Contributors" src="https://img.shields.io/badge/contributors-1-blueviolet"> <img alt="License" src="https://img.shields.io/badge/license-MIT-yellow"> -->
 
 ## Overview
 
@@ -417,7 +417,7 @@ Now, if you restart the server and refresh the page, what you'll see is "Hello, 
 
 ## The Validation Chain
 
-The validation chain is one of the main concepts in ginvalidator, therefore it's useful to learn about it, so that you can use it effectively.
+The [validation chain](https://pkg.go.dev/github.com/bube054/ginvalidator#ValidationChain) is one of the main concepts in ginvalidator, therefore it's useful to learn about it, so that you can use it effectively.
 
 But don't worry: if you've read through the [Getting Started guide](#getting-started), you have already used validation chains without even noticing!
 
@@ -462,23 +462,134 @@ A validation chain has three kinds of methods: `validators`, `sanitizers` and `m
 
 If the value is invalid, an error is recorded for that field using some error message. This validation error can then be retrieved at a later point in the Gin route handler and returned to the user.
 
+They are:
+
+* [CustomValidator](https://pkg.go.dev/github.com/bube054/ginvalidator#CustomValidator)
+* [Contains](https://pkg.go.dev/github.com/bube054/ginvalidator#Contains)
+* [Equals](https://pkg.go.dev/github.com/bube054/ginvalidator#Equals)
+* [AbaRouting](https://pkg.go.dev/github.com/bube054/ginvalidator#AbaRouting)
+* [After](https://pkg.go.dev/github.com/bube054/ginvalidator#After)
+* [Alpha](https://pkg.go.dev/github.com/bube054/ginvalidator#Alpha)
+* [Alphanumeric](https://pkg.go.dev/github.com/bube054/ginvalidator#Alphanumeric)
+* [Ascii](https://pkg.go.dev/github.com/bube054/ginvalidator#Ascii)
+* [Base32](https://pkg.go.dev/github.com/bube054/ginvalidator#Base32)
+* [Base58](https://pkg.go.dev/github.com/bube054/ginvalidator#Base58)
+* [Base64](https://pkg.go.dev/github.com/bube054/ginvalidator#Base64)
+* [Before](https://pkg.go.dev/github.com/bube054/ginvalidator#Before)
+* [Bic](https://pkg.go.dev/github.com/bube054/ginvalidator#Bic)
+* [Boolean](https://pkg.go.dev/github.com/bube054/ginvalidator#Boolean)
+* [BTCAddress](https://pkg.go.dev/github.com/bube054/ginvalidator#BTCAddress)
+* [ByteLength](https://pkg.go.dev/github.com/bube054/ginvalidator#ByteLength)
+* [CreditCard](https://pkg.go.dev/github.com/bube054/ginvalidator#CreditCard)
+* [Currency](https://pkg.go.dev/github.com/bube054/ginvalidator#Currency)
+* [DataURI](https://pkg.go.dev/github.com/bube054/ginvalidator#DataURI)
+* [Date](https://pkg.go.dev/github.com/bube054/ginvalidator#Date)
+* [Decimal](https://pkg.go.dev/github.com/bube054/ginvalidator#Decimal)
+* [DivisibleBy](https://pkg.go.dev/github.com/bube054/ginvalidator#DivisibleBy)
+* [EAN](https://pkg.go.dev/github.com/bube054/ginvalidator#EAN)
+* [Email](https://pkg.go.dev/github.com/bube054/ginvalidator#Email)
+* [Empty](https://pkg.go.dev/github.com/bube054/ginvalidator#Empty)
+* [EthereumAddress](https://pkg.go.dev/github.com/bube054/ginvalidator#EthereumAddress)
+* [Float](https://pkg.go.dev/github.com/bube054/ginvalidator#Float)
+* [FQDN](https://pkg.go.dev/github.com/bube054/ginvalidator#FQDN)
+* [FreightContainerID](https://pkg.go.dev/github.com/bube054/ginvalidator#FreightContainerID)
+* [FullWidth](https://pkg.go.dev/github.com/bube054/ginvalidator#FullWidth)
+* [HalfWidth](https://pkg.go.dev/github.com/bube054/ginvalidator#HalfWidth)
+* [Hash](https://pkg.go.dev/github.com/bube054/ginvalidator#Hash)
+* [Hexadecimal](https://pkg.go.dev/github.com/bube054/ginvalidator#Hexadecimal)
+* [HexColor](https://pkg.go.dev/github.com/bube054/ginvalidator#HexColor)
+* [HSL](https://pkg.go.dev/github.com/bube054/ginvalidator#HSL)
+* [IBAN](https://pkg.go.dev/github.com/bube054/ginvalidator#IBAN)
+* [IdentityCard](https://pkg.go.dev/github.com/bube054/ginvalidator#IdentityCard)
+* [IMEI](https://pkg.go.dev/github.com/bube054/ginvalidator#IMEI)
+* [In](https://pkg.go.dev/github.com/bube054/ginvalidator#In)
+* [Int](https://pkg.go.dev/github.com/bube054/ginvalidator#Int)
+* [IP](https://pkg.go.dev/github.com/bube054/ginvalidator#IP)
+* [IPRange](https://pkg.go.dev/github.com/bube054/ginvalidator#IPRange)
+* [ISIN](https://pkg.go.dev/github.com/bube054/ginvalidator#ISIN)
+* [ISO4217](https://pkg.go.dev/github.com/bube054/ginvalidator#ISO4217)
+* [ISO6346](https://pkg.go.dev/github.com/bube054/ginvalidator#ISO6346)
+* [ISO6391](https://pkg.go.dev/github.com/bube054/ginvalidator#ISO6391)
+* [ISO8601](https://pkg.go.dev/github.com/bube054/ginvalidator#ISO8601)
+* [ISO31661Alpha2](https://pkg.go.dev/github.com/bube054/ginvalidator#ISO31661Alpha2)
+* [ISO31661Alpha3](https://pkg.go.dev/github.com/bube054/ginvalidator#ISO31661Alpha3)
+* [ISO31661Numeric](https://pkg.go.dev/github.com/bube054/ginvalidator#ISO31661Numeric)
+* [ISRC](https://pkg.go.dev/github.com/bube054/ginvalidator#ISRC)
+* [ISSN](https://pkg.go.dev/github.com/bube054/ginvalidator#ISSN)
+* [JSON](https://pkg.go.dev/github.com/bube054/ginvalidator#JSON)
+* [LatLong](https://pkg.go.dev/github.com/bube054/ginvalidator#LatLong)
+* [LicensePlate](https://pkg.go.dev/github.com/bube054/ginvalidator#LicensePlate)
+* [Locale](https://pkg.go.dev/github.com/bube054/ginvalidator#Locale)
+* [LowerCase](https://pkg.go.dev/github.com/bube054/ginvalidator#LowerCase)
+* [LuhnNumber](https://pkg.go.dev/github.com/bube054/ginvalidator#LuhnNumber)
+* [MacAddress](https://pkg.go.dev/github.com/bube054/ginvalidator#MacAddress)
+* [MagnetURI](https://pkg.go.dev/github.com/bube054/ginvalidator#MagnetURI)
+* [MailtoURI](https://pkg.go.dev/github.com/bube054/ginvalidator#MailtoURI)
+* [MD5](https://pkg.go.dev/github.com/bube054/ginvalidator#MD5)
+* [MimeType](https://pkg.go.dev/github.com/bube054/ginvalidator#MimeType)
+* [MobilePhone](https://pkg.go.dev/github.com/bube054/ginvalidator#MobilePhone)
+* [MongoID](https://pkg.go.dev/github.com/bube054/ginvalidator#MongoID)
+* [Multibyte](https://pkg.go.dev/github.com/bube054/ginvalidator#Multibyte)
+* [Numeric](https://pkg.go.dev/github.com/bube054/ginvalidator#Numeric)
+* [Octal](https://pkg.go.dev/github.com/bube054/ginvalidator#Octal)
+* [PassportNumber](https://pkg.go.dev/github.com/bube054/ginvalidator#PassportNumber)
+* [Port](https://pkg.go.dev/github.com/bube054/ginvalidator#Port)
+* [PostalCode](https://pkg.go.dev/github.com/bube054/ginvalidator#PostalCode)
+* [RFC3339](https://pkg.go.dev/github.com/bube054/ginvalidator#RFC3339)
+* [RgbColor](https://pkg.go.dev/github.com/bube054/ginvalidator#RgbColor)
+* [SemVer](https://pkg.go.dev/github.com/bube054/ginvalidator#SemVer)
+* [Slug](https://pkg.go.dev/github.com/bube054/ginvalidator#Slug)
+* [StrongPassword](https://pkg.go.dev/github.com/bube054/ginvalidator#StrongPassword)
+* [TaxID](https://pkg.go.dev/github.com/bube054/ginvalidator#TaxID)
+* [SurrogatePair](https://pkg.go.dev/github.com/bube054/ginvalidator#SurrogatePair)
+* [Time](https://pkg.go.dev/github.com/bube054/ginvalidator#Time)
+* [ULID](https://pkg.go.dev/github.com/bube054/ginvalidator#ULID)
+* [UpperCase](https://pkg.go.dev/github.com/bube054/ginvalidator#UpperCase)
+* [URL](https://pkg.go.dev/github.com/bube054/ginvalidator#URL)
+* [UUID](https://pkg.go.dev/github.com/bube054/ginvalidator#UUID)
+* [VariableWidth](https://pkg.go.dev/github.com/bube054/ginvalidator#VariableWidth)
+* [VAT](https://pkg.go.dev/github.com/bube054/ginvalidator#VAT)
+* [Whitelisted](https://pkg.go.dev/github.com/bube054/ginvalidator#Whitelisted)
+* [Matches](https://pkg.go.dev/github.com/bube054/ginvalidator#Matches)
+
 `Sanitizers` transform the field value. They are useful to remove noise from the value and perhaps even to provide some basic line of defense against threats.
 
 Sanitizers persist the updated fields value back into the Gin Contexts, so that it's usable by other ginvalidator functions, your own route handler code, and even other middlewares.
 
+They are:
+* [CustomSanitizer](https://pkg.go.dev/github.com/bube054/ginvalidator#CustomSanitizer)
+* [Blacklist](https://pkg.go.dev/github.com/bube054/ginvalidator#Blacklist)
+* [Escape](https://pkg.go.dev/github.com/bube054/ginvalidator#Escape)
+* [LTrim](https://pkg.go.dev/github.com/bube054/ginvalidator#LTrim)
+* [NormalizeEmail](https://pkg.go.dev/github.com/bube054/ginvalidator#NormalizeEmail)
+* [RTrim](https://pkg.go.dev/github.com/bube054/ginvalidator#RTrim)
+* [StripLow](https://pkg.go.dev/github.com/bube054/ginvalidator#StripLow)
+* [ToBoolean](https://pkg.go.dev/github.com/bube054/ginvalidator#ToBoolean)
+* [ToDate](https://pkg.go.dev/github.com/bube054/ginvalidator#ToDate)
+* [ToFloat](https://pkg.go.dev/github.com/bube054/ginvalidator#ToFloat)
+* [ToInt](https://pkg.go.dev/github.com/bube054/ginvalidator#ToInt)
+* [Trim](https://pkg.go.dev/github.com/bube054/ginvalidator#Trim)
+* [Unescape](https://pkg.go.dev/github.com/bube054/ginvalidator#Unescape)
+* [Whitelist](https://pkg.go.dev/github.com/bube054/ginvalidator#Whitelist)
+
 `Modifiers` define how validation chains behave when they are run.
 
-Some `validators` and `sanitizers` accept arguments that allow you to customize their behavior.
+They are:
+* [Bail](https://pkg.go.dev/github.com/bube054/ginvalidator#Bail)
+* [If](https://pkg.go.dev/github.com/bube054/ginvalidator#If)
+* [Not](https://pkg.go.dev/github.com/bube054/ginvalidator#Not)
+* [Skip](https://pkg.go.dev/github.com/bube054/ginvalidator#Skip)
+* [Optional](https://pkg.go.dev/github.com/bube054/ginvalidator#Optional)
+
+> 📝 **Note:**  
+> These methods are thoroughly documented using GoDoc within the pkg.go.dev ginvalidator [documentation](https://pkg.go.dev/github.com/bube054). If any details are unclear, you may also want to refer to related functions within the `validatorgo` package for additional context, which I’ll be explaining below.
 
 ### Standard validators/sanitizers
-
 All of the functionality exposed by the validation chain actually comes from [validatorgo](github.com/bube054/validatorgo), one of my other open source go packages which specializes in string validation/sanitation. Please check it out, star and share 🙏🙏🙏, Thank You.
 
 This includes all of `validatorgo` validators and sanitizers, from commonly used `IsEmail`, `IsLength`, and `Trim` to the more niche `IsISBN`, `IsMultibyte` and `StripLow`!
 
 These are called standard `validators` and standard `sanitizers` in ginvalidator. But without the `Is` prefix from `validatorgo`.
-
-<!-- Because `validatorgo` only works with strings, `ginvalidator` will always convert fields with a standard validator/sanitizer to string first. -->
 
 ### Chaining order
 
@@ -492,7 +603,7 @@ Take the following snippet as an example:
 NewQuery("search_query", nil).Chain().Not().Empty().Trim("").Validate();
 ```
 
-In this case, if the user passes a search_query value that is composed of whitespaces only, it won't be empty, therefore the validation passes. But since the .Trim() sanitizer is there, the whitespace's will be removed, and the field will become empty, so you actually end up with a false positive.
+In this case, if the user passes a `"search_query"` value that is composed of whitespaces only, it won't be empty, therefore the validation passes. But since the `.Trim()` sanitizer is there, the whitespace's will be removed, and the field will become empty, so you actually end up with a false positive.
 
 Now, compare it with the below snippet:
 
@@ -505,12 +616,7 @@ This chain will more sensibly remove whitespace's, and then validate if the valu
 
 ### Reusing validation chains
 
-<!-- Validation chains are mutable.
-This means that calling methods on one will cause the original chain object to be updated, just like any references to it. -->
-
 If you wish to reuse the same chain, it's a good idea to return them from functions:
-
-<!-- One exception to this rule is .optional(): It can be placed at any point in the chain and it will mark the chain as optional the same way. -->
 
 ```go
 func createEmailValidator() gin.HandlerFunc {
@@ -522,7 +628,7 @@ func handleLoginRoute(ctx *gin.Context) {
 }
 
 func handleSignupRoute(ctx *gin.Context) {
-  // Handle login route
+  // Handle signup route
 }
 
 r.POST("/login", createEmailChain(), handleLoginRoute)
@@ -539,7 +645,8 @@ Pretty much every function or value returned by ginvalidator reference fields in
 
 - **`Body` fields** are only valid for the following Content-Types:
 
-  - `application/json`: Uses [gjson path syntax](https://github.com/tidwall/gjson?tab=readme-ov-file#path-syntax) for value extraction. Please take a look at it.
+  - `application/json`: This uses [GJSON path syntax](https://github.com/tidwall/gjson#path-syntax) for extracting values. Please refer to the linked documentation for details.
+
 
     - **Example**:
       ```json
@@ -762,20 +869,23 @@ Email(nil).
 Validate()
 ```
 
-`initialValue` is the original value extracted from the request (before any sanitization).
-`sanitizedValue` is the value after it has been sanitized (if applicable).
-`validatorName` is the name of the validator that failed, which helps identify the validation rule that did not pass.
+- `initialValue` is the original value extracted from the request (before any sanitization).
+- `sanitizedValue` is the value after it has been sanitized (if applicable).
+- `validatorName` is the name of the validator that failed, which helps identify the validation rule that did not pass.
+
+For a complete list of validator names, refer to the [ginvalidator constants](https://pkg.go.dev/github.com/bube054/ginvalidator#pkg-constants).
+
 
 ### Maintainers
 
 - [bube054](https://github.com/bube054) - Attah Gbubemi David (author)
 
-# Other related projects
+<!-- # Other related projects
 
 - [ginvalidator](https://github.com/bube054/ginvalidator)
 - [echovalidator](https://github.com/bube054/echovalidator)
 - [fibervalidator](https://github.com/bube054/fibervalidator)
-- [chivalidator](https://github.com/bube054/chivalidator)
+- [chivalidator](https://github.com/bube054/chivalidator) -->
 
 # License
 

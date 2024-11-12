@@ -2,7 +2,6 @@ package ginvalidator
 
 import (
 	"bytes"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -17,21 +16,38 @@ import (
 )
 
 var (
-	ErrFieldExtractionFromNilCtx    = errors.New("gin context is nil")
-	ErrExtractionInvalidContentType = errors.New("invalid content-type header")
-	ErrExtractionInvalidJson        = errors.New("invalid json")
+	// ErrFieldExtractionFromNilCtx occurs when an operation attempts to extract a field from a nil Gin context.
+	ErrFieldExtractionFromNilCtx = errors.New("failed to extract field: gin context is nil")
+
+	// ErrExtractionInvalidContentType occurs when the request contains an unsupported or missing Content-Type header.
+	ErrExtractionInvalidContentType = errors.New("failed to extract field: unsupported or missing Content-Type header")
+
+	// ErrExtractionInvalidJSON occurs when JSON parsing fails due to malformed JSON in the request body.
+	ErrExtractionInvalidJSON = errors.New("failed to extract field: invalid JSON in request body")
 )
 
+// RequestLocation defines different locations where data can be extracted from the request.
 type RequestLocation int
 
+// Constants representing different locations in a request.
 const (
+	// BodyLocation represents the request body.
 	BodyLocation RequestLocation = iota
+
+	// CookieLocation represents cookies in the request.
 	CookieLocation
+
+	// HeaderLocation represents the headers in the request.
 	HeaderLocation
+
+	// ParamLocation represents path parameters in the request.
 	ParamLocation
+
+	// QueryLocation represents query parameters in the URL of the request.
 	QueryLocation
 )
 
+// String returns a string representation of the RequestLocation.
 func (l RequestLocation) String() string {
 	return [...]string{"body", "cookies", "headers", "params", "queries"}[l]
 }
@@ -44,7 +60,6 @@ const (
 	modifierType
 )
 
-// not escaped
 func extractFieldValFromBody(ctx *gin.Context, field string) (string, error) {
 	if ctx == nil {
 		return "", ErrFieldExtractionFromNilCtx
@@ -61,11 +76,6 @@ func extractFieldValFromBody(ctx *gin.Context, field string) (string, error) {
 
 	if contentType == "application/json" {
 		jsonStr := string(data)
-
-		if !json.Valid(data) {
-			return "", fmt.Errorf("%s is %w", jsonStr, ErrExtractionInvalidJson)
-		}
-
 		result := gjson.Get(jsonStr, field)
 		return result.String(), nil
 	}
@@ -78,7 +88,6 @@ func extractFieldValFromBody(ctx *gin.Context, field string) (string, error) {
 	return "", fmt.Errorf("%s is %w", contentType, ErrExtractionInvalidContentType)
 }
 
-// auto escape
 func extractFieldValFromCookie(ctx *gin.Context, field string) (string, error) {
 	if ctx == nil {
 		return "", ErrFieldExtractionFromNilCtx
@@ -93,7 +102,6 @@ func extractFieldValFromCookie(ctx *gin.Context, field string) (string, error) {
 	return cookie, nil
 }
 
-// not escaped
 func extractFieldValFromHeader(ctx *gin.Context, field string) (string, error) {
 	if ctx == nil {
 		return "", ErrFieldExtractionFromNilCtx
@@ -108,7 +116,6 @@ func extractFieldValFromHeader(ctx *gin.Context, field string) (string, error) {
 	return header, nil
 }
 
-// i escaped
 func extractFieldValFromParam(ctx *gin.Context, field string) (string, error) {
 	if ctx == nil {
 		return "", ErrFieldExtractionFromNilCtx
@@ -125,7 +132,6 @@ func extractFieldValFromParam(ctx *gin.Context, field string) (string, error) {
 	return param, nil
 }
 
-// auto escaped
 func extractFieldValFromQuery(ctx *gin.Context, field string) (string, error) {
 	if ctx == nil {
 		return "", ErrFieldExtractionFromNilCtx

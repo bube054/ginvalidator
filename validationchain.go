@@ -57,8 +57,6 @@ func (v ValidationChain) Validate() gin.HandlerFunc {
 
 		if extractionErr != nil {
 			log.Printf("Error extracting field %q from request location %q: %v", field, location, extractionErr)
-			ctx.Next()
-			return
 		}
 
 		ruleCreators := v.validator.rulesCreatorFuncs
@@ -146,7 +144,7 @@ func (v ValidationChain) Validate() gin.HandlerFunc {
 
 				if vcn == "Optional" {
 					if initialValue == "" {
-						valErrs = make([]ValidationChainError, 0, len(ruleCreators))
+						valErrs = make([]ValidationChainError, 0)
 						break
 					}
 				}

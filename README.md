@@ -614,6 +614,8 @@ NewQuery("search_query", nil).Chain().Trim("").Not().Empty().Validate();
 
 This chain will more sensibly remove whitespace's, and then validate if the value is not empty.
 
+One exception to this rule is `.Optional()`: It can be placed at any point in the chain and it will mark the chain as optional.
+
 ### Reusing validation chains
 
 If you wish to reuse the same chain, it's a good idea to return them from functions:

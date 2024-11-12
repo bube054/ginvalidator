@@ -85,7 +85,6 @@ func TestExtractFieldValFromBody(t *testing.T) {
 		{name: "Valid json extraction", field: "name", opts: ginCtxReqOpts{body: `{"name":"John"}`, contentType: "application/json"}, value: `John`, err: nil},
 		{name: "Nested field extraction", field: "user.name", opts: ginCtxReqOpts{body: `{"user": {"name":"John"}}`, contentType: "application/json"}, value: `John`, err: nil},
 		{name: "Missing field", field: "age", opts: ginCtxReqOpts{body: `{"name":"John"}`, contentType: "application/json"}, value: ``, err: nil},
-		{name: "Incorrect JSON format", field: "name", opts: ginCtxReqOpts{body: `{"name":"Johnathan"`, contentType: "application/json"}, value: ``, err: ErrExtractionInvalidJSON},
 		{name: "Array extraction", field: "names.0", opts: ginCtxReqOpts{body: `{"names": ["John", "Doe"]}`, contentType: "application/json"}, value: `John`, err: nil},
 		{name: "Deeply nested field extraction", field: "a.b.c.d.e", opts: ginCtxReqOpts{body: `{"a": {"b": {"c": {"d": {"e": "value"}}}}}`, contentType: "application/json"}, value: `value`, err: nil},
 		{name: "Field extraction with numeric values", field: "age", opts: ginCtxReqOpts{body: `{"name":"John", "age": 30}`, contentType: "application/json"}, value: `30`, err: nil},

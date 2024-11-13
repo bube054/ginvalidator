@@ -268,3 +268,82 @@ func TestMatchedData(t *testing.T) {
 		})
 	}
 }
+
+func TestMatchedData_Get(t *testing.T) {
+	md := MatchedData{
+		"headers": MatchedDataFieldValues{
+			"headerField1": "headerValue1",
+			"headerField2": "headerValue2",
+		},
+		"body": MatchedDataFieldValues{
+			"bodyField1": "bodyValue1",
+			"bodyField2": "bodyValue2",
+		},
+		"cookies": MatchedDataFieldValues{
+			"cookieField1": "cookieValue1",
+			"cookieField2": "cookieValue2",
+		},
+		"params": MatchedDataFieldValues{
+			"paramField1": "paramValue1",
+			"paramField2": "paramValue2",
+		},
+		"queries": MatchedDataFieldValues{
+			"queryField1": "queryValue1",
+			"queryField2": "queryValue2",
+		},
+	}
+
+	tests := []struct {
+		name          string
+		loc           RequestLocation
+		field         string
+		expectedValue string
+		expectedBool  bool
+	}{
+		{
+			name:          "extract from body",
+			loc:           BodyLocation,
+			field:         "bodyField1",
+			expectedValue: "bodyValue1",
+			expectedBool:  true,
+		},
+		{
+			name:          "extract from headers",
+			loc:           HeaderLocation,
+			field:         "headerField1",
+			expectedValue: "headerValue1",
+			expectedBool:  true,
+		},
+		{
+			name:          "extract from cookies",
+			loc:           CookieLocation,
+			field:         "cookieField1",
+			expectedValue: "cookieValue1",
+			expectedBool:  true,
+		},
+		{
+			name:          "extract from params",
+			loc:           ParamLocation,
+			field:         "paramField1",
+			expectedValue: "paramValue1",
+			expectedBool:  true,
+		},
+		{
+			name:          "extract from queries",
+			loc:           QueryLocation,
+			field:         "queryField1",
+			expectedValue: "queryValue1",
+			expectedBool:  true,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			gotValue, gotBool := md.Get(test.loc, test.field)
+
+			if gotValue != test.expectedValue || gotBool != test.expectedBool {
+				t.Errorf("got (%s,%t), want  (%s,%t)", gotValue, gotBool, test.expectedValue, test.expectedBool)
+			}
+		})
+	}
+}

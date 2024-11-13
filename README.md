@@ -275,7 +275,7 @@ Now if you access http://localhost:8080/hello again, what you'll see is the foll
 
 ### Accessing validated/sanitized data
 
-You can use `GetMatchedData`, which automatically collects all data that `ginvalidator` has validated and/or sanitized:
+You can use `GetMatchedData`, which automatically collects all data that `ginvalidator` has validated and/or sanitized. This data can then be accessed using the `Get` method of `MatchedData`:
 
 ```go
 package main
@@ -323,7 +323,7 @@ func main() {
                 return
             }
 
-            person, ok := data[gv.QueryLocation.String()]["person"]
+            person, ok := data.Get(gv.QueryLocation, "person")
             if !ok {
                 ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
                     "message": "The server encountered an unexpected error.",
@@ -397,7 +397,7 @@ func main() {
                 return
             }
 
-            person, ok := data[gv.QueryLocation.String()]["person"]
+            person, ok := data.Get(gv.QueryLocation, "person")
             if !ok {
                 ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
                     "message": "The server encountered an unexpected error.",

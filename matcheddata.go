@@ -29,6 +29,19 @@ type MatchedDataFieldValues map[string]string
 //   - "queries": Data from URL query parameters.
 type MatchedData map[string]MatchedDataFieldValues
 
+// Get retrieves a specific field's value from a given request location within MatchedData.
+// Parameters:
+//   - loc: The request location to search in (e.g., "body", "cookies", "headers", "params", "queries").
+//   - field: The name of the field to retrieve.
+//
+// Returns:
+//   - The value associated with the specified field at the given location (as a string).
+//   - A boolean indicating if the field exists (true if found, false if not).
+func (md MatchedData) Get(loc RequestLocation, field string) (string, bool) {
+	value, ok := md[loc.String()][field]
+	return value, ok
+}
+
 // GetMatchedData extracts and returns matched data from various locations in the request context.
 // It retrieves fields and values from predefined request locations such as query parameters, body,
 // URL parameters, and headers.

@@ -93,7 +93,7 @@ go run main.go
 The HTTP server should be running, and you can open http://localhost:8080/hello?person=John to salute John!
 
 > 💡 **Tip:**
-> You can use [Air](https://blog.logrocket.com/using-air-go-implement-live-reload/) with Go and Gin to implement live reload. These automatically restart the server whenever a file is changed, so you don't have to do this yourself!
+> You can use [Air](https://www.bytesizego.com/blog/golang-air) with Go and Gin to implement live reload. These automatically restart the server whenever a file is changed, so you don't have to do this yourself!
 
 ### Adding a validator
 
@@ -338,13 +338,15 @@ func main() {
 }
 ```
 
+open http://localhost:8080/hello?person=John to salute John!
+
 The available locations are `BodyLocation`, `CookieLocation` `QueryLocation`, `ParamLocation` and `HeaderLocation`.
 Each of these locations includes a `String` method that returns the location where validated/sanitized data is being stored.
 
 ### Sanitizing inputs
 
 While the user can no longer send empty person names, it can still inject HTML into your page! This is known as the [Cross-Site Scripting vulnerability (XSS)](https://www.youtube.com/watch?si=zN2bDf-xT-h5wL4a&v=z4LhLJnmoZ0&feature=youtu.be).
-Let's see how it works. Go to http://localhost:8080/hello?person=<b>John</b>, and you should see "Hello, <b>John</b>!".
+Let's see how it works. Go to `http://localhost:8080/hello?person=<b>John</b>`, and you should see "Hello, <b>John</b>!".
 While this example is fine, an attacker could change the person query string to a \<script> tag which loads its own JavaScript that could be harmful.
 In this scenario, one way to mitigate the issue with ginvalidator is to use a sanitizer, most specifically `Escape`, which transforms special HTML characters with others that can be represented as text.
 
@@ -633,8 +635,8 @@ func handleSignupRoute(ctx *gin.Context) {
   // Handle signup route
 }
 
-r.POST("/login", createEmailChain(), handleLoginRoute)
-r.POST("/signup", createEmailChain(), handleSignupRoute)
+r.POST("/login", createEmailValidator(), handleLoginRoute)
+r.POST("/signup", createEmailValidator(), handleSignupRoute)
 ```
 
 ## Field Selection

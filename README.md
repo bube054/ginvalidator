@@ -281,6 +281,7 @@ You can use `GetMatchedData`, which automatically collects all data that `ginval
 package main
 
 import (
+    "fmt"
     "net/http"
 
     gv "github.com/bube054/ginvalidator"
@@ -290,8 +291,10 @@ import (
 func main() {
     r := gin.Default()
 
-    r.GET("/hello",
-        gv.NewQuery("person",
+    r.GET(
+        "/hello",
+        gv.NewQuery(
+            "person",
             func(initialValue, sanitizedValue, validatorName string) string {
                 return "Please enter your name."
             },
@@ -325,14 +328,18 @@ func main() {
 
             person, ok := data.Get(gv.QueryLocation, "person")
             if !ok {
-                ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-                    "message": "The server encountered an unexpected error.",
+                ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+                    "message": fmt.Sprintf(
+                        "The server could not find 'person' in the expected location: %s. Also please ensure you're using the correct location, such as Body, Header, Cookie, Query, or Param.",
+                        gv.QueryLocation,
+                    ),
                 })
                 return
             }
 
             ctx.String(http.StatusOK, "Hello, %s!", person)
-        })
+        },
+    )
 
     r.Run()
 }
@@ -340,8 +347,17 @@ func main() {
 
 open http://localhost:8080/hello?person=John to salute John!
 
-The available locations are `BodyLocation`, `CookieLocation` `QueryLocation`, `ParamLocation` and `HeaderLocation`.
-Each of these locations includes a `String` method that returns the location where validated/sanitized data is being stored.
+### Available Data Locations 🚩
+
+The following are the valid data locations you can use:  
+- **`BodyLocation`**: Represents the request body.  
+- **`CookieLocation`**: Represents cookies in the request.  
+- **`QueryLocation`**: Represents query parameters in the URL.  
+- **`ParamLocation`**: Represents path parameters in the request.  
+- **`HeaderLocation`**: Represents the headers in the request.  
+
+Each of these locations includes a `String` method that returns the location where validated/sanitized data is stored.
+
 
 ### Sanitizing inputs
 
@@ -354,6 +370,7 @@ In this scenario, one way to mitigate the issue with ginvalidator is to use a sa
 package main
 
 import (
+    "fmt"
     "net/http"
 
     gv "github.com/bube054/ginvalidator"
@@ -399,8 +416,11 @@ func main() {
 
             person, ok := data.Get(gv.QueryLocation, "person")
             if !ok {
-                ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-                    "message": "The server encountered an unexpected error.",
+                ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+                    "message": fmt.Sprintf(
+                        "The server could not find 'person' in the expected location: %s. Also please ensure you're using the correct location, such as Body, Header, Cookie, Query, or Param.",
+                        gv.QueryLocation,
+                    ),
                 })
                 return
             }
@@ -649,7 +669,7 @@ Pretty much every function or value returned by ginvalidator reference fields in
 
 - **`Body` fields** are only valid for the following Content-Types:
 
-  - `application/json`: This uses [GJSON path syntax](https://github.com/tidwall/gjson#path-syntax) for extracting values. Please refer to the linked documentation for details.
+   `application/json`: This uses [GJSON path syntax](https://github.com/tidwall/gjson#path-syntax) for extracting values. Please refer to the linked documentation for details.
 
 
     - **Example**:
@@ -663,7 +683,7 @@ Pretty much every function or value returned by ginvalidator reference fields in
       ```
       With path `user.name`, the extracted value would be `"John"`.
 
-  - `application/x-www-form-urlencoded`: Typically used for HTML form submissions. Fields are submitted as key-value pairs in the body.
+   `application/x-www-form-urlencoded`: Typically used for HTML form submissions. Fields are submitted as key-value pairs in the body.
 
     - **Example**:
       ```
@@ -675,7 +695,7 @@ Pretty much every function or value returned by ginvalidator reference fields in
       ```
       Field `"name"` would have the value `"John"`, and `"email"` would have the value `"john.doe@example.com"`.
 
-  - `multipart/form-data`: Commonly used for file uploads or when submitting form data with files.
+   `multipart/form-data`: Commonly used for file uploads or when submitting form data with files.
 
     - **Example**:
 
@@ -891,6 +911,6 @@ For a complete list of validator names, refer to the [ginvalidator constants](ht
 - [fibervalidator](https://github.com/bube054/fibervalidator)
 - [chivalidator](https://github.com/bube054/chivalidator) -->
 
-# License
+## License
 
 This project is licensed under the [MIT](https://opensource.org/license/mit). See the [LICENSE](https://github.com/bube054/validatorgo/blob/master/LICENSE) file for details.

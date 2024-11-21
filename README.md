@@ -93,7 +93,7 @@ go run main.go
 The HTTP server should be running, and you can open http://localhost:8080/hello?person=John to salute John!
 
 > 💡 **Tip:**
-> You can use [Air](https://www.bytesizego.com/blog/golang-air) with Go and Gin to implement live reload. These automatically restart the server whenever a file is changed, so you don't have to do this yourself!
+> You can use [Air](https://github.com/air-verse/air) with Go and Gin to implement live reload. These automatically restart the server whenever a file is changed, so you don't have to do this yourself!
 
 ### Adding a validator
 

@@ -154,10 +154,10 @@ func (v *validator) recreateValidationChainFromValidator(ruleCreatorFunc ruleCre
 // CustomValidatorFunc defines a function that evaluates whether the value is valid according to your custom logic.
 //
 // Parameters:
-//   - req: The HTTP request context derived from `http.Request`.
+//   - r: The HTTP request context derived from `http.Request`.
 //   - initialValue: The original value derived from the specified field.
 //   - sanitizedValue: The current sanitized value after applying previous sanitizers.
-type CustomValidatorFunc func(req *http.Request, initialValue, sanitizedValue string) bool
+type CustomValidatorFunc func(r *http.Request, initialValue, sanitizedValue string) bool
 
 // CustomValidator applies a custom validator function.
 //

@@ -23,7 +23,7 @@ func TestCustomSanitizer(t *testing.T) {
 			name:       "Creates a CustomSanitizer chain rule. Returns the validated value.",
 			field:      "name",
 			errFmtFunc: nil,
-			csf: func(req *http.Request, initialValue, sanitizedValue string) string {
+			csf: func(r *http.Request, initialValue, sanitizedValue string) string {
 				return initialValue
 			},
 			reqOpts: ginCtxReqOpts{body: `{"name": "John"}`, contentType: "application/json"},
@@ -38,7 +38,7 @@ func TestCustomSanitizer(t *testing.T) {
 			name:       "Creates a CustomSanitizer chain rule. Returns the an empty string.",
 			field:      "name",
 			errFmtFunc: nil,
-			csf: func(req *http.Request, initialValue, sanitizedValue string) string {
+			csf: func(r *http.Request, initialValue, sanitizedValue string) string {
 				return ""
 			},
 			reqOpts: ginCtxReqOpts{body: `{"name": "John"}`, contentType: "application/json"},

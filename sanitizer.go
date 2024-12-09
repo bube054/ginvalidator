@@ -66,7 +66,7 @@ func (s *sanitizer) recreateValidationChainFromSanitizer(ruleCreatorFunc ruleCre
 //   - req: The HTTP request context derived from `http.Request`.
 //   - initialValue: The original value derived from the specified field.
 //   - sanitizedValue: The current sanitized value after applying previous sanitizers.
-type CustomSanitizerFunc func(req *http.Request, initialValue, sanitizedValue string) string
+type CustomSanitizerFunc func(r *http.Request, initialValue, sanitizedValue string) string
 
 // CustomSanitizer applies a custom sanitizer function to compute the new sanitized value.
 //

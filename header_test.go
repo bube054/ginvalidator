@@ -136,7 +136,7 @@ func TestHeaderValidationChain(t *testing.T) {
 			headers: header,
 			customValidatorsChain: []gin.HandlerFunc{
 				NewHeader("PHPSESSID", nil).Chain().CustomValidator(
-					func(req *http.Request, initialValue, sanitizedValue string) bool { return true },
+					func(r *http.Request, initialValue, sanitizedValue string) bool { return true },
 				).Validate(),
 			},
 			validationResult:    []ValidationChainError{},
@@ -151,7 +151,7 @@ func TestHeaderValidationChain(t *testing.T) {
 			headers: header,
 			customValidatorsChain: []gin.HandlerFunc{
 				NewHeader("PHPSESSID", nil).Chain().CustomValidator(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
 						return false
 					},
 				).Validate(),
@@ -170,12 +170,12 @@ func TestHeaderValidationChain(t *testing.T) {
 			headers: header,
 			customValidatorsChain: []gin.HandlerFunc{
 				NewHeader("PHPSESSID", nil).Chain().CustomValidator(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
 						return true
 					},
 				).Validate(),
 				NewHeader("JSESSIONID", nil).Chain().CustomValidator(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
 						return true
 					},
 				).Validate(),
@@ -192,12 +192,12 @@ func TestHeaderValidationChain(t *testing.T) {
 			headers: header,
 			customValidatorsChain: []gin.HandlerFunc{
 				NewHeader("PHPSESSID", nil).Chain().CustomValidator(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
 						return false
 					},
 				).Validate(),
 				NewHeader("JSESSIONID", nil).Chain().CustomValidator(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
 						return false
 					},
 				).Validate(),
@@ -244,7 +244,7 @@ func TestHeaderValidationChain(t *testing.T) {
 			headers: header,
 			customValidatorsChain: []gin.HandlerFunc{
 				NewHeader("JSESSIONID", nil).Chain().CustomSanitizer(
-					func(req *http.Request, initialValue, sanitizedValue string) string {
+					func(r *http.Request, initialValue, sanitizedValue string) string {
 						return "custom-sanitizer"
 					},
 				).Validate(),
@@ -261,12 +261,12 @@ func TestHeaderValidationChain(t *testing.T) {
 			headers: header,
 			customValidatorsChain: []gin.HandlerFunc{
 				NewHeader("PHPSESSID", nil).Chain().CustomSanitizer(
-					func(req *http.Request, initialValue, sanitizedValue string) string {
+					func(r *http.Request, initialValue, sanitizedValue string) string {
 						return "f25g9kvjlou432vmc0ht"
 					},
 				).Validate(),
 				NewHeader("JSESSIONID", nil).Chain().CustomSanitizer(
-					func(req *http.Request, initialValue, sanitizedValue string) string {
+					func(r *http.Request, initialValue, sanitizedValue string) string {
 						return "D4E4B8CD58F4B5205E013B0B4467D5DF"
 					},
 				).Validate(),
@@ -315,7 +315,7 @@ func TestHeaderValidationChain(t *testing.T) {
 			headers: header,
 			customValidatorsChain: []gin.HandlerFunc{
 				NewHeader("PHPSESSID", nil).Chain().Alpha(nil).If(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
 						return true
 					},
 				).LowerCase().Validate(),
@@ -334,12 +334,12 @@ func TestHeaderValidationChain(t *testing.T) {
 			headers: header,
 			customValidatorsChain: []gin.HandlerFunc{
 				NewHeader("auth_token", nil).Chain().Alpha(nil).If(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
 						return true
 					},
 				).LowerCase().Validate(),
 				NewHeader("_gat", nil).Chain().Alpha(nil).If(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
 						return true
 					},
 				).LowerCase().Validate(),
@@ -359,7 +359,7 @@ func TestHeaderValidationChain(t *testing.T) {
 			headers: header,
 			customValidatorsChain: []gin.HandlerFunc{
 				NewHeader("fr", nil).Chain().Alpha(nil).If(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
 						return false
 					},
 				).LowerCase().Validate(),
@@ -379,12 +379,12 @@ func TestHeaderValidationChain(t *testing.T) {
 			headers: header,
 			customValidatorsChain: []gin.HandlerFunc{
 				NewHeader("csrf_token", nil).Chain().Alpha(nil).If(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
 						return false
 					},
 				).LowerCase().Validate(),
 				NewHeader("_gat", nil).Chain().Alpha(nil).If(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
 						return false
 					},
 				).LowerCase().Validate(),
@@ -465,7 +465,7 @@ func TestHeaderValidationChain(t *testing.T) {
 			headers: header,
 			customValidatorsChain: []gin.HandlerFunc{
 				NewHeader(`auth_token`, nil).Chain().Skip(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
 						return true
 					},
 				).Numeric(nil).Validate(),
@@ -482,12 +482,12 @@ func TestHeaderValidationChain(t *testing.T) {
 			headers: header,
 			customValidatorsChain: []gin.HandlerFunc{
 				NewHeader(`currency`, nil).Chain().Skip(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
 						return true
 					},
 				).Numeric(nil).Validate(),
 				NewHeader(`_gat`, nil).Chain().Skip(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
 						return true
 					},
 				).Numeric(nil).Validate(),
@@ -504,7 +504,7 @@ func TestHeaderValidationChain(t *testing.T) {
 			headers: header,
 			customValidatorsChain: []gin.HandlerFunc{
 				NewHeader(`currency`, nil).Chain().Skip(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
 						return false
 					},
 				).Numeric(nil).Validate(),
@@ -523,7 +523,7 @@ func TestHeaderValidationChain(t *testing.T) {
 			headers: header,
 			customValidatorsChain: []gin.HandlerFunc{
 				NewHeader(`auth_token`, nil).Chain().Skip(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
 						return true
 					},
 				).Numeric(nil).Currency(nil).Validate(),
@@ -542,7 +542,7 @@ func TestHeaderValidationChain(t *testing.T) {
 			headers: header,
 			customValidatorsChain: []gin.HandlerFunc{
 				NewHeader(`access_token`, nil).Chain().Skip(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
 						return false
 					},
 				).Numeric(nil).Currency(nil).Validate(),

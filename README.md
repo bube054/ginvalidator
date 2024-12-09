@@ -93,7 +93,7 @@ go run main.go
 The HTTP server should be running, and you can open http://localhost:8080/hello?person=John to salute John!
 
 > 💡 **Tip:**
-> You can use [Air](https://github.com/air-verse/air) with Go and Gin to implement live reload. These automatically restart the server whenever a file is changed, so you don't have to do this yourself!
+> You can use [Air](https://github.com/air-verse/air) with Go and Gin to implement live reload. This automatically restart the server whenever a file is changed, so you don't have to do this yourself!
 
 ### Adding a validator
 
@@ -785,7 +785,7 @@ r.POST("/create-user",
       NewBody("email", nil).
       Chain().
       CustomValidator(
-        func(req *http.Request, initialValue, sanitizedValue string) bool {
+        func(r *http.Request, initialValue, sanitizedValue string) bool {
           var exists bool
           var wg sync.WaitGroup
           wg.Add(1)
@@ -823,7 +823,7 @@ r.POST("/create-user",
     Validate(),
   gv.NewBody("passwordConfirmation", nil).
     Chain().
-    CustomValidator(func(req *http.Request, initialValue, sanitizedValue string) bool {
+    CustomValidator(func(r *http.Request, initialValue, sanitizedValue string) bool {
       data, err := io.ReadAll(req.Body)
       if err != nil {
       return false
@@ -857,7 +857,7 @@ r.POST("/user/:id",
     gv.NewParam("id", nil).
       Chain().
       CustomSanitizer(
-        func(req *http.Request, initialValue, sanitizedValue string) string {
+        func(r *http.Request, initialValue, sanitizedValue string) string {
           return strings.Repeat(sanitizedValue, 3) // some string manipulation
         },
       ).

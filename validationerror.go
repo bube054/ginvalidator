@@ -12,7 +12,7 @@ import "time"
 //   - Field: The name of the field that failed validation.
 //   - Value: The invalid value that triggered the validation error.
 //   - createdAt: The timestamp when the error was created (used internally for tracking).
-//   - incId: The autoincrement id (used internally for tracking).
+//   - incId: The autoincrement id (used internally for tracking/sorting).
 type ValidationChainError struct {
 	Location  string `json:"location"`
 	Msg       string `json:"message"`

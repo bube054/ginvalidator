@@ -137,7 +137,7 @@ func TestParamValidationChain(t *testing.T) {
 			params: params,
 			customValidatorsChain: []gin.HandlerFunc{
 				NewParam("PHPSESSID", nil).Chain().CustomValidator(
-					func(req *http.Request, initialValue, sanitizedValue string) bool { return true },
+					func(r *http.Request, initialValue, sanitizedValue string) bool { return true },
 				).Validate(),
 			},
 			validationResult:    []ValidationChainError{},
@@ -152,7 +152,7 @@ func TestParamValidationChain(t *testing.T) {
 			params: params,
 			customValidatorsChain: []gin.HandlerFunc{
 				NewParam("PHPSESSID", nil).Chain().CustomValidator(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
 						return false
 					},
 				).Validate(),
@@ -171,12 +171,12 @@ func TestParamValidationChain(t *testing.T) {
 			params: params,
 			customValidatorsChain: []gin.HandlerFunc{
 				NewParam("PHPSESSID", nil).Chain().CustomValidator(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
 						return true
 					},
 				).Validate(),
 				NewParam("JSESSIONID", nil).Chain().CustomValidator(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
 						return true
 					},
 				).Validate(),
@@ -193,12 +193,12 @@ func TestParamValidationChain(t *testing.T) {
 			params: params,
 			customValidatorsChain: []gin.HandlerFunc{
 				NewParam("PHPSESSID", nil).Chain().CustomValidator(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
 						return false
 					},
 				).Validate(),
 				NewParam("JSESSIONID", nil).Chain().CustomValidator(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
 						return false
 					},
 				).Validate(),
@@ -245,7 +245,7 @@ func TestParamValidationChain(t *testing.T) {
 			params: params,
 			customValidatorsChain: []gin.HandlerFunc{
 				NewParam("JSESSIONID", nil).Chain().CustomSanitizer(
-					func(req *http.Request, initialValue, sanitizedValue string) string {
+					func(r *http.Request, initialValue, sanitizedValue string) string {
 						return "custom-sanitizer"
 					},
 				).Validate(),
@@ -262,12 +262,12 @@ func TestParamValidationChain(t *testing.T) {
 			params: params,
 			customValidatorsChain: []gin.HandlerFunc{
 				NewParam("PHPSESSID", nil).Chain().CustomSanitizer(
-					func(req *http.Request, initialValue, sanitizedValue string) string {
+					func(r *http.Request, initialValue, sanitizedValue string) string {
 						return "f25g9kvjlou432vmc0ht"
 					},
 				).Validate(),
 				NewParam("JSESSIONID", nil).Chain().CustomSanitizer(
-					func(req *http.Request, initialValue, sanitizedValue string) string {
+					func(r *http.Request, initialValue, sanitizedValue string) string {
 						return "D4E4B8CD58F4B5205E013B0B4467D5DF"
 					},
 				).Validate(),
@@ -316,7 +316,7 @@ func TestParamValidationChain(t *testing.T) {
 			params: params,
 			customValidatorsChain: []gin.HandlerFunc{
 				NewParam("PHPSESSID", nil).Chain().Alpha(nil).If(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
 						return true
 					},
 				).LowerCase().Validate(),
@@ -335,12 +335,12 @@ func TestParamValidationChain(t *testing.T) {
 			params: params,
 			customValidatorsChain: []gin.HandlerFunc{
 				NewParam("auth_token", nil).Chain().Alpha(nil).If(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
 						return true
 					},
 				).LowerCase().Validate(),
 				NewParam("_gat", nil).Chain().Alpha(nil).If(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
 						return true
 					},
 				).LowerCase().Validate(),
@@ -360,7 +360,7 @@ func TestParamValidationChain(t *testing.T) {
 			params: params,
 			customValidatorsChain: []gin.HandlerFunc{
 				NewParam("fr", nil).Chain().Alpha(nil).If(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
 						return false
 					},
 				).LowerCase().Validate(),
@@ -380,12 +380,12 @@ func TestParamValidationChain(t *testing.T) {
 			params: params,
 			customValidatorsChain: []gin.HandlerFunc{
 				NewParam("csrf_token", nil).Chain().Alpha(nil).If(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
 						return false
 					},
 				).LowerCase().Validate(),
 				NewParam("_gat", nil).Chain().Alpha(nil).If(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
 						return false
 					},
 				).LowerCase().Validate(),
@@ -466,7 +466,7 @@ func TestParamValidationChain(t *testing.T) {
 			params: params,
 			customValidatorsChain: []gin.HandlerFunc{
 				NewParam(`auth_token`, nil).Chain().Skip(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
 						return true
 					},
 				).Numeric(nil).Validate(),
@@ -483,12 +483,12 @@ func TestParamValidationChain(t *testing.T) {
 			params: params,
 			customValidatorsChain: []gin.HandlerFunc{
 				NewParam(`currency`, nil).Chain().Skip(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
 						return true
 					},
 				).Numeric(nil).Validate(),
 				NewParam(`_gat`, nil).Chain().Skip(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
 						return true
 					},
 				).Numeric(nil).Validate(),
@@ -505,7 +505,7 @@ func TestParamValidationChain(t *testing.T) {
 			params: params,
 			customValidatorsChain: []gin.HandlerFunc{
 				NewParam(`currency`, nil).Chain().Skip(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
 						return false
 					},
 				).Numeric(nil).Validate(),
@@ -524,7 +524,7 @@ func TestParamValidationChain(t *testing.T) {
 			params: params,
 			customValidatorsChain: []gin.HandlerFunc{
 				NewParam(`auth_token`, nil).Chain().Skip(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
 						return true
 					},
 				).Numeric(nil).Currency(nil).Validate(),
@@ -543,7 +543,7 @@ func TestParamValidationChain(t *testing.T) {
 			params: params,
 			customValidatorsChain: []gin.HandlerFunc{
 				NewParam(`access_token`, nil).Chain().Skip(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
 						return false
 					},
 				).Numeric(nil).Currency(nil).Validate(),

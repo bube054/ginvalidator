@@ -76,7 +76,7 @@ func (m modifier) Bail() ValidationChain {
 //   - req: the HTTP request context derived from `http.Request`.
 //   - initialValue: the original value derived from the specified field.
 //   - sanitizedValue: the current sanitized value after applying previous sanitizers.
-type IfModifierFunc func(req *http.Request, initialValue, sanitizedValue string) bool
+type IfModifierFunc func(r *http.Request, initialValue, sanitizedValue string) bool
 
 // If adds a conditional check to decide whether the validation chain should continue for a field.
 //
@@ -123,7 +123,7 @@ func (m modifier) Not() ValidationChain {
 //   - req: the HTTP request context derived from `http.Request`.
 //   - initialValue: the original value derived from the specified field.
 //   - sanitizedValue: the current sanitized value after applying previous sanitizers.
-type SkipModifierFunc func(req *http.Request, initialValue, sanitizedValue string) bool
+type SkipModifierFunc func(r *http.Request, initialValue, sanitizedValue string) bool
 
 // Skip adds a conditional check to decide whether the next validator, modifier or sanitizer in validation chain should be skipped.
 //

@@ -150,8 +150,8 @@ john@example.com
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody("name.first", nil).Chain().CustomValidator(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
-						data, err := io.ReadAll(req.Body)
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
+						data, err := io.ReadAll(r.Body)
 						if err != nil {
 							panic(fmt.Errorf("Custom validator could not read req body err: %w", err))
 						}
@@ -185,8 +185,8 @@ john@example.com
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody("name.first", nil).Chain().CustomValidator(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
-						data, err := io.ReadAll(req.Body)
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
+						data, err := io.ReadAll(r.Body)
 						if err != nil {
 							panic(fmt.Errorf("Custom validator could not read req body err: %w", err))
 						}
@@ -222,13 +222,13 @@ john@example.com
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody("name.first", nil).Chain().CustomValidator(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
-						data, err := io.ReadAll(req.Body)
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
+						data, err := io.ReadAll(r.Body)
 						if err != nil {
 							panic(fmt.Errorf("Custom validator could not read req body err: %w", err))
 						}
 
-						req.Body = io.NopCloser(bytes.NewBuffer(data))
+						r.Body = io.NopCloser(bytes.NewBuffer(data))
 
 						if string(data) != jsonBody {
 							panic(fmt.Errorf("Custom validator req bodies do not match body: %s", data))
@@ -246,8 +246,8 @@ john@example.com
 					},
 				).Validate(),
 				NewBody("name.last", nil).Chain().CustomValidator(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
-						data, err := io.ReadAll(req.Body)
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
+						data, err := io.ReadAll(r.Body)
 						if err != nil {
 							panic(fmt.Errorf("Custom validator could not read req body err: %w", err))
 						}
@@ -281,13 +281,13 @@ john@example.com
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody("name.first", nil).Chain().CustomValidator(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
-						data, err := io.ReadAll(req.Body)
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
+						data, err := io.ReadAll(r.Body)
 						if err != nil {
 							panic(fmt.Errorf("Custom validator could not read req body err: %w", err))
 						}
 
-						req.Body = io.NopCloser(bytes.NewBuffer(data))
+						r.Body = io.NopCloser(bytes.NewBuffer(data))
 
 						if string(data) != jsonBody {
 							panic(fmt.Errorf("Custom validator req bodies do not match body: %s", data))
@@ -305,8 +305,8 @@ john@example.com
 					},
 				).Validate(),
 				NewBody("name.last", nil).Chain().CustomValidator(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
-						data, err := io.ReadAll(req.Body)
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
+						data, err := io.ReadAll(r.Body)
 						if err != nil {
 							panic(fmt.Errorf("Custom validator could not read req body err: %w", err))
 						}
@@ -372,8 +372,8 @@ john@example.com
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody("name.last", nil).Chain().CustomSanitizer(
-					func(req *http.Request, initialValue, sanitizedValue string) string {
-						data, err := io.ReadAll(req.Body)
+					func(r *http.Request, initialValue, sanitizedValue string) string {
+						data, err := io.ReadAll(r.Body)
 						if err != nil {
 							panic(fmt.Errorf("Custom Sanitizer could not read req body err: %w", err))
 						}
@@ -407,13 +407,13 @@ john@example.com
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody("name.last", nil).Chain().CustomSanitizer(
-					func(req *http.Request, initialValue, sanitizedValue string) string {
-						data, err := io.ReadAll(req.Body)
+					func(r *http.Request, initialValue, sanitizedValue string) string {
+						data, err := io.ReadAll(r.Body)
 						if err != nil {
 							panic(fmt.Errorf("Custom Sanitizer could not read req body err: %w", err))
 						}
 
-						req.Body = io.NopCloser(bytes.NewBuffer(data))
+						r.Body = io.NopCloser(bytes.NewBuffer(data))
 
 						if string(data) != jsonBody {
 							panic(fmt.Errorf("Custom Sanitizer req bodies do not match body: %s", data))
@@ -431,8 +431,8 @@ john@example.com
 					},
 				).Validate(),
 				NewBody("name.first", nil).Chain().CustomSanitizer(
-					func(req *http.Request, initialValue, sanitizedValue string) string {
-						data, err := io.ReadAll(req.Body)
+					func(r *http.Request, initialValue, sanitizedValue string) string {
+						data, err := io.ReadAll(r.Body)
 						if err != nil {
 							panic(fmt.Errorf("Custom Sanitizer could not read req body err: %w", err))
 						}
@@ -500,8 +500,8 @@ john@example.com
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody("message", nil).Chain().Alpha(nil).If(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
-						data, err := io.ReadAll(req.Body)
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
+						data, err := io.ReadAll(r.Body)
 						if err != nil {
 							panic(fmt.Errorf("If modifier could not read req body err: %w", err))
 						}
@@ -537,13 +537,13 @@ john@example.com
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody("message", nil).Chain().Alpha(nil).If(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
-						data, err := io.ReadAll(req.Body)
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
+						data, err := io.ReadAll(r.Body)
 						if err != nil {
 							panic(fmt.Errorf("If modifier could not read req body err: %w", err))
 						}
 
-						req.Body = io.NopCloser(bytes.NewBuffer(data))
+						r.Body = io.NopCloser(bytes.NewBuffer(data))
 
 						if string(data) != jsonBody {
 							panic(fmt.Errorf("If modifier req bodies do not match body: %s", data))
@@ -561,8 +561,8 @@ john@example.com
 					},
 				).LowerCase().Validate(),
 				NewBody("age", nil).Chain().Alpha(nil).If(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
-						data, err := io.ReadAll(req.Body)
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
+						data, err := io.ReadAll(r.Body)
 						if err != nil {
 							panic(fmt.Errorf("If modifier could not read req body err: %w", err))
 						}
@@ -599,8 +599,8 @@ john@example.com
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody("message", nil).Chain().Alpha(nil).If(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
-						data, err := io.ReadAll(req.Body)
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
+						data, err := io.ReadAll(r.Body)
 						if err != nil {
 							panic(fmt.Errorf("If modifier could not read req body err: %w", err))
 						}
@@ -637,13 +637,13 @@ john@example.com
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody("message", nil).Chain().Alpha(nil).If(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
-						data, err := io.ReadAll(req.Body)
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
+						data, err := io.ReadAll(r.Body)
 						if err != nil {
 							panic(fmt.Errorf("If modifier could not read req body err: %w", err))
 						}
 
-						req.Body = io.NopCloser(bytes.NewBuffer(data))
+						r.Body = io.NopCloser(bytes.NewBuffer(data))
 
 						if string(data) != jsonBody {
 							panic(fmt.Errorf("If modifier req bodies do not match body: %s", data))
@@ -661,13 +661,13 @@ john@example.com
 					},
 				).LowerCase().Validate(),
 				NewBody("age", nil).Chain().Alpha(nil).If(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
-						data, err := io.ReadAll(req.Body)
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
+						data, err := io.ReadAll(r.Body)
 						if err != nil {
 							panic(fmt.Errorf("If modifier could not read req body err: %w", err))
 						}
 
-						req.Body = io.NopCloser(bytes.NewBuffer(data))
+						r.Body = io.NopCloser(bytes.NewBuffer(data))
 
 						if string(data) != jsonBody {
 							panic(fmt.Errorf("If modifier req bodies do not match body: %s", data))
@@ -766,8 +766,8 @@ john@example.com
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody(`fav\.movie`, nil).Chain().Skip(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
-						data, err := io.ReadAll(req.Body)
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
+						data, err := io.ReadAll(r.Body)
 						if err != nil {
 							panic(fmt.Errorf("Skip modifier could not read req body err: %w", err))
 						}
@@ -801,13 +801,13 @@ john@example.com
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody(`fav\.movie`, nil).Chain().Skip(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
-						data, err := io.ReadAll(req.Body)
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
+						data, err := io.ReadAll(r.Body)
 						if err != nil {
 							panic(fmt.Errorf("Skip modifier could not read req body err: %w", err))
 						}
 
-						req.Body = io.NopCloser(bytes.NewBuffer(data))
+						r.Body = io.NopCloser(bytes.NewBuffer(data))
 
 						if string(data) != jsonBody {
 							panic(fmt.Errorf("Skip modifier req bodies do not match body: %s", data))
@@ -825,13 +825,13 @@ john@example.com
 					},
 				).Numeric(nil).Validate(),
 				NewBody(`age`, nil).Chain().Skip(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
-						data, err := io.ReadAll(req.Body)
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
+						data, err := io.ReadAll(r.Body)
 						if err != nil {
 							panic(fmt.Errorf("Skip modifier could not read req body err: %w", err))
 						}
 
-						req.Body = io.NopCloser(bytes.NewBuffer(data))
+						r.Body = io.NopCloser(bytes.NewBuffer(data))
 
 						if string(data) != jsonBody {
 							panic(fmt.Errorf("Skip modifier req bodies do not match body: %s", data))
@@ -864,8 +864,8 @@ john@example.com
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody(`fav\.movie`, nil).Chain().Skip(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
-						data, err := io.ReadAll(req.Body)
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
+						data, err := io.ReadAll(r.Body)
 						if err != nil {
 							panic(fmt.Errorf("Skip modifier could not read req body err: %w", err))
 						}
@@ -901,8 +901,8 @@ john@example.com
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody(`fav\.movie`, nil).Chain().Skip(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
-						data, err := io.ReadAll(req.Body)
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
+						data, err := io.ReadAll(r.Body)
 						if err != nil {
 							panic(fmt.Errorf("Skip modifier could not read req body err: %w", err))
 						}
@@ -938,8 +938,8 @@ john@example.com
 			contentType: "application/json",
 			customValidatorsChain: []gin.HandlerFunc{
 				NewBody(`fav\.movie`, nil).Chain().Skip(
-					func(req *http.Request, initialValue, sanitizedValue string) bool {
-						data, err := io.ReadAll(req.Body)
+					func(r *http.Request, initialValue, sanitizedValue string) bool {
+						data, err := io.ReadAll(r.Body)
 						if err != nil {
 							panic(fmt.Errorf("Skip modifier could not read req body err: %w", err))
 						}

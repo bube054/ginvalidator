@@ -36,7 +36,7 @@ Make sure you have [Go](https://go.dev/dl/) installed on your machine.
 2. Open a terminal, navigate (`cd`) into that folder, and initialize a new Go module:
 
 ```bash
-go mod init example.com/learning
+go mod init example.com/tutorial
 ```
 
 ### Step 2: Install Required Packages
@@ -100,7 +100,9 @@ The HTTP server should be running, and you can open http://localhost:8080/hello?
 So the server is working, but there are problems with it. Most notably, you don't want to say hello to someone when the person's name is not set.
 For example, going to http://localhost:8080/hello will print `"Hello, "`.
 
-That's where `ginvalidator` comes in handy. It provides `validators`, `sanitizers` and `modifiers` that are used to validate your request.
+That's where `ginvalidator` and also `validatorgo` come in handy. 
+`ginvalidator` provides `validators`, `sanitizers` and `modifiers` that are used to validate your request. 
+`validatorgo` provides a set of configuration structs to help you customize `validators` and `sanitizers`. These structs, like `vgo.IsEmptyOpts{IgnoreWhitespace: false}`, allow you to fine-tune the behavior of each validation and or sanitization step. By passing these configuration options into chain methods, you can precisely control how the input is processed and validated.
 Let's add a validator and a modifier that checks that the person query string cannot be empty, with the validator named Empty and modifier named Not:
 
 ```go
@@ -110,16 +112,18 @@ import (
     "net/http"
 
     gv "github.com/bube054/ginvalidator"
+    vgo "github.com/bube054/validatorgo"
     "github.com/gin-gonic/gin"
 )
 
 func main() {
     r := gin.Default()
 
-    r.GET("/hello", gv.NewQuery("person", nil).
+    r.GET("/hello", 
+        gv.NewQuery("person", nil).
         Chain().
         Not().
-        Empty(nil).
+        Empty(&vgo.IsEmptyOpts{IgnoreWhitespace: false}).
         Validate(), func(ctx *gin.Context) {
             person := ctx.Query("person")
             ctx.String(http.StatusOK, "Hello, %s!", person)
@@ -130,7 +134,7 @@ func main() {
 ```
 
 > 📝 **Note:**  
-> For brevity, `gv` is used as an alias for `ginvalidator` in the code examples.
+> For brevity, `gv` is used as an alias for `ginvalidator` and `vgo` is used as an alias for `validatorgo` in the code examples.
 
 Now, restart your server, and go to http://localhost:8080/hello again. Hmm, it still prints `"Hello, !"`... why?
 
@@ -148,6 +152,7 @@ import (
     "net/http"
 
     gv "github.com/bube054/ginvalidator"
+    vgo "github.com/bube054/validatorgo"
     "github.com/gin-gonic/gin"
 )
 
@@ -158,7 +163,7 @@ func main() {
         gv.NewQuery("person", nil).
             Chain().
             Not().
-            Empty(nil).
+            Empty(&vgo.IsEmptyOpts{IgnoreWhitespace: false}).
             Validate(),
         func(ctx *gin.Context) {
             result, err := gv.ValidationResult(ctx)
@@ -219,6 +224,7 @@ import (
     "net/http"
 
     gv "github.com/bube054/ginvalidator"
+    vgo "github.com/bube054/validatorgo"
     "github.com/gin-gonic/gin"
 )
 
@@ -232,7 +238,7 @@ func main() {
             },
         ).Chain().
             Not().
-            Empty(nil).
+            Empty(&vgo.IsEmptyOpts{IgnoreWhitespace: false}).
             Validate(),
         func(ctx *gin.Context) {
             result, err := gv.ValidationResult(ctx)
@@ -285,6 +291,7 @@ import (
     "net/http"
 
     gv "github.com/bube054/ginvalidator"
+    vgo "github.com/bube054/validatorgo"
     "github.com/gin-gonic/gin"
 )
 
@@ -300,7 +307,7 @@ func main() {
             },
         ).Chain().
             Not().
-            Empty(nil).
+            Empty(&vgo.IsEmptyOpts{IgnoreWhitespace: false}).
             Validate(),
         func(ctx *gin.Context) {
             result, err := gv.ValidationResult(ctx)
@@ -374,6 +381,7 @@ import (
     "net/http"
 
     gv "github.com/bube054/ginvalidator"
+    vgo "github.com/bube054/validatorgo"
     "github.com/gin-gonic/gin"
 )
 
@@ -387,7 +395,7 @@ func main() {
             },
         ).Chain().
             Not().
-            Empty(nil).
+            Empty(&vgo.IsEmptyOpts{IgnoreWhitespace: false}).
             Escape(). // Added sanitizer
             Validate(),
         func(ctx *gin.Context) {

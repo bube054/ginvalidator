@@ -16,6 +16,7 @@ const (
 	AfterValidatorName              string = "After"
 	AlphaValidatorName              string = "Alpha"
 	AlphanumericValidatorName       string = "Alphanumeric"
+	ArrayValidatorName              string = "Array"
 	AsciiValidatorName              string = "Ascii"
 	BTCAddressValidatorName         string = "BTCAddress"
 	Base32ValidatorName             string = "Base32"
@@ -81,6 +82,7 @@ const (
 	MultibyteValidatorName          string = "Multibyte"
 	NumericValidatorName            string = "Numeric"
 	OctalValidatorName              string = "Octal"
+	ObjectValidatorName              string = "Object"
 	PassportNumberValidatorName     string = "PassportNumber"
 	PortValidatorName               string = "Port"
 	PostalCodeValidatorName         string = "PostalCode"
@@ -319,7 +321,7 @@ func (v validator) Array(opts *vgo.IsArrayOpts) ValidationChain {
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
-			withValidationChainName(AbaRoutingValidatorName),
+			withValidationChainName(ArrayValidatorName),
 			withValidationChainType(validatorType),
 		)
 	}
@@ -1621,7 +1623,7 @@ func (v validator) Object(opts *vgo.IsObjectOpts) ValidationChain {
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
-			withValidationChainName(AbaRoutingValidatorName),
+			withValidationChainName(OctalValidatorName),
 			withValidationChainType(validatorType),
 		)
 	}

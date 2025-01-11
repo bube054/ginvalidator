@@ -3,7 +3,7 @@ module github.com/bube054/ginvalidator
 go 1.21.0
 
 require (
-	github.com/bube054/validatorgo v0.2.0
+	github.com/bube054/validatorgo v0.3.0
 	github.com/gin-gonic/gin v1.10.0
 	github.com/google/go-cmp v0.6.0
 	github.com/tidwall/gjson v1.18.0

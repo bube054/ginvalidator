@@ -1,5 +1,7 @@
 github.com/bube054/validatorgo v0.1.0-alpha h1:CANWtEHdakoVAYSxScZVmjNMCGzvQPKzoZWKd5ulFLA=
 github.com/bube054/validatorgo v0.1.0-alpha/go.mod h1:l7qWrvAhk+bmBMopBt2L+S0M8MdXhMJ3ykzdqWyfcGA=
+github.com/bube054/validatorgo v0.2.0 h1:r6uktsSkwyDWkdwfrQ6UWF+UG2P4ihU2gsR9jiZ1QaI=
+github.com/bube054/validatorgo v0.2.0/go.mod h1:l7qWrvAhk+bmBMopBt2L+S0M8MdXhMJ3ykzdqWyfcGA=
 github.com/bytedance/sonic v1.12.3 h1:W2MGa7RCU1QTeYRTPE3+88mVC0yXmsRQRChiyVocVjU=
 github.com/bytedance/sonic v1.12.3/go.mod h1:B8Gt/XvtZ3Fqj+iSKMypzymZxw/FVwgIGKzMzT9r/rk=
 github.com/bytedance/sonic/loader v0.1.1/go.mod h1:ncP89zfokxS5LZrJxl5z0UJcsk4M4yY2JpfqGeCtNLU=

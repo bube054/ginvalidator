@@ -910,7 +910,7 @@ For a complete list of validator names, refer to the [ginvalidator constants](ht
 
 ### Maintainers
 
-- [bube054](https://github.com/bube054) - Attah Gbubemi David (author)
+- [bube054](https://github.com/bube054) - **Attah Gbubemi David (author)**
 
 <!-- # Other related projects
 

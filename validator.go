@@ -306,7 +306,28 @@ func (v validator) Alphanumeric(opts *vgo.IsAlphanumericOpts) ValidationChain {
 	return v.recreateValidationChainFromValidator(ruleCreator)
 }
 
-// Ascii validator that checks if the string contains ASCII chars only.
+// Base32 is a validator to check that a value is an array.
+//
+// This function uses the [IsArray] from [validatorgo] package to perform the validation logic.
+//
+// [validatorgo]: https://pkg.go.dev/github.com/bube054
+// [IsArray]: https://pkg.go.dev/github.com/bube054/validatorgo#IsArray
+func (v validator) Array(opts *vgo.IsArrayOpts) ValidationChain {
+	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
+		isValid := vgo.IsArray(sanitizedValue, opts)
+
+		return NewValidationChainRule(
+			withIsValid(isValid),
+			withNewValue(sanitizedValue),
+			withValidationChainName(AbaRoutingValidatorName),
+			withValidationChainType(validatorType),
+		)
+	}
+
+	return v.recreateValidationChainFromValidator(ruleCreator)
+}
+
+// Ascii is a validator that checks if the string contains ASCII chars only.
 //
 // This function uses the [IsAscii] from [validatorgo] package to perform the validation logic.
 //
@@ -1293,6 +1314,27 @@ func (v validator) LatLong(opts *vgo.IsLatLongOpts) ValidationChain {
 	return v.recreateValidationChainFromValidator(ruleCreator)
 }
 
+// length is a validator that checks if the string's length falls in a range.
+//
+// This function uses the [IsLength] from [validatorgo] package to perform the validation logic.
+//
+// [validatorgo]: https://pkg.go.dev/github.com/bube054
+// [IsLength]: https://pkg.go.dev/github.com/bube054/validatorgo#IsLength
+func (v validator) Length(opts *vgo.IsLengthOpts) ValidationChain {
+	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
+		isValid := vgo.IsLength(sanitizedValue, opts)
+
+		return NewValidationChainRule(
+			withIsValid(isValid),
+			withNewValue(sanitizedValue),
+			withValidationChainName(LengthValidatorName),
+			withValidationChainType(validatorType),
+		)
+	}
+
+	return v.recreateValidationChainFromValidator(ruleCreator)
+}
+
 // LicensePlate is a validator that checks if the string matches the format of a country's license plate.
 //
 // This function uses the [IsLicensePlate] from [validatorgo] package to perform the validation logic.
@@ -1559,6 +1601,27 @@ func (v validator) Numeric(opts *vgo.IsNumericOpts) ValidationChain {
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(NumericValidatorName),
+			withValidationChainType(validatorType),
+		)
+	}
+
+	return v.recreateValidationChainFromValidator(ruleCreator)
+}
+
+// Octal is a  validator to check that a value is a json object.
+//
+// This function uses the [IsObject] from [validatorgo] package to perform the validation logic.
+//
+// [validatorgo]: https://pkg.go.dev/github.com/bube054
+// [IsObject]: https://pkg.go.dev/github.com/bube054/validatorgo#IsObject
+func (v validator) Object(opts *vgo.IsObjectOpts) ValidationChain {
+	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
+		isValid := vgo.IsObject(sanitizedValue, opts)
+
+		return NewValidationChainRule(
+			withIsValid(isValid),
+			withNewValue(sanitizedValue),
+			withValidationChainName(AbaRoutingValidatorName),
 			withValidationChainType(validatorType),
 		)
 	}

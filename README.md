@@ -55,6 +55,9 @@ go get -u github.com/gin-gonic/gin
 go get -u github.com/bube054/ginvalidator
 ```
 
+> 📝 **Note:**  
+`ginvalidator` uses `validatorgo` as a dependency. In this tutorial, we will directly import `validatorgo` into the project. Remember to run `go mod tidy` to add it as a direct dependency.
+
 ## Getting Started
 
 One of the best ways to learn something is by example! So let's roll the sleeves up and get some coding happening.

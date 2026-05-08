@@ -12,15 +12,23 @@
 package ginvalidator
 
 import (
+	"errors"
 	"log"
 	"sync/atomic"
 
+	vgo "github.com/bube054/validatorgo"
 	"github.com/gin-gonic/gin"
 )
 
 var globalErrorOrder uint64
 
 const DefaultValChainErrMsg string = "Invalid value"
+
+// DefaultErrFmtFunc is a package-level fallback error message formatter.
+// When set, it is used for any validation chain that does not have its own errFmtFunc.
+// If nil (the default), the system falls back to the validatorgo error message,
+// then to DefaultValChainErrMsg.
+var DefaultErrFmtFunc ErrFmtFuncHandler
 
 type ValidationChain struct {
 	validator
@@ -80,13 +88,24 @@ func (v ValidationChain) Validate() gin.HandlerFunc {
 			newValue := rule.newValue
 			shouldBail := rule.shouldBail
 			shouldSkip := rule.shouldSkip
+			validationErr := rule.validationErr
 
 			var errMsg string
 
-			if errFmtFunc == nil {
-				errMsg = DefaultValChainErrMsg
-			} else {
+			switch {
+			case errFmtFunc != nil:
 				errMsg = errFmtFunc(initialValue, sanitizedValue, vcn)
+			case DefaultErrFmtFunc != nil:
+				errMsg = DefaultErrFmtFunc(initialValue, sanitizedValue, vcn)
+			case validationErr != nil:
+				var ve *vgo.ValidationError
+				if errors.As(validationErr, &ve) {
+					errMsg = ve.Message
+				} else {
+					errMsg = validationErr.Error()
+				}
+			default:
+				errMsg = DefaultValChainErrMsg
 			}
 
 			// rule is for validators
@@ -100,11 +119,21 @@ func (v ValidationChain) Validate() gin.HandlerFunc {
 					numOfPreviousValidatorsFailed++
 
 					order := atomic.AddUint64(&globalErrorOrder, 1)
+
+					var code string
+					if validationErr != nil {
+						var ve *vgo.ValidationError
+						if errors.As(validationErr, &ve) {
+							code = ve.Code
+						}
+					}
+
 					vce := NewValidationChainError(
 						vceWithLocation(location),
 						vceWithMsg(errMsg),
 						vceWithField(field),
 						vceWithValue(initialValue),
+						vceWithCode(code),
 						vceWithOrder(order),
 					)
 

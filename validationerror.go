@@ -15,6 +15,7 @@ type ValidationChainError struct {
 	Msg      string `json:"message"`
 	Field    string `json:"field"`
 	Value    string `json:"value"`
+	Code     string `json:"code,omitempty"`
 	order    uint64
 }
 
@@ -39,6 +40,12 @@ func vceWithField(field string) func(*ValidationChainError) {
 func vceWithValue(value string) func(*ValidationChainError) {
 	return func(vce *ValidationChainError) {
 		vce.Value = value
+	}
+}
+
+func vceWithCode(code string) func(*ValidationChainError) {
+	return func(vce *ValidationChainError) {
+		vce.Code = code
 	}
 }
 

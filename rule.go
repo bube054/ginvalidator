@@ -10,6 +10,7 @@ type validationChainRule struct {
 	validationChainType validationChainType // The type of chain (e.g., validator, sanitizer).
 	shouldBail          bool                // Determines if validation should stop immediately on failure.
 	shouldSkip          bool                // Determines if this chain rule should be skipped.
+	validationErr       error               // The error returned by the validatorgo validator, if any.
 }
 
 // NewValidationChainRule creates a new validationChainRule with the specified options.
@@ -62,6 +63,12 @@ func withShouldBail(shouldBail bool) func(*validationChainRule) {
 func withShouldSkip(shouldSkip bool) func(*validationChainRule) {
 	return func(vcr *validationChainRule) {
 		vcr.shouldSkip = shouldSkip
+	}
+}
+
+func withValidationErr(err error) func(*validationChainRule) {
+	return func(vcr *validationChainRule) {
+		vcr.validationErr = err
 	}
 }
 

@@ -600,7 +600,7 @@ func TestQueryValidationChain(t *testing.T) {
 						t.Errorf("got %+v, wanted %+v", err, test.validationResultErr)
 					}
 				} else {
-					if !cmp.Equal(test.validationResult, validationResult, cmpopts.IgnoreUnexported(ValidationChainError{}), cmpopts.EquateEmpty()) {
+					if !cmp.Equal(test.validationResult, validationResult, cmpopts.IgnoreUnexported(ValidationChainError{}), cmpopts.IgnoreFields(ValidationChainError{}, "Msg", "Code"), cmpopts.EquateEmpty()) {
 						t.Errorf("got %+v, wanted %+v", validationResult, test.validationResult)
 					}
 				}

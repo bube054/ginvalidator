@@ -174,6 +174,7 @@ func (v validator) CustomValidator(cvf CustomValidatorFunc) ValidationChain {
 			withNewValue(sanitizedValue),
 			withValidationChainName(CustomValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(nil),
 		)
 	}
 
@@ -189,13 +190,14 @@ func (v validator) CustomValidator(cvf CustomValidatorFunc) ValidationChain {
 // [IsContains]: https://pkg.go.dev/github.com/bube054/validatorgo#Contains
 func (v validator) Contains(seed string, opts *vgo.ContainsOpt) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.Contains(sanitizedValue, seed, opts)
+		isValid, vErr := vgo.Contains(sanitizedValue, seed, opts)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(ContainsValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -211,13 +213,14 @@ func (v validator) Contains(seed string, opts *vgo.ContainsOpt) ValidationChain 
 // [IsEquals]: https://pkg.go.dev/github.com/bube054/validatorgo#Equals
 func (v validator) Equals(comparison string) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.Equals(sanitizedValue, comparison)
+		isValid, vErr := vgo.Equals(sanitizedValue, comparison)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(EqualsValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -232,13 +235,14 @@ func (v validator) Equals(comparison string) ValidationChain {
 // [IsAbaRouting]: https://pkg.go.dev/github.com/bube054/validatorgo#IsAbaRouting
 func (v validator) AbaRouting() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsAbaRouting(sanitizedValue)
+		isValid, vErr := vgo.IsAbaRouting(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(AbaRoutingValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -253,13 +257,14 @@ func (v validator) AbaRouting() ValidationChain {
 // [IsAfter]: https://pkg.go.dev/github.com/bube054/validatorgo#IsAfter
 func (v validator) After(opts *vgo.IsAfterOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsAfter(sanitizedValue, opts)
+		isValid, vErr := vgo.IsAfter(sanitizedValue, opts)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(AfterValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -274,13 +279,14 @@ func (v validator) After(opts *vgo.IsAfterOpts) ValidationChain {
 // [IsAlpha]: https://pkg.go.dev/github.com/bube054/validatorgo#IsAlpha
 func (v validator) Alpha(opts *vgo.IsAlphaOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsAlpha(sanitizedValue, opts)
+		isValid, vErr := vgo.IsAlpha(sanitizedValue, opts)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(AlphaValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -295,13 +301,14 @@ func (v validator) Alpha(opts *vgo.IsAlphaOpts) ValidationChain {
 // [IsAlphanumeric]: https://pkg.go.dev/github.com/bube054/validatorgo#IsAlphanumeric
 func (v validator) Alphanumeric(opts *vgo.IsAlphanumericOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsAlphanumeric(sanitizedValue, opts)
+		isValid, vErr := vgo.IsAlphanumeric(sanitizedValue, opts)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(AlphanumericValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -316,13 +323,14 @@ func (v validator) Alphanumeric(opts *vgo.IsAlphanumericOpts) ValidationChain {
 // [IsArray]: https://pkg.go.dev/github.com/bube054/validatorgo#IsArray
 func (v validator) Array(opts *vgo.IsArrayOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsArray(sanitizedValue, opts)
+		isValid, vErr := vgo.IsArray(sanitizedValue, opts)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(ArrayValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -337,13 +345,14 @@ func (v validator) Array(opts *vgo.IsArrayOpts) ValidationChain {
 // [IsAscii]: https://pkg.go.dev/github.com/bube054/validatorgo#IsAscii
 func (v validator) Ascii() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsAscii(sanitizedValue)
+		isValid, vErr := vgo.IsAscii(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(AbaRoutingValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -358,13 +367,14 @@ func (v validator) Ascii() ValidationChain {
 // [IsBase32]: https://pkg.go.dev/github.com/bube054/validatorgo#IsBase32
 func (v validator) Base32(opts *vgo.IsBase32Opts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsBase32(sanitizedValue, opts)
+		isValid, vErr := vgo.IsBase32(sanitizedValue, opts)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(Base32ValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -379,13 +389,14 @@ func (v validator) Base32(opts *vgo.IsBase32Opts) ValidationChain {
 // [IsBase58]: https://pkg.go.dev/github.com/bube054/validatorgo#IsBase58
 func (v validator) Base58() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsBase58(sanitizedValue)
+		isValid, vErr := vgo.IsBase58(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(Base58ValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -400,13 +411,14 @@ func (v validator) Base58() ValidationChain {
 // [IsBase64]: https://pkg.go.dev/github.com/bube054/validatorgo#IsBase64
 func (v validator) Base64(opts *vgo.IsBase64Opts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsBase64(sanitizedValue, opts)
+		isValid, vErr := vgo.IsBase64(sanitizedValue, opts)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(Base64ValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -421,13 +433,14 @@ func (v validator) Base64(opts *vgo.IsBase64Opts) ValidationChain {
 // [IsBefore]: https://pkg.go.dev/github.com/bube054/validatorgo#IsBefore
 func (v validator) Before(opts *vgo.IsBeforeOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsBefore(sanitizedValue, opts)
+		isValid, vErr := vgo.IsBefore(sanitizedValue, opts)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(BeforeValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -442,13 +455,14 @@ func (v validator) Before(opts *vgo.IsBeforeOpts) ValidationChain {
 // [IsBic]: https://pkg.go.dev/github.com/bube054/validatorgo#IsBic
 func (v validator) Bic() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsBic(sanitizedValue)
+		isValid, vErr := vgo.IsBic(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(BicValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -463,13 +477,14 @@ func (v validator) Bic() ValidationChain {
 // [IsBoolean]: https://pkg.go.dev/github.com/bube054/validatorgo#IsBoolean
 func (v validator) Boolean(opts *vgo.IsBooleanOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsBoolean(sanitizedValue, opts)
+		isValid, vErr := vgo.IsBoolean(sanitizedValue, opts)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(BooleanValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -484,13 +499,14 @@ func (v validator) Boolean(opts *vgo.IsBooleanOpts) ValidationChain {
 // [IsBTCAddress]: https://pkg.go.dev/github.com/bube054/validatorgo#IsBTCAddress
 func (v validator) BTCAddress() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsBTCAddress(sanitizedValue)
+		isValid, vErr := vgo.IsBTCAddress(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(BTCAddressValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -505,13 +521,14 @@ func (v validator) BTCAddress() ValidationChain {
 // [IsByteLength]: https://pkg.go.dev/github.com/bube054/validatorgo#IsByteLength
 func (v validator) ByteLength(opts *vgo.IsByteLengthOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsByteLength(sanitizedValue, opts)
+		isValid, vErr := vgo.IsByteLength(sanitizedValue, opts)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(ByteLengthValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -526,13 +543,14 @@ func (v validator) ByteLength(opts *vgo.IsByteLengthOpts) ValidationChain {
 // [IsCreditCard]: https://pkg.go.dev/github.com/bube054/validatorgo#IsCreditCard
 func (v validator) CreditCard(opts *vgo.IsCreditCardOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsCreditCard(sanitizedValue, opts)
+		isValid, vErr := vgo.IsCreditCard(sanitizedValue, opts)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(CreditCardValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -547,13 +565,14 @@ func (v validator) CreditCard(opts *vgo.IsCreditCardOpts) ValidationChain {
 // [IsCurrency]: https://pkg.go.dev/github.com/bube054/validatorgo#IsCurrency
 func (v validator) Currency(opts *vgo.IsCurrencyOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsCurrency(sanitizedValue, opts)
+		isValid, vErr := vgo.IsCurrency(sanitizedValue, opts)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(CurrencyValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -568,13 +587,14 @@ func (v validator) Currency(opts *vgo.IsCurrencyOpts) ValidationChain {
 // [IsDataURI]: https://pkg.go.dev/github.com/bube054/validatorgo#IsDataURI
 func (v validator) DataURI() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsDataURI(sanitizedValue)
+		isValid, vErr := vgo.IsDataURI(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(DataURIValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -589,13 +609,14 @@ func (v validator) DataURI() ValidationChain {
 // [IsDate]: https://pkg.go.dev/github.com/bube054/validatorgo#IsDate
 func (v validator) Date(opts *vgo.IsDateOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsDate(sanitizedValue, opts)
+		isValid, vErr := vgo.IsDate(sanitizedValue, opts)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(DataURIValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -610,13 +631,14 @@ func (v validator) Date(opts *vgo.IsDateOpts) ValidationChain {
 // [IsDecimal]: https://pkg.go.dev/github.com/bube054/validatorgo#IsDecimal
 func (v validator) Decimal(opts *vgo.IsDecimalOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsDecimal(sanitizedValue, opts)
+		isValid, vErr := vgo.IsDecimal(sanitizedValue, opts)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(DecimalValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -631,13 +653,14 @@ func (v validator) Decimal(opts *vgo.IsDecimalOpts) ValidationChain {
 // [IsDivisibleBy]: https://pkg.go.dev/github.com/bube054/validatorgo#IsDivisibleBy
 func (v validator) DivisibleBy(num int) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsDivisibleBy(sanitizedValue, num)
+		isValid, vErr := vgo.IsDivisibleBy(sanitizedValue, num)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(DivisibleByValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -652,13 +675,14 @@ func (v validator) DivisibleBy(num int) ValidationChain {
 // [IsEAN]: https://pkg.go.dev/github.com/bube054/validatorgo#IsEAN
 func (v validator) EAN() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsEAN(sanitizedValue)
+		isValid, vErr := vgo.IsEAN(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(EANValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -673,13 +697,14 @@ func (v validator) EAN() ValidationChain {
 // [IsEmail]: https://pkg.go.dev/github.com/bube054/validatorgo#IsEmail
 func (v validator) Email(opts *vgo.IsEmailOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsEmail(sanitizedValue, opts)
+		isValid, vErr := vgo.IsEmail(sanitizedValue, opts)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(EmailValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -694,13 +719,14 @@ func (v validator) Email(opts *vgo.IsEmailOpts) ValidationChain {
 // [IsEmpty]: https://pkg.go.dev/github.com/bube054/validatorgo#IsEmpty
 func (v validator) Empty(opts *vgo.IsEmptyOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsEmpty(sanitizedValue, opts)
+		isValid, vErr := vgo.IsEmpty(sanitizedValue, opts)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(EmptyValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -715,13 +741,14 @@ func (v validator) Empty(opts *vgo.IsEmptyOpts) ValidationChain {
 // [IsEthereumAddress]: https://pkg.go.dev/github.com/bube054/validatorgo#IsEthereumAddress
 func (v validator) EthereumAddress() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsEthereumAddress(sanitizedValue)
+		isValid, vErr := vgo.IsEthereumAddress(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(EthereumAddressValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -736,13 +763,14 @@ func (v validator) EthereumAddress() ValidationChain {
 // [IsFloat]: https://pkg.go.dev/github.com/bube054/validatorgo#IsFloat
 func (v validator) Float(opts *vgo.IsFloatOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsFloat(sanitizedValue, opts)
+		isValid, vErr := vgo.IsFloat(sanitizedValue, opts)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(FloatValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -757,13 +785,14 @@ func (v validator) Float(opts *vgo.IsFloatOpts) ValidationChain {
 // [IsFQDN]: https://pkg.go.dev/github.com/bube054/validatorgo#IsFQDN
 func (v validator) FQDN(opts *vgo.IsFQDNOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsFQDN(sanitizedValue, opts)
+		isValid, vErr := vgo.IsFQDN(sanitizedValue, opts)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(FQDNValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -778,13 +807,14 @@ func (v validator) FQDN(opts *vgo.IsFQDNOpts) ValidationChain {
 // [IsFreightContainerID]: https://pkg.go.dev/github.com/bube054/validatorgo#IsFreightContainerID
 func (v validator) FreightContainerID() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsFreightContainerID(sanitizedValue)
+		isValid, vErr := vgo.IsFreightContainerID(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(FreightContainerIDValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -799,13 +829,14 @@ func (v validator) FreightContainerID() ValidationChain {
 // [IsFullWidth]: https://pkg.go.dev/github.com/bube054/validatorgo#IsFullWidth
 func (v validator) FullWidth() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsFullWidth(sanitizedValue)
+		isValid, vErr := vgo.IsFullWidth(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(FullWidthValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -820,13 +851,14 @@ func (v validator) FullWidth() ValidationChain {
 // [IsHalfWidth]: https://pkg.go.dev/github.com/bube054/validatorgo#IsHalfWidth
 func (v validator) HalfWidth() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsHalfWidth(sanitizedValue)
+		isValid, vErr := vgo.IsHalfWidth(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(HalfWidthValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -841,13 +873,14 @@ func (v validator) HalfWidth() ValidationChain {
 // [IsHash]: https://pkg.go.dev/github.com/bube054/validatorgo#IsHash
 func (v validator) Hash(algorithm string) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsHash(sanitizedValue, algorithm)
+		isValid, vErr := vgo.IsHash(sanitizedValue, algorithm)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(HashValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -862,13 +895,14 @@ func (v validator) Hash(algorithm string) ValidationChain {
 // [IsHexadecimal]: https://pkg.go.dev/github.com/bube054/validatorgo#IsHexadecimal
 func (v validator) Hexadecimal() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsHexadecimal(sanitizedValue)
+		isValid, vErr := vgo.IsHexadecimal(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(HexadecimalValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -883,13 +917,14 @@ func (v validator) Hexadecimal() ValidationChain {
 // [IsHexColor]: https://pkg.go.dev/github.com/bube054/validatorgo#IsHexColor
 func (v validator) HexColor() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsHexColor(sanitizedValue)
+		isValid, vErr := vgo.IsHexColor(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(HexColorValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -904,13 +939,14 @@ func (v validator) HexColor() ValidationChain {
 // [IsHSL]: https://pkg.go.dev/github.com/bube054/validatorgo#IsHSL
 func (v validator) HSL() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsHSL(sanitizedValue)
+		isValid, vErr := vgo.IsHSL(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(HSLValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -925,13 +961,14 @@ func (v validator) HSL() ValidationChain {
 // [IsIBAN]: https://pkg.go.dev/github.com/bube054/validatorgo#IsIBAN
 func (v validator) IBAN(countryCode string) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsIBAN(sanitizedValue, countryCode)
+		isValid, vErr := vgo.IsIBAN(sanitizedValue, countryCode)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(IBANValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -946,13 +983,14 @@ func (v validator) IBAN(countryCode string) ValidationChain {
 // [IsIdentityCard]: https://pkg.go.dev/github.com/bube054/validatorgo#IsIdentityCard
 func (v validator) IdentityCard(locale string) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsIdentityCard(sanitizedValue, locale)
+		isValid, vErr := vgo.IsIdentityCard(sanitizedValue, locale)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(IdentityCardValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -967,13 +1005,14 @@ func (v validator) IdentityCard(locale string) ValidationChain {
 // [IsIMEI]: https://pkg.go.dev/github.com/bube054/validatorgo#IsIMEI
 func (v validator) IMEI(opts *vgo.IsIMEIOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsIMEI(sanitizedValue, opts)
+		isValid, vErr := vgo.IsIMEI(sanitizedValue, opts)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(IMEIValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -988,13 +1027,14 @@ func (v validator) IMEI(opts *vgo.IsIMEIOpts) ValidationChain {
 // [IsIn]: https://pkg.go.dev/github.com/bube054/validatorgo#IsIn
 func (v validator) In(values []string) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsIn(sanitizedValue, values)
+		isValid, vErr := vgo.IsIn(sanitizedValue, values)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(InValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1009,13 +1049,14 @@ func (v validator) In(values []string) ValidationChain {
 // [IsInt]: https://pkg.go.dev/github.com/bube054/validatorgo#IsInt
 func (v validator) Int(opts *vgo.IsIntOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsInt(sanitizedValue, opts)
+		isValid, vErr := vgo.IsInt(sanitizedValue, opts)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(IntValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1030,13 +1071,14 @@ func (v validator) Int(opts *vgo.IsIntOpts) ValidationChain {
 // [IsIP]: https://pkg.go.dev/github.com/bube054/validatorgo#IsIP
 func (v validator) IP(version string) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsIP(sanitizedValue, version)
+		isValid, vErr := vgo.IsIP(sanitizedValue, version)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(IPValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1051,13 +1093,14 @@ func (v validator) IP(version string) ValidationChain {
 // [IsIPRange]: https://pkg.go.dev/github.com/bube054/validatorgo#IsIPRange
 func (v validator) IPRange(version string) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsIPRange(sanitizedValue, version)
+		isValid, vErr := vgo.IsIPRange(sanitizedValue, version)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(IPRangeValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1072,13 +1115,14 @@ func (v validator) IPRange(version string) ValidationChain {
 // [IsISIN]: https://pkg.go.dev/github.com/bube054/validatorgo#IsISIN
 func (v validator) ISIN() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsISIN(sanitizedValue)
+		isValid, vErr := vgo.IsISIN(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(InValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1093,13 +1137,14 @@ func (v validator) ISIN() ValidationChain {
 // [IsISO4217]: https://pkg.go.dev/github.com/bube054/validatorgo#IsISO4217
 func (v validator) ISO4217() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsIso4217(sanitizedValue)
+		isValid, vErr := vgo.IsIso4217(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(ISO4217ValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1114,13 +1159,14 @@ func (v validator) ISO4217() ValidationChain {
 // [IsISO6346]: https://pkg.go.dev/github.com/bube054/validatorgo#IsISO6346
 func (v validator) ISO6346() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsISO6346(sanitizedValue)
+		isValid, vErr := vgo.IsISO6346(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(ISO6346ValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1135,13 +1181,14 @@ func (v validator) ISO6346() ValidationChain {
 // [IsISO6391]: https://pkg.go.dev/github.com/bube054/validatorgo#IsISO6391
 func (v validator) ISO6391() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsISO6391(sanitizedValue)
+		isValid, vErr := vgo.IsISO6391(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(ISO6391ValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1156,13 +1203,14 @@ func (v validator) ISO6391() ValidationChain {
 // [IsISO8601]: https://pkg.go.dev/github.com/bube054/validatorgo#IsISO8601
 func (v validator) ISO8601(opts *vgo.IsISO8601Opts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsISO8601(sanitizedValue, opts)
+		isValid, vErr := vgo.IsISO8601(sanitizedValue, opts)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(ISO8601ValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1177,13 +1225,14 @@ func (v validator) ISO8601(opts *vgo.IsISO8601Opts) ValidationChain {
 // [IsISO31661Alpha2]: https://pkg.go.dev/github.com/bube054/validatorgo#IsISO31661Alpha2
 func (v validator) ISO31661Alpha2() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsISO31661Alpha2(sanitizedValue)
+		isValid, vErr := vgo.IsISO31661Alpha2(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(ISO31661Alpha2ValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1198,13 +1247,14 @@ func (v validator) ISO31661Alpha2() ValidationChain {
 // [IsISO31661Alpha3]: https://pkg.go.dev/github.com/bube054/validatorgo#IsISO31661Alpha3
 func (v validator) ISO31661Alpha3() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsISO31661Alpha3(sanitizedValue)
+		isValid, vErr := vgo.IsISO31661Alpha3(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(ISO31661Alpha3ValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1219,13 +1269,14 @@ func (v validator) ISO31661Alpha3() ValidationChain {
 // [IsISO31661Numeric]: https://pkg.go.dev/github.com/bube054/validatorgo#IsISO31661Numeric
 func (v validator) ISO31661Numeric() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsISO31661Numeric(sanitizedValue)
+		isValid, vErr := vgo.IsISO31661Numeric(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(ISO31661NumericValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1240,13 +1291,14 @@ func (v validator) ISO31661Numeric() ValidationChain {
 // [IsISRC]: https://pkg.go.dev/github.com/bube054/validatorgo#IsISRC
 func (v validator) ISRC(allowHyphens bool) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsISRC(sanitizedValue, allowHyphens)
+		isValid, vErr := vgo.IsISRC(sanitizedValue, allowHyphens)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(ISRCValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1261,13 +1313,14 @@ func (v validator) ISRC(allowHyphens bool) ValidationChain {
 // [IsISSN]: https://pkg.go.dev/github.com/bube054/validatorgo#IsISSN
 func (v validator) ISSN(opts *vgo.IsISSNOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsISSN(sanitizedValue, opts)
+		isValid, vErr := vgo.IsISSN(sanitizedValue, opts)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(ISSNValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1282,13 +1335,14 @@ func (v validator) ISSN(opts *vgo.IsISSNOpts) ValidationChain {
 // [IsJSON]: https://pkg.go.dev/github.com/bube054/validatorgo#IsJSON
 func (v validator) JSON() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsJSON(sanitizedValue)
+		isValid, vErr := vgo.IsJSON(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(JSONValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1303,13 +1357,14 @@ func (v validator) JSON() ValidationChain {
 // [IsLatLong]: https://pkg.go.dev/github.com/bube054/validatorgo#IsLatLong
 func (v validator) LatLong(opts *vgo.IsLatLongOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsLatLong(sanitizedValue, opts)
+		isValid, vErr := vgo.IsLatLong(sanitizedValue, opts)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(LatLongValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1324,13 +1379,14 @@ func (v validator) LatLong(opts *vgo.IsLatLongOpts) ValidationChain {
 // [IsLength]: https://pkg.go.dev/github.com/bube054/validatorgo#IsLength
 func (v validator) Length(opts *vgo.IsLengthOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsLength(sanitizedValue, opts)
+		isValid, vErr := vgo.IsLength(sanitizedValue, opts)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(LengthValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1345,13 +1401,14 @@ func (v validator) Length(opts *vgo.IsLengthOpts) ValidationChain {
 // [IsLicensePlate]: https://pkg.go.dev/github.com/bube054/validatorgo#IsLicensePlate
 func (v validator) LicensePlate(locale string) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsLicensePlate(sanitizedValue, locale)
+		isValid, vErr := vgo.IsLicensePlate(sanitizedValue, locale)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(LicensePlateValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1366,13 +1423,14 @@ func (v validator) LicensePlate(locale string) ValidationChain {
 // [IsLocale]: https://pkg.go.dev/github.com/bube054/validatorgo#IsLocale
 func (v validator) Locale() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsLocale(sanitizedValue)
+		isValid, vErr := vgo.IsLocale(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(LocaleValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1387,13 +1445,14 @@ func (v validator) Locale() ValidationChain {
 // [IsLowerCase]: https://pkg.go.dev/github.com/bube054/validatorgo#IsLowerCase
 func (v validator) LowerCase() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsLowerCase(sanitizedValue)
+		isValid, vErr := vgo.IsLowerCase(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(LowerCaseValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1408,13 +1467,14 @@ func (v validator) LowerCase() ValidationChain {
 // [IsLuhnNumber]: https://pkg.go.dev/github.com/bube054/validatorgo#IsLuhnNumber
 func (v validator) LuhnNumber() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsLuhnNumber(sanitizedValue)
+		isValid, vErr := vgo.IsLuhnNumber(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(LuhnNumberValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1429,13 +1489,14 @@ func (v validator) LuhnNumber() ValidationChain {
 // [IsMacAddress]: https://pkg.go.dev/github.com/bube054/validatorgo#IsMacAddress
 func (v validator) MacAddress(opts *vgo.IsMacAddressOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsMacAddress(sanitizedValue, opts)
+		isValid, vErr := vgo.IsMacAddress(sanitizedValue, opts)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(MacAddressValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1450,13 +1511,14 @@ func (v validator) MacAddress(opts *vgo.IsMacAddressOpts) ValidationChain {
 // [IsMagnetURI]: https://pkg.go.dev/github.com/bube054/validatorgo#IsMagnetURI
 func (v validator) MagnetURI() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsMagnetURI(sanitizedValue)
+		isValid, vErr := vgo.IsMagnetURI(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(MagnetURIValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1471,13 +1533,14 @@ func (v validator) MagnetURI() ValidationChain {
 // [IsMailtoURI]: https://pkg.go.dev/github.com/bube054/validatorgo#IsMailtoURI
 func (v validator) MailtoURI(opts *vgo.IsMailToURIOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsMailtoURI(sanitizedValue, opts)
+		isValid, vErr := vgo.IsMailtoURI(sanitizedValue, opts)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(MailtoURIValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1492,13 +1555,14 @@ func (v validator) MailtoURI(opts *vgo.IsMailToURIOpts) ValidationChain {
 // [IsMD5]: https://pkg.go.dev/github.com/bube054/validatorgo#IsMD5
 func (v validator) MD5() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsMD5(sanitizedValue)
+		isValid, vErr := vgo.IsMD5(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(MD5ValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1513,13 +1577,14 @@ func (v validator) MD5() ValidationChain {
 // [IsMimeType]: https://pkg.go.dev/github.com/bube054/validatorgo#IsMimeType
 func (v validator) MimeType() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsMimeType(sanitizedValue)
+		isValid, vErr := vgo.IsMimeType(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(MimeTypeValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1534,13 +1599,14 @@ func (v validator) MimeType() ValidationChain {
 // [IsMobilePhone]: https://pkg.go.dev/github.com/bube054/validatorgo#IsMobilePhone
 func (v validator) MobilePhone(locales []string, opts *vgo.IsMobilePhoneOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsMobilePhone(sanitizedValue, locales, opts)
+		isValid, vErr := vgo.IsMobilePhone(sanitizedValue, locales, opts)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(MobilePhoneValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1555,13 +1621,14 @@ func (v validator) MobilePhone(locales []string, opts *vgo.IsMobilePhoneOpts) Va
 // [IsMongoID]: https://pkg.go.dev/github.com/bube054/validatorgo#IsMongoID
 func (v validator) MongoID() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsMongoID(sanitizedValue)
+		isValid, vErr := vgo.IsMongoID(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(MongoIDValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1576,13 +1643,14 @@ func (v validator) MongoID() ValidationChain {
 // [IsMultibyte]: https://pkg.go.dev/github.com/bube054/validatorgo#IsMultibyte
 func (v validator) Multibyte() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsMultibyte(sanitizedValue)
+		isValid, vErr := vgo.IsMultibyte(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(MultibyteValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1597,13 +1665,14 @@ func (v validator) Multibyte() ValidationChain {
 // [IsNumeric]: https://pkg.go.dev/github.com/bube054/validatorgo#IsNumeric
 func (v validator) Numeric(opts *vgo.IsNumericOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsNumeric(sanitizedValue, opts)
+		isValid, vErr := vgo.IsNumeric(sanitizedValue, opts)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(NumericValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1618,13 +1687,14 @@ func (v validator) Numeric(opts *vgo.IsNumericOpts) ValidationChain {
 // [IsObject]: https://pkg.go.dev/github.com/bube054/validatorgo#IsObject
 func (v validator) Object(opts *vgo.IsObjectOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsObject(sanitizedValue, opts)
+		isValid, vErr := vgo.IsObject(sanitizedValue, opts)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(OctalValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1639,13 +1709,14 @@ func (v validator) Object(opts *vgo.IsObjectOpts) ValidationChain {
 // [IsOctal]: https://pkg.go.dev/github.com/bube054/validatorgo#IsOctal
 func (v validator) Octal() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsOctal(sanitizedValue)
+		isValid, vErr := vgo.IsOctal(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(OctalValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1660,13 +1731,14 @@ func (v validator) Octal() ValidationChain {
 // [IsPassportNumber]: https://pkg.go.dev/github.com/bube054/validatorgo#IsPassportNumber
 func (v validator) PassportNumber(countryCode string) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsPassportNumber(sanitizedValue, countryCode)
+		isValid, vErr := vgo.IsPassportNumber(sanitizedValue, countryCode)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(PassportNumberValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1681,13 +1753,14 @@ func (v validator) PassportNumber(countryCode string) ValidationChain {
 // [IsPort]: https://pkg.go.dev/github.com/bube054/validatorgo#IsPort
 func (v validator) Port() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsPort(sanitizedValue)
+		isValid, vErr := vgo.IsPort(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(PortValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1702,13 +1775,14 @@ func (v validator) Port() ValidationChain {
 // [IsPostalCode]: https://pkg.go.dev/github.com/bube054/validatorgo#IsPostalCode
 func (v validator) PostalCode(locale string) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsPostalCode(sanitizedValue, locale)
+		isValid, vErr := vgo.IsPostalCode(sanitizedValue, locale)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(PostalCodeValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1723,13 +1797,14 @@ func (v validator) PostalCode(locale string) ValidationChain {
 // [IsRFC3339]: https://pkg.go.dev/github.com/bube054/validatorgo#IsRFC3339
 func (v validator) RFC3339() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsRFC3339(sanitizedValue)
+		isValid, vErr := vgo.IsRFC3339(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(RFC3339ValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1744,13 +1819,14 @@ func (v validator) RFC3339() ValidationChain {
 // [IsRgbColor]: https://pkg.go.dev/github.com/bube054/validatorgo#IsRgbColor
 func (v validator) RgbColor(opts *vgo.IsRgbOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsRgbColor(sanitizedValue, opts)
+		isValid, vErr := vgo.IsRgbColor(sanitizedValue, opts)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(RgbColorValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1765,13 +1841,14 @@ func (v validator) RgbColor(opts *vgo.IsRgbOpts) ValidationChain {
 // [IsSemVer]: https://pkg.go.dev/github.com/bube054/validatorgo#IsSemVer
 func (v validator) SemVer() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsSemVer(sanitizedValue)
+		isValid, vErr := vgo.IsSemVer(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(SemVerValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1786,13 +1863,14 @@ func (v validator) SemVer() ValidationChain {
 // [IsSlug]: https://pkg.go.dev/github.com/bube054/validatorgo#IsSlug
 func (v validator) Slug() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsSlug(sanitizedValue)
+		isValid, vErr := vgo.IsSlug(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(SlugValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1807,13 +1885,14 @@ func (v validator) Slug() ValidationChain {
 // [IsStrongPassword]: https://pkg.go.dev/github.com/bube054/validatorgo#IsStrongPassword
 func (v validator) StrongPassword(opts *vgo.IsStrongPasswordOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _, _ := vgo.IsStrongPassword(sanitizedValue, opts)
+		isValid, _, vErr := vgo.IsStrongPassword(sanitizedValue, opts)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(StrongPasswordValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1828,13 +1907,14 @@ func (v validator) StrongPassword(opts *vgo.IsStrongPasswordOpts) ValidationChai
 // [IsTaxID]: https://pkg.go.dev/github.com/bube054/validatorgo#IsTaxID
 func (v validator) TaxID(locale string) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsTaxID(sanitizedValue, locale)
+		isValid, vErr := vgo.IsTaxID(sanitizedValue, locale)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(TaxIDValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1849,13 +1929,14 @@ func (v validator) TaxID(locale string) ValidationChain {
 // [IsSurrogatePair]: https://pkg.go.dev/github.com/bube054/validatorgo#IsSurrogatePair
 func (v validator) SurrogatePair() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsSurrogatePair(sanitizedValue)
+		isValid, vErr := vgo.IsSurrogatePair(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(SurrogatePairValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1870,13 +1951,14 @@ func (v validator) SurrogatePair() ValidationChain {
 // [IsTime]: https://pkg.go.dev/github.com/bube054/validatorgo#IsTime
 func (v validator) Time(opts *vgo.IsTimeOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsTime(sanitizedValue, opts)
+		isValid, vErr := vgo.IsTime(sanitizedValue, opts)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(TimeValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1891,13 +1973,14 @@ func (v validator) Time(opts *vgo.IsTimeOpts) ValidationChain {
 // [IsULID]: https://pkg.go.dev/github.com/bube054/validatorgo#IsULID
 func (v validator) ULID() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsULID(sanitizedValue)
+		isValid, vErr := vgo.IsULID(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(ULIDValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1912,13 +1995,14 @@ func (v validator) ULID() ValidationChain {
 // [IsUpperCase]: https://pkg.go.dev/github.com/bube054/validatorgo#IsUpperCase
 func (v validator) UpperCase() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsUpperCase(sanitizedValue)
+		isValid, vErr := vgo.IsUpperCase(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(UpperCaseValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1933,13 +2017,14 @@ func (v validator) UpperCase() ValidationChain {
 // [IsURL]: https://pkg.go.dev/github.com/bube054/validatorgo#IsURL
 func (v validator) URL(opts *vgo.IsURLOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsURL(sanitizedValue, opts)
+		isValid, vErr := vgo.IsURL(sanitizedValue, opts)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(URLValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1954,13 +2039,14 @@ func (v validator) URL(opts *vgo.IsURLOpts) ValidationChain {
 // [IsUUID]: https://pkg.go.dev/github.com/bube054/validatorgo#IsUUID
 func (v validator) UUID(version string) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsUUID(sanitizedValue, version)
+		isValid, vErr := vgo.IsUUID(sanitizedValue, version)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(UUIDValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1975,13 +2061,14 @@ func (v validator) UUID(version string) ValidationChain {
 // [IsVariableWidth]: https://pkg.go.dev/github.com/bube054/validatorgo#IsVariableWidth
 func (v validator) VariableWidth() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsVariableWidth(sanitizedValue)
+		isValid, vErr := vgo.IsVariableWidth(sanitizedValue)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(VariableWidthValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -1996,13 +2083,14 @@ func (v validator) VariableWidth() ValidationChain {
 // [IsVAT]: https://pkg.go.dev/github.com/bube054/validatorgo#IsVAT
 func (v validator) VAT(countryCode string) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsVAT(sanitizedValue, countryCode)
+		isValid, vErr := vgo.IsVAT(sanitizedValue, countryCode)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(VATValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -2017,13 +2105,14 @@ func (v validator) VAT(countryCode string) ValidationChain {
 // [IsWhitelisted]: https://pkg.go.dev/github.com/bube054/validatorgo#IsWhitelisted
 func (v validator) Whitelisted(chars string) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.IsWhitelisted(sanitizedValue, chars)
+		isValid, vErr := vgo.IsWhitelisted(sanitizedValue, chars)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(WhitelistedValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 
@@ -2038,13 +2127,14 @@ func (v validator) Whitelisted(chars string) ValidationChain {
 // [IsMatches]: https://pkg.go.dev/github.com/bube054/validatorgo#IsMatches
 func (v validator) Matches(re *regexp.Regexp) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		isValid, _ := vgo.Matches(sanitizedValue, re)
+		isValid, vErr := vgo.Matches(sanitizedValue, re)
 
 		return NewValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(MatchesValidatorName),
 			withValidationChainType(validatorType),
+			withValidationErr(vErr),
 		)
 	}
 

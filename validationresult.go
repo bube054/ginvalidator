@@ -141,13 +141,7 @@ func saveValidationErrorsToCtx(ctx *gin.Context, errs []ValidationChainError) {
 
 func SortValidationErrors(errors []ValidationChainError) {
 	sort.Slice(errors, func(i, j int) bool {
-		if errors[i].createdAt.Before(errors[j].createdAt) {
-			return true
-		}
-		if errors[i].createdAt.Equal(errors[j].createdAt) {
-			return errors[i].incId > errors[j].incId
-		}
-		return false
+		return errors[i].order < errors[j].order
 	})
 }
 

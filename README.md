@@ -12,7 +12,7 @@ It is based on the popular js/express library [express-validator](https://github
 
 ## Support
 
-This version of ginvalidator requires that your application is running on [Go](https://go.dev/dl/) 1.16+.
+This version of ginvalidator requires that your application is running on [Go](https://go.dev/dl/) 1.22+.
 It's also verified to work with [Gin](https://github.com/gin-gonic/gin) 1.x.x.
 
 ## Rationale
@@ -766,7 +766,7 @@ Pretty much every function or value returned by ginvalidator reference fields in
     Cookie: "session_id=abc%20123"
     ```
 
-## Customizing express-validator
+## Customizing ginvalidator
 
 If the server you're building is anything but a very simple one, you'll need `validators`, `sanitizers` and error messages beyond the ones built into ginvalidator sooner or later.
 
@@ -883,7 +883,15 @@ r.POST("/user/:id",
 ### Error Messages
 
 Whenever a field value is invalid, an error message is recorded for it.
-The default error message is `"Invalid value"`, which is not descriptive at all of what the error is, so you might need to customize it. You can customize by
+
+ginvalidator tries to pick the best error message it can, in this order:
+
+1. **Per-chain formatter** — the function you pass as the second argument to `NewBody`, `NewQuery`, etc.
+2. **`DefaultErrFmtFunc`** — a package-level formatter you can set once for your whole app.
+3. **`validatorgo` message** — if the underlying validator returns a descriptive message (like `"invalid email"`), ginvalidator will use that.
+4. **`"Invalid value"`** — the last-resort fallback.
+
+Most of the time, option 3 already gives you something decent out of the box. But when you need full control, you can set a per-chain formatter:
 
 ```go
 gv.NewBody("email",
@@ -910,66 +918,17 @@ Validate()
 
 For a complete list of validator names, refer to the [ginvalidator constants](https://pkg.go.dev/github.com/bube054/ginvalidator#pkg-constants).
 
-
-## OneOf
-
-`OneOf` runs multiple groups of validation chains and passes if at least one group produces zero errors. If every group fails, a single error with field `"_oneOf"` is recorded.
-
-Each argument is a slice of chains that must all pass together. The first group that passes wins.
-
-```go
-router.POST("/login",
-  gv.OneOf(
-    []gv.ValidationChain{gv.NewBody("email", nil).Chain().Email(nil)},
-    []gv.ValidationChain{gv.NewBody("phone", nil).Chain().MobilePhone(nil, "")},
-  ),
-  handler,
-)
-```
-
-## CheckSchema
-
-`CheckSchema` creates a single middleware from a declarative schema. Fields are processed in sorted order for deterministic error ordering.
-
-```go
-router.POST("/register",
-  gv.CheckSchema(gv.Schema{
-    "email": {In: gv.BodyLocation, Build: func(vc gv.ValidationChain) gv.ValidationChain {
-      return vc.Email(nil)
-    }},
-    "name": {In: gv.BodyLocation, Optional: true, Build: func(vc gv.ValidationChain) gv.ValidationChain {
-      return vc.Alpha(nil)
-    }},
-  }),
-  handler,
-)
-```
-
-`SchemaField` options:
-- `In` — request location (`BodyLocation`, `QueryLocation`, etc.)
-- `Optional` — skip validation when the field is empty
-- `ErrFmtFunc` — per-field error formatter
-- `Build` — receives a fresh `ValidationChain`, returns the configured chain. Use `.Bail()` within Build to stop on first failure. If nil, the chain runs with no validators.
-
-## DefaultErrFmtFunc
-
-Set a package-level default error formatter that applies when no per-chain formatter is provided:
+If you don't want to attach a formatter to every single chain, you can set `DefaultErrFmtFunc` once and it'll apply everywhere that doesn't already have its own:
 
 ```go
 gv.DefaultErrFmtFunc = func(initialValue, sanitizedValue, validatorName string) string {
-  return fmt.Sprintf("%s is not valid", validatorName)
+    return fmt.Sprintf("%s is not valid", validatorName)
 }
 ```
 
-The error message fallback order is:
-1. Per-chain `ErrFmtFunc`
-2. `DefaultErrFmtFunc`
-3. Message from `validatorgo` (e.g. `"invalid email"`)
-4. `"Invalid value"`
+#### Error codes
 
-## Error Code
-
-When a validator from `validatorgo` fails, the `Code` field on `ValidationChainError` is automatically populated with a machine-readable code (e.g. `"invalid_format"`). This is useful for i18n or programmatic error handling:
+You might have noticed the `code` field in your validation errors. When a `validatorgo` validator fails, ginvalidator automatically populates a machine-readable error code — things like `"invalid_format"`, `"too_short"`, etc. This is handy if you need to do i18n or build programmatic error handling on the client side.
 
 ```json
 {
@@ -981,34 +940,148 @@ When a validator from `validatorgo` fails, the `Code` field on `ValidationChainE
 }
 ```
 
-## Result Helpers
+The `code` field is `omitempty` in JSON, so it only shows up when there's actually a code to report (for example, `CustomValidator` won't produce one).
 
-In addition to `ValidationResult`, several convenience functions are available:
+
+## Whole-Request Validation
+
+So far we've been creating one validation chain per field. That works great, but as your routes grow you might want more powerful ways to express "validate all of this at once" or "at least one of these must be valid". That's where `OneOf` and `CheckSchema` come in.
+
+### OneOf
+
+Sometimes you want to accept different shapes of input — say, a login route that takes either an email or a phone number. You don't care which one the user provides, as long as one of them is valid.
+
+`OneOf` lets you pass in multiple groups of validation chains. If at least one group has zero errors, the request passes. If they all fail, a single error with field `"_oneOf"` is recorded.
 
 ```go
-// True if any validation error exists
-if gv.HasErrors(ctx) { ... }
-
-// First error, or nil
-if err := gv.FirstError(ctx); err != nil { ... }
-
-// All errors grouped by field name
-grouped, err := gv.ErrorsByField(ctx)
-
-// At most one error per field
-firsts, err := gv.FirstErrorByField(ctx)
+r.POST("/login",
+    gv.OneOf(
+        []gv.ValidationChain{gv.NewBody("email", nil).Chain().Email(nil)},
+        []gv.ValidationChain{gv.NewBody("phone", nil).Chain().MobilePhone(nil, "")},
+    ),
+    func(ctx *gin.Context) {
+        // At this point, either email or phone was valid
+    },
+)
 ```
 
-## MatchedData.Has
+You can also put multiple chains in the same group — all of them must pass together for that group to count:
 
-Check whether a field was matched without retrieving its value:
+```go
+gv.OneOf(
+    // Group 1: both name and email must be valid
+    []gv.ValidationChain{
+        gv.NewBody("name", nil).Chain().Alpha(nil),
+        gv.NewBody("email", nil).Chain().Email(nil),
+    },
+    // Group 2: just a username is fine
+    []gv.ValidationChain{
+        gv.NewBody("username", nil).Chain().Alphanumeric(nil),
+    },
+)
+```
+
+### CheckSchema
+
+If you've got a route with lots of fields, writing out individual chains for each one gets tedious. `CheckSchema` lets you define all your validations in a single map instead — it's a more declarative way of doing the same thing.
+
+```go
+r.POST("/register",
+    gv.CheckSchema(gv.Schema{
+        "email": {
+            In: gv.BodyLocation,
+            Build: func(vc gv.ValidationChain) gv.ValidationChain {
+                return vc.Email(nil)
+            },
+        },
+        "name": {
+            In:       gv.BodyLocation,
+            Optional: true,
+            Build: func(vc gv.ValidationChain) gv.ValidationChain {
+                return vc.Alpha(nil)
+            },
+        },
+        "age": {
+            In: gv.BodyLocation,
+            Build: func(vc gv.ValidationChain) gv.ValidationChain {
+                return vc.Numeric(nil)
+            },
+        },
+    }),
+    func(ctx *gin.Context) {
+        // Handle the request
+    },
+)
+```
+
+Each field in the schema gets a `SchemaField` with the following options:
+
+- `In` — which request location the field comes from (`BodyLocation`, `QueryLocation`, etc.)
+- `Optional` — if `true`, skip validation when the field is empty
+- `ErrFmtFunc` — a per-field error formatter (same as the second arg to `NewBody` and friends)
+- `Build` — this is where you configure the chain. It receives a fresh `ValidationChain` and you return it with your validators attached. If you need to bail on first error, just call `.Bail()` between your validators inside `Build`. If `Build` is `nil`, the field always passes.
+
+Fields are processed in alphabetical order so your errors come back in a predictable order every time.
+
+## Working with Errors
+
+We've already seen `ValidationResult`, but as your app grows you'll probably want more convenient ways to check for and access errors. ginvalidator comes with a few helpers that save you from writing the same boilerplate over and over.
+
+### Quick error check
+
+Sometimes you just want to know: _did anything fail?_ You don't care about the details yet.
+
+```go
+if gv.HasErrors(ctx) {
+    ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": "validation failed"})
+    return
+}
+```
+
+### Grabbing the first error
+
+If you want to show just one error message to the user (instead of a list), `FirstError` gives you a pointer to the first one, or `nil` if everything passed:
+
+```go
+if err := gv.FirstError(ctx); err != nil {
+    ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+        "field":   err.Field,
+        "message": err.Msg,
+    })
+    return
+}
+```
+
+### Errors grouped by field
+
+For building form-style error responses where each field gets its own list of errors:
+
+```go
+grouped, err := gv.ErrorsByField(ctx)
+// grouped["email"] = [{...}, {...}]
+// grouped["name"]  = [{...}]
+```
+
+Or if you only want the first error per field (common for "show one error per input" UIs):
+
+```go
+firsts, err := gv.FirstErrorByField(ctx)
+// firsts["email"] = {...}
+// firsts["name"]  = {...}
+```
+
+### MatchedData.Has
+
+We already covered `Get` for retrieving matched data, but sometimes you just want to check if a field was matched at all, without actually pulling out the value. That's what `Has` is for:
 
 ```go
 data, _ := gv.GetMatchedData(ctx)
 if data.Has(gv.BodyLocation, "email") {
-  // field was validated
+    // the email field was validated and matched
 }
 ```
+
+This is useful when you have optional fields and need to know whether the user actually sent something.
 
 ### Maintainers
 

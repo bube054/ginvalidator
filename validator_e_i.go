@@ -1,3 +1,5 @@
+// Validator methods in alphabetical order: EAN through IPRange.
+
 package ginvalidator
 
 import (

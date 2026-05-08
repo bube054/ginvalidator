@@ -1,3 +1,5 @@
+// Validator methods in alphabetical order: ISIN through Multibyte.
+
 package ginvalidator
 
 import (

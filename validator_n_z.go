@@ -1,3 +1,5 @@
+// Validator methods in alphabetical order: Numeric through Matches.
+
 package ginvalidator
 
 import (

@@ -269,6 +269,22 @@ func TestMatchedData(t *testing.T) {
 	}
 }
 
+func TestMatchedData_Has(t *testing.T) {
+	md := MatchedData{
+		"body": MatchedDataFieldValues{"email": "a@b.com"},
+	}
+
+	if !md.Has(BodyLocation, "email") {
+		t.Error("expected Has to return true for existing field")
+	}
+	if md.Has(BodyLocation, "missing") {
+		t.Error("expected Has to return false for missing field")
+	}
+	if md.Has(HeaderLocation, "email") {
+		t.Error("expected Has to return false for wrong location")
+	}
+}
+
 func TestMatchedData_Get(t *testing.T) {
 	md := MatchedData{
 		"headers": MatchedDataFieldValues{

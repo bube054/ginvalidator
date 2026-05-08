@@ -911,6 +911,105 @@ Validate()
 For a complete list of validator names, refer to the [ginvalidator constants](https://pkg.go.dev/github.com/bube054/ginvalidator#pkg-constants).
 
 
+## OneOf
+
+`OneOf` runs multiple groups of validation chains and passes if at least one group produces zero errors. If every group fails, a single error with field `"_oneOf"` is recorded.
+
+Each argument is a slice of chains that must all pass together. The first group that passes wins.
+
+```go
+router.POST("/login",
+  gv.OneOf(
+    []gv.ValidationChain{gv.NewBody("email", nil).Chain().Email(nil)},
+    []gv.ValidationChain{gv.NewBody("phone", nil).Chain().MobilePhone(nil, "")},
+  ),
+  handler,
+)
+```
+
+## CheckSchema
+
+`CheckSchema` creates a single middleware from a declarative schema. Fields are processed in sorted order for deterministic error ordering.
+
+```go
+router.POST("/register",
+  gv.CheckSchema(gv.Schema{
+    "email": {In: gv.BodyLocation, Build: func(vc gv.ValidationChain) gv.ValidationChain {
+      return vc.Email(nil)
+    }},
+    "name": {In: gv.BodyLocation, Optional: true, Build: func(vc gv.ValidationChain) gv.ValidationChain {
+      return vc.Alpha(nil)
+    }},
+  }),
+  handler,
+)
+```
+
+`SchemaField` options:
+- `In` — request location (`BodyLocation`, `QueryLocation`, etc.)
+- `Optional` — skip validation when the field is empty
+- `ErrFmtFunc` — per-field error formatter
+- `Build` — receives a fresh `ValidationChain`, returns the configured chain. Use `.Bail()` within Build to stop on first failure. If nil, the chain runs with no validators.
+
+## DefaultErrFmtFunc
+
+Set a package-level default error formatter that applies when no per-chain formatter is provided:
+
+```go
+gv.DefaultErrFmtFunc = func(initialValue, sanitizedValue, validatorName string) string {
+  return fmt.Sprintf("%s is not valid", validatorName)
+}
+```
+
+The error message fallback order is:
+1. Per-chain `ErrFmtFunc`
+2. `DefaultErrFmtFunc`
+3. Message from `validatorgo` (e.g. `"invalid email"`)
+4. `"Invalid value"`
+
+## Error Code
+
+When a validator from `validatorgo` fails, the `Code` field on `ValidationChainError` is automatically populated with a machine-readable code (e.g. `"invalid_format"`). This is useful for i18n or programmatic error handling:
+
+```json
+{
+  "location": "body",
+  "message": "invalid email",
+  "field": "email",
+  "value": "notanemail",
+  "code": "invalid_format"
+}
+```
+
+## Result Helpers
+
+In addition to `ValidationResult`, several convenience functions are available:
+
+```go
+// True if any validation error exists
+if gv.HasErrors(ctx) { ... }
+
+// First error, or nil
+if err := gv.FirstError(ctx); err != nil { ... }
+
+// All errors grouped by field name
+grouped, err := gv.ErrorsByField(ctx)
+
+// At most one error per field
+firsts, err := gv.FirstErrorByField(ctx)
+```
+
+## MatchedData.Has
+
+Check whether a field was matched without retrieving its value:
+
+```go
+data, _ := gv.GetMatchedData(ctx)
+if data.Has(gv.BodyLocation, "email") {
+  // field was validated
+}
+```
+
 ### Maintainers
 
 - [bube054](https://github.com/bube054) - **Attah Gbubemi David (author)**

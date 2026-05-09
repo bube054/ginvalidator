@@ -17,7 +17,7 @@ func (v validator) ISIN() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsISIN(sanitizedValue)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(InValidatorName),
@@ -39,7 +39,7 @@ func (v validator) ISO4217() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsIso4217(sanitizedValue)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(ISO4217ValidatorName),
@@ -61,7 +61,7 @@ func (v validator) ISO6346() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsISO6346(sanitizedValue)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(ISO6346ValidatorName),
@@ -83,7 +83,7 @@ func (v validator) ISO6391() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsISO6391(sanitizedValue)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(ISO6391ValidatorName),
@@ -105,7 +105,7 @@ func (v validator) ISO8601(opts *vgo.IsISO8601Opts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsISO8601(sanitizedValue, opts)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(ISO8601ValidatorName),
@@ -127,7 +127,7 @@ func (v validator) ISO31661Alpha2() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsISO31661Alpha2(sanitizedValue)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(ISO31661Alpha2ValidatorName),
@@ -149,7 +149,7 @@ func (v validator) ISO31661Alpha3() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsISO31661Alpha3(sanitizedValue)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(ISO31661Alpha3ValidatorName),
@@ -171,7 +171,7 @@ func (v validator) ISO31661Numeric() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsISO31661Numeric(sanitizedValue)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(ISO31661NumericValidatorName),
@@ -193,7 +193,7 @@ func (v validator) ISRC(allowHyphens bool) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsISRC(sanitizedValue, allowHyphens)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(ISRCValidatorName),
@@ -215,7 +215,7 @@ func (v validator) ISSN(opts *vgo.IsISSNOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsISSN(sanitizedValue, opts)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(ISSNValidatorName),
@@ -237,7 +237,7 @@ func (v validator) JSON() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsJSON(sanitizedValue)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(JSONValidatorName),
@@ -259,7 +259,7 @@ func (v validator) LatLong(opts *vgo.IsLatLongOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsLatLong(sanitizedValue, opts)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(LatLongValidatorName),
@@ -281,7 +281,7 @@ func (v validator) Length(opts *vgo.IsLengthOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsLength(sanitizedValue, opts)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(LengthValidatorName),
@@ -303,7 +303,7 @@ func (v validator) LicensePlate(locale string) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsLicensePlate(sanitizedValue, locale)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(LicensePlateValidatorName),
@@ -325,7 +325,7 @@ func (v validator) Locale() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsLocale(sanitizedValue)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(LocaleValidatorName),
@@ -347,7 +347,7 @@ func (v validator) LowerCase() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsLowerCase(sanitizedValue)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(LowerCaseValidatorName),
@@ -369,7 +369,7 @@ func (v validator) LuhnNumber() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsLuhnNumber(sanitizedValue)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(LuhnNumberValidatorName),
@@ -391,7 +391,7 @@ func (v validator) MacAddress(opts *vgo.IsMacAddressOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsMacAddress(sanitizedValue, opts)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(MacAddressValidatorName),
@@ -413,7 +413,7 @@ func (v validator) MagnetURI() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsMagnetURI(sanitizedValue)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(MagnetURIValidatorName),
@@ -435,7 +435,7 @@ func (v validator) MailtoURI(opts *vgo.IsMailToURIOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsMailtoURI(sanitizedValue, opts)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(MailtoURIValidatorName),
@@ -457,7 +457,7 @@ func (v validator) MD5() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsMD5(sanitizedValue)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(MD5ValidatorName),
@@ -479,7 +479,7 @@ func (v validator) MimeType() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsMimeType(sanitizedValue)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(MimeTypeValidatorName),
@@ -501,7 +501,7 @@ func (v validator) MobilePhone(locales []string, opts *vgo.IsMobilePhoneOpts) Va
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsMobilePhone(sanitizedValue, locales, opts)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(MobilePhoneValidatorName),
@@ -523,7 +523,7 @@ func (v validator) MongoID() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsMongoID(sanitizedValue)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(MongoIDValidatorName),
@@ -545,7 +545,7 @@ func (v validator) Multibyte() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsMultibyte(sanitizedValue)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(MultibyteValidatorName),

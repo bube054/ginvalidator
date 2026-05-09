@@ -492,7 +492,7 @@ import vgo "github.com/bube054/validatorgo"
 
 gv.NewBodyChain("email", nil).
 	Email(&vgo.IsEmailOpts{
-		RequireTld:    vgo.Bool(false), // helper to create a *bool pointer
+		RequireTld:    vgo.Bool(false), // helper from validatorgo to create a *bool pointer
 		HostWhitelist: []string{"gmail.com", "yahoo.com"},
 	}).
 	Validate()
@@ -1010,7 +1010,7 @@ func signupHandler(ctx *gin.Context) {
 	if err := gv.FirstError(ctx); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"field":   err.Field,
-			"message": err.Msg,
+			"message": err.Message,
 		})
 		return
 	}

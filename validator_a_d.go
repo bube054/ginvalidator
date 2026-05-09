@@ -17,7 +17,7 @@ func (v validator) AbaRouting() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsAbaRouting(sanitizedValue)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(AbaRoutingValidatorName),
@@ -39,7 +39,7 @@ func (v validator) After(opts *vgo.IsAfterOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsAfter(sanitizedValue, opts)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(AfterValidatorName),
@@ -61,7 +61,7 @@ func (v validator) Alpha(opts *vgo.IsAlphaOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsAlpha(sanitizedValue, opts)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(AlphaValidatorName),
@@ -83,7 +83,7 @@ func (v validator) Alphanumeric(opts *vgo.IsAlphanumericOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsAlphanumeric(sanitizedValue, opts)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(AlphanumericValidatorName),
@@ -105,7 +105,7 @@ func (v validator) Array(opts *vgo.IsArrayOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsArray(sanitizedValue, opts)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(ArrayValidatorName),
@@ -127,7 +127,7 @@ func (v validator) Ascii() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsAscii(sanitizedValue)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(AbaRoutingValidatorName),
@@ -149,7 +149,7 @@ func (v validator) Base32(opts *vgo.IsBase32Opts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsBase32(sanitizedValue, opts)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(Base32ValidatorName),
@@ -171,7 +171,7 @@ func (v validator) Base58() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsBase58(sanitizedValue)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(Base58ValidatorName),
@@ -193,7 +193,7 @@ func (v validator) Base64(opts *vgo.IsBase64Opts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsBase64(sanitizedValue, opts)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(Base64ValidatorName),
@@ -215,7 +215,7 @@ func (v validator) Before(opts *vgo.IsBeforeOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsBefore(sanitizedValue, opts)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(BeforeValidatorName),
@@ -237,7 +237,7 @@ func (v validator) Bic() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsBic(sanitizedValue)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(BicValidatorName),
@@ -259,7 +259,7 @@ func (v validator) Boolean(opts *vgo.IsBooleanOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsBoolean(sanitizedValue, opts)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(BooleanValidatorName),
@@ -281,7 +281,7 @@ func (v validator) BTCAddress() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsBTCAddress(sanitizedValue)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(BTCAddressValidatorName),
@@ -303,7 +303,7 @@ func (v validator) ByteLength(opts *vgo.IsByteLengthOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsByteLength(sanitizedValue, opts)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(ByteLengthValidatorName),
@@ -325,7 +325,7 @@ func (v validator) CreditCard(opts *vgo.IsCreditCardOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsCreditCard(sanitizedValue, opts)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(CreditCardValidatorName),
@@ -347,7 +347,7 @@ func (v validator) Currency(opts *vgo.IsCurrencyOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsCurrency(sanitizedValue, opts)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(CurrencyValidatorName),
@@ -369,7 +369,7 @@ func (v validator) DataURI() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsDataURI(sanitizedValue)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(DataURIValidatorName),
@@ -391,7 +391,7 @@ func (v validator) Date(opts *vgo.IsDateOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsDate(sanitizedValue, opts)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(DataURIValidatorName),
@@ -413,7 +413,7 @@ func (v validator) Decimal(opts *vgo.IsDecimalOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsDecimal(sanitizedValue, opts)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(DecimalValidatorName),
@@ -435,7 +435,7 @@ func (v validator) DivisibleBy(num int) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsDivisibleBy(sanitizedValue, num)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(DivisibleByValidatorName),

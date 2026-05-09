@@ -12,7 +12,7 @@ func TestCustomValidator(t *testing.T) {
 		name string
 
 		field      string
-		errFmtFunc ErrFmtFuncHandler
+		errFmtFunc ErrFmtFunc
 
 		cvf     CustomValidatorFunc
 		reqOpts ginCtxReqOpts
@@ -27,7 +27,7 @@ func TestCustomValidator(t *testing.T) {
 				return true
 			},
 			reqOpts: ginCtxReqOpts{body: `{"name": "John"}`, contentType: "application/json"},
-			want: NewValidationChainRule(
+			want: newValidationChainRule(
 				withIsValid(true),
 				withNewValue("John"),
 				withValidationChainName(CustomValidatorName),
@@ -42,7 +42,7 @@ func TestCustomValidator(t *testing.T) {
 				return false
 			},
 			reqOpts: ginCtxReqOpts{body: `{"name": "John"}`, contentType: "application/json"},
-			want: NewValidationChainRule(
+			want: newValidationChainRule(
 				withIsValid(false),
 				withNewValue("John"),
 				withValidationChainName(CustomValidatorName),
@@ -81,7 +81,7 @@ func TestContains(t *testing.T) {
 		name string
 
 		field      string
-		errFmtFunc ErrFmtFuncHandler
+		errFmtFunc ErrFmtFunc
 
 		seed string
 		opts *vgo.ContainsOpt
@@ -97,7 +97,7 @@ func TestContains(t *testing.T) {
 			seed:       "world",
 			opts:       &vgo.ContainsOpt{},
 			reqOpts:    ginCtxReqOpts{body: `{"text": "Hello world"}`, contentType: "application/json"},
-			want: NewValidationChainRule(
+			want: newValidationChainRule(
 				withIsValid(true),
 				withNewValue("Hello world"),
 				withValidationChainName(ContainsValidatorName),

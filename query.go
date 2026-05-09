@@ -3,14 +3,14 @@ package ginvalidator
 // Query is used to validate data from the `http.Request` queries.
 type Query struct {
 	field      string            // the field to be specified
-	errFmtFunc ErrFmtFuncHandler // the function to create the error message
+	errFmtFunc ErrFmtFunc // the function to create the error message
 }
 
 // Chain initializes a validation chain for the given body field.
 // It creates a new ValidationChain object that will validate the specified field
-// and format error messages using the provided ErrFmtFuncHandler.
+// and format error messages using the provided ErrFmtFunc.
 func (q Query) Chain() ValidationChain {
-	return NewValidationChain(q.field, q.errFmtFunc, QueryLocation)
+	return newValidationChain(q.field, q.errFmtFunc, QueryLocation)
 }
 
 // NewQuery constructs a Query validator for the given field.
@@ -19,7 +19,7 @@ func (q Query) Chain() ValidationChain {
 // Parameters:
 //   - field: the name of the field to validate.
 //   - errFmtFunc: a handler for formatting error messages.
-func NewQuery(field string, errFmtFunc ErrFmtFuncHandler) Query {
+func NewQuery(field string, errFmtFunc ErrFmtFunc) Query {
 	return Query{
 		field:      field,
 		errFmtFunc: errFmtFunc,
@@ -27,6 +27,6 @@ func NewQuery(field string, errFmtFunc ErrFmtFuncHandler) Query {
 }
 
 // NewQueryChain is a shorthand for NewQuery(field, errFmtFunc).Chain().
-func NewQueryChain(field string, errFmtFunc ErrFmtFuncHandler) ValidationChain {
+func NewQueryChain(field string, errFmtFunc ErrFmtFunc) ValidationChain {
 	return NewQuery(field, errFmtFunc).Chain()
 }

@@ -22,13 +22,13 @@ import (
 
 var globalErrorOrder uint64
 
-const DefaultValChainErrMsg string = "Invalid value"
+const DefaultErrMsg string = "Invalid value"
 
 // DefaultErrFmtFunc is a package-level fallback error message formatter.
 // When set, it is used for any validation chain that does not have its own errFmtFunc.
 // If nil (the default), the system falls back to the validatorgo error message,
-// then to DefaultValChainErrMsg.
-var DefaultErrFmtFunc ErrFmtFuncHandler
+// then to DefaultErrMsg.
+var DefaultErrFmtFunc ErrFmtFunc
 
 type ValidationChain struct {
 	validator
@@ -110,7 +110,7 @@ func (v ValidationChain) validate(ctx *gin.Context) chainResult {
 				errMsg = validationErr.Error()
 			}
 		default:
-			errMsg = DefaultValChainErrMsg
+			errMsg = DefaultErrMsg
 		}
 
 		if rule.validationChainType == 0 {
@@ -132,9 +132,9 @@ func (v ValidationChain) validate(ctx *gin.Context) chainResult {
 					}
 				}
 
-				vce := NewValidationChainError(
+				vce := newValidationChainError(
 					vceWithLocation(location),
-					vceWithMsg(errMsg),
+					vceWithMessage(errMsg),
 					vceWithField(field),
 					vceWithValue(initialValue),
 					vceWithCode(code),
@@ -198,7 +198,7 @@ func (v ValidationChain) Validate() gin.HandlerFunc {
 	}
 }
 
-func NewValidationChain(field string, errFmtFunc ErrFmtFuncHandler, reqLoc RequestLocation) ValidationChain {
+func newValidationChain(field string, errFmtFunc ErrFmtFunc, reqLoc RequestLocation) ValidationChain {
 	return ValidationChain{
 		validator: newValidator(field, errFmtFunc, reqLoc),
 		modifier:  newModifier(field, errFmtFunc, reqLoc),

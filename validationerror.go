@@ -6,13 +6,14 @@ package ginvalidator
 //
 // Fields:
 //   - Location: The location in the request where the error occurred (e.g., "body", "cookies", "headers", "params", "queries").
-//   - Msg: A message describing the validation error.
+//   - Message: A message describing the validation error.
 //   - Field: The name of the field that failed validation.
 //   - Value: The invalid value that triggered the validation error.
+//   - Code: A machine-readable error code (e.g., "invalid_format") populated by validatorgo.
 //   - order: A monotonic counter used internally to preserve insertion order across chains.
 type ValidationChainError struct {
 	Location string `json:"location"`
-	Msg      string `json:"message"`
+	Message  string `json:"message"`
 	Field    string `json:"field"`
 	Value    string `json:"value"`
 	Code     string `json:"code,omitempty"`
@@ -25,9 +26,9 @@ func vceWithLocation(location string) func(*ValidationChainError) {
 	}
 }
 
-func vceWithMsg(msg string) func(*ValidationChainError) {
+func vceWithMessage(msg string) func(*ValidationChainError) {
 	return func(vce *ValidationChainError) {
-		vce.Msg = msg
+		vce.Message = msg
 	}
 }
 
@@ -55,7 +56,7 @@ func vceWithOrder(order uint64) func(*ValidationChainError) {
 	}
 }
 
-func NewValidationChainError(opts ...func(*ValidationChainError)) ValidationChainError {
+func newValidationChainError(opts ...func(*ValidationChainError)) ValidationChainError {
 	vce := &ValidationChainError{}
 
 	for _, opt := range opts {
@@ -65,7 +66,7 @@ func NewValidationChainError(opts ...func(*ValidationChainError)) ValidationChai
 	return *vce
 }
 
-// ErrFmtFuncHandler is a function type used to format validation error messages.
+// ErrFmtFunc is a function type used to format validation error messages.
 // It takes in the initial and sanitized values of a field, along with the name of the validator
 // that triggered the error, and returns a formatted error message as a string.
 //
@@ -76,4 +77,4 @@ func NewValidationChainError(opts ...func(*ValidationChainError)) ValidationChai
 //
 // Returns:
 //   - A string representing the formatted error message based on the provided values and validator.
-type ErrFmtFuncHandler func(initialValue, sanitizedValue, validatorName string) string
+type ErrFmtFunc func(initialValue, sanitizedValue, validatorName string) string

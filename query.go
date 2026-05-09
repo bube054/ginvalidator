@@ -25,3 +25,8 @@ func NewQuery(field string, errFmtFunc ErrFmtFuncHandler) Query {
 		errFmtFunc: errFmtFunc,
 	}
 }
+
+// NewQueryChain is a shorthand for NewQuery(field, errFmtFunc).Chain().
+func NewQueryChain(field string, errFmtFunc ErrFmtFuncHandler) ValidationChain {
+	return NewQuery(field, errFmtFunc).Chain()
+}

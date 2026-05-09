@@ -25,3 +25,8 @@ func NewHeader(field string, errFmtFunc ErrFmtFuncHandler) Header {
 		errFmtFunc: errFmtFunc,
 	}
 }
+
+// NewHeaderChain is a shorthand for NewHeader(field, errFmtFunc).Chain().
+func NewHeaderChain(field string, errFmtFunc ErrFmtFuncHandler) ValidationChain {
+	return NewHeader(field, errFmtFunc).Chain()
+}

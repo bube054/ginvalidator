@@ -9,26 +9,26 @@ import (
 )
 
 const (
-	CustomSanitizerFuncName         string = "CustomSanitizer"
-	BlacklistSanitizerFuncName      string = "Blacklist"
-	EscapeSanitizerFuncName         string = "Escape"
-	LTrimSanitizerFuncName          string = "LTrim"
-	NormalizeEmailSanitizerFuncName string = "NormalizeEmail"
-	RTrimSanitizerFuncName          string = "RTrim"
-	StripLowSanitizerFuncName       string = "StripLow"
-	ToBooleanSanitizerFuncName      string = "ToBoolean"
-	ToDateSanitizerFuncName         string = "ToDate"
-	ToFloatSanitizerFuncName        string = "ToFloat"
-	ToIntSanitizerFuncName          string = "ToInt"
-	TrimSanitizerFuncName           string = "Trim"
-	UnescapeSanitizerFuncName       string = "Unescape"
-	WhitelistSanitizerFuncName      string = "Whitelist"
+	CustomSanitizerName         string = "CustomSanitizer"
+	BlacklistSanitizerName      string = "Blacklist"
+	EscapeSanitizerName         string = "Escape"
+	LTrimSanitizerName          string = "LTrim"
+	NormalizeEmailSanitizerName string = "NormalizeEmail"
+	RTrimSanitizerName          string = "RTrim"
+	StripLowSanitizerName       string = "StripLow"
+	ToBooleanSanitizerName      string = "ToBoolean"
+	ToDateSanitizerName         string = "ToDate"
+	ToFloatSanitizerName        string = "ToFloat"
+	ToIntSanitizerName          string = "ToInt"
+	TrimSanitizerName           string = "Trim"
+	UnescapeSanitizerName       string = "Unescape"
+	WhitelistSanitizerName      string = "Whitelist"
 )
 
 // A sanitizer is simply a piece of the validation chain that can sanitize values from the specified field.
 type sanitizer struct {
 	field      string            // the field to be specified
-	errFmtFunc ErrFmtFuncHandler // the function to create the error message
+	errFmtFunc ErrFmtFunc // the function to create the error message
 
 	reqLoc            RequestLocation  // the HTTP request location (e.g., body, headers, cookies, params, or queries)
 	rulesCreatorFuncs ruleCreatorFuncs // the list of functions that creates the validation rules.
@@ -76,10 +76,10 @@ func (s sanitizer) CustomSanitizer(csf CustomSanitizerFunc) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		newValue := csf(ctx.Request, initialValue, sanitizedValue)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(true),
 			withNewValue(newValue),
-			withValidationChainName(CustomSanitizerFuncName),
+			withValidationChainName(CustomSanitizerName),
 			withValidationChainType(sanitizerType),
 		)
 	}
@@ -99,10 +99,10 @@ func (s sanitizer) Blacklist(blacklistedChars string) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		newValue := san.Blacklist(sanitizedValue, blacklistedChars)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(true),
 			withNewValue(newValue),
-			withValidationChainName(BlacklistSanitizerFuncName),
+			withValidationChainName(BlacklistSanitizerName),
 			withValidationChainType(sanitizerType),
 		)
 	}
@@ -122,10 +122,10 @@ func (s sanitizer) Escape() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		newValue := san.Escape(sanitizedValue)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(true),
 			withNewValue(newValue),
-			withValidationChainName(EscapeSanitizerFuncName),
+			withValidationChainName(EscapeSanitizerName),
 			withValidationChainType(sanitizerType),
 		)
 	}
@@ -145,10 +145,10 @@ func (s sanitizer) LTrim(chars string) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		newValue := san.LTrim(sanitizedValue, chars)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(true),
 			withNewValue(newValue),
-			withValidationChainName(LTrimSanitizerFuncName),
+			withValidationChainName(LTrimSanitizerName),
 			withValidationChainType(sanitizerType),
 		)
 	}
@@ -168,10 +168,10 @@ func (s sanitizer) NormalizeEmail(opts *san.NormalizeEmailOpts) ValidationChain 
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		newValue := san.NormalizeEmail(sanitizedValue, opts)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(true),
 			withNewValue(newValue),
-			withValidationChainName(NormalizeEmailSanitizerFuncName),
+			withValidationChainName(NormalizeEmailSanitizerName),
 			withValidationChainType(sanitizerType),
 		)
 	}
@@ -191,10 +191,10 @@ func (s sanitizer) RTrim(chars string) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		newValue := san.RTrim(sanitizedValue, chars)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(true),
 			withNewValue(newValue),
-			withValidationChainName(RTrimSanitizerFuncName),
+			withValidationChainName(RTrimSanitizerName),
 			withValidationChainType(sanitizerType),
 		)
 	}
@@ -214,10 +214,10 @@ func (s sanitizer) StripLow(keepNewLines bool) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		newValue := san.StripLow(sanitizedValue, keepNewLines)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(true),
 			withNewValue(newValue),
-			withValidationChainName(StripLowSanitizerFuncName),
+			withValidationChainName(StripLowSanitizerName),
 			withValidationChainType(sanitizerType),
 		)
 	}
@@ -242,10 +242,10 @@ func (s sanitizer) ToBoolean(strict bool) ValidationChain {
 			newValue = "true"
 		}
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(true),
 			withNewValue(newValue),
-			withValidationChainName(ToBooleanSanitizerFuncName),
+			withValidationChainName(ToBooleanSanitizerName),
 			withValidationChainType(sanitizerType),
 		)
 	}
@@ -270,10 +270,10 @@ func (s sanitizer) ToDate() ValidationChain {
 			newValue = time.Format("2006-01-02 15:04:05")
 		}
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(true),
 			withNewValue(newValue),
-			withValidationChainName(ToDateSanitizerFuncName),
+			withValidationChainName(ToDateSanitizerName),
 			withValidationChainType(sanitizerType),
 		)
 	}
@@ -294,10 +294,10 @@ func (s sanitizer) ToFloat() ValidationChain {
 		float, _ := san.ToFloat(sanitizedValue)
 		newValue := fmt.Sprintf("%f", float)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(true),
 			withNewValue(newValue),
-			withValidationChainName(ToFloatSanitizerFuncName),
+			withValidationChainName(ToFloatSanitizerName),
 			withValidationChainType(sanitizerType),
 		)
 	}
@@ -319,10 +319,10 @@ func (s sanitizer) ToInt() ValidationChain {
 
 		newValue := fmt.Sprintf("%d", num)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(true),
 			withNewValue(newValue),
-			withValidationChainName(ToIntSanitizerFuncName),
+			withValidationChainName(ToIntSanitizerName),
 			withValidationChainType(sanitizerType),
 		)
 	}
@@ -342,10 +342,10 @@ func (s sanitizer) Trim(chars string) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		newValue := san.Trim(sanitizedValue, chars)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(true),
 			withNewValue(newValue),
-			withValidationChainName(TrimSanitizerFuncName),
+			withValidationChainName(TrimSanitizerName),
 			withValidationChainType(sanitizerType),
 		)
 	}
@@ -365,10 +365,10 @@ func (s sanitizer) Unescape() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		newValue := san.Unescape(sanitizedValue)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(true),
 			withNewValue(newValue),
-			withValidationChainName(UnescapeSanitizerFuncName),
+			withValidationChainName(UnescapeSanitizerName),
 			withValidationChainType(sanitizerType),
 		)
 	}
@@ -388,10 +388,10 @@ func (s sanitizer) Whitelist(whitelistedChars string) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		newValue := san.Whitelist(sanitizedValue, whitelistedChars)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(true),
 			withNewValue(newValue),
-			withValidationChainName(WhitelistSanitizerFuncName),
+			withValidationChainName(WhitelistSanitizerName),
 			withValidationChainType(sanitizerType),
 		)
 	}
@@ -405,7 +405,7 @@ func (s sanitizer) Whitelist(whitelistedChars string) ValidationChain {
 //   - field: The field to validate from the HTTP request data location (e.g., body, headers, cookies, params, or queries).
 //   - errFmtFunc: A function that returns a custom error message. If nil, a generic error message will be used.
 //   - reqLoc: The location in the HTTP request from where the field is extracted (e.g., body, headers, cookies, params, or queries).
-func newSanitizer(field string, errFmtFunc ErrFmtFuncHandler, reqLoc RequestLocation) sanitizer {
+func newSanitizer(field string, errFmtFunc ErrFmtFunc, reqLoc RequestLocation) sanitizer {
 	return sanitizer{
 		field:      field,
 		errFmtFunc: errFmtFunc,

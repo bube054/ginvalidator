@@ -12,7 +12,7 @@ func TestCustomSanitizer(t *testing.T) {
 		name string
 
 		field      string
-		errFmtFunc ErrFmtFuncHandler
+		errFmtFunc ErrFmtFunc
 
 		csf     CustomSanitizerFunc
 		reqOpts ginCtxReqOpts
@@ -27,10 +27,10 @@ func TestCustomSanitizer(t *testing.T) {
 				return initialValue
 			},
 			reqOpts: ginCtxReqOpts{body: `{"name": "John"}`, contentType: "application/json"},
-			want: NewValidationChainRule(
+			want: newValidationChainRule(
 				withIsValid(true),
 				withNewValue("John"),
-				withValidationChainName(CustomSanitizerFuncName),
+				withValidationChainName(CustomSanitizerName),
 				withValidationChainType(sanitizerType),
 			),
 		},
@@ -42,10 +42,10 @@ func TestCustomSanitizer(t *testing.T) {
 				return ""
 			},
 			reqOpts: ginCtxReqOpts{body: `{"name": "John"}`, contentType: "application/json"},
-			want: NewValidationChainRule(
+			want: newValidationChainRule(
 				withIsValid(true),
 				withNewValue(""),
-				withValidationChainName(CustomSanitizerFuncName),
+				withValidationChainName(CustomSanitizerName),
 				withValidationChainType(sanitizerType),
 			),
 		},
@@ -81,7 +81,7 @@ func TestBlacklist(t *testing.T) {
 		name string
 
 		field      string
-		errFmtFunc ErrFmtFuncHandler
+		errFmtFunc ErrFmtFunc
 
 		blacklistedChars string
 		reqOpts          ginCtxReqOpts
@@ -94,10 +94,10 @@ func TestBlacklist(t *testing.T) {
 			errFmtFunc:       nil,
 			blacklistedChars: "0-9",
 			reqOpts:          ginCtxReqOpts{body: `{"name": "John109"}`, contentType: "application/json"},
-			want: NewValidationChainRule(
+			want: newValidationChainRule(
 				withIsValid(true),
 				withNewValue("John"),
-				withValidationChainName(BlacklistSanitizerFuncName),
+				withValidationChainName(BlacklistSanitizerName),
 				withValidationChainType(sanitizerType),
 			),
 		},
@@ -107,10 +107,10 @@ func TestBlacklist(t *testing.T) {
 			errFmtFunc:       nil,
 			blacklistedChars: "[a-zA-Z]",
 			reqOpts:          ginCtxReqOpts{body: `{"name": "John109"}`, contentType: "application/json"},
-			want: NewValidationChainRule(
+			want: newValidationChainRule(
 				withIsValid(true),
 				withNewValue("109"),
-				withValidationChainName(BlacklistSanitizerFuncName),
+				withValidationChainName(BlacklistSanitizerName),
 				withValidationChainType(sanitizerType),
 			),
 		},
@@ -146,7 +146,7 @@ func TestEscape(t *testing.T) {
 		name string
 
 		field      string
-		errFmtFunc ErrFmtFuncHandler
+		errFmtFunc ErrFmtFunc
 
 		reqOpts ginCtxReqOpts
 
@@ -157,10 +157,10 @@ func TestEscape(t *testing.T) {
 			field:      "name",
 			errFmtFunc: nil,
 			reqOpts:    ginCtxReqOpts{body: `{"name": "<John"}`, contentType: "application/json"},
-			want: NewValidationChainRule(
+			want: newValidationChainRule(
 				withIsValid(true),
 				withNewValue("&lt;John"),
-				withValidationChainName(EscapeSanitizerFuncName),
+				withValidationChainName(EscapeSanitizerName),
 				withValidationChainType(sanitizerType),
 			),
 		},
@@ -196,7 +196,7 @@ func TestLTrim(t *testing.T) {
 		name string
 
 		field      string
-		errFmtFunc ErrFmtFuncHandler
+		errFmtFunc ErrFmtFunc
 
 		chars   string
 		reqOpts ginCtxReqOpts
@@ -209,10 +209,10 @@ func TestLTrim(t *testing.T) {
 			errFmtFunc: nil,
 			chars:      "",
 			reqOpts:    ginCtxReqOpts{body: `{"name": "John"}`, contentType: "application/json"},
-			want: NewValidationChainRule(
+			want: newValidationChainRule(
 				withIsValid(true),
 				withNewValue("John"),
-				withValidationChainName(LTrimSanitizerFuncName),
+				withValidationChainName(LTrimSanitizerName),
 				withValidationChainType(sanitizerType),
 			),
 		},
@@ -222,10 +222,10 @@ func TestLTrim(t *testing.T) {
 			errFmtFunc: nil,
 			chars:      " ",
 			reqOpts:    ginCtxReqOpts{body: `{"name": " John "}`, contentType: "application/json"},
-			want: NewValidationChainRule(
+			want: newValidationChainRule(
 				withIsValid(true),
 				withNewValue("John "),
-				withValidationChainName(LTrimSanitizerFuncName),
+				withValidationChainName(LTrimSanitizerName),
 				withValidationChainType(sanitizerType),
 			),
 		},
@@ -261,7 +261,7 @@ func TestNormalizeEmail(t *testing.T) {
 		name string
 
 		field      string
-		errFmtFunc ErrFmtFuncHandler
+		errFmtFunc ErrFmtFunc
 
 		opts    *san.NormalizeEmailOpts
 		reqOpts ginCtxReqOpts
@@ -274,10 +274,10 @@ func TestNormalizeEmail(t *testing.T) {
 			errFmtFunc: nil,
 			opts:       nil,
 			reqOpts:    ginCtxReqOpts{body: `{"email": "Example@Example.com"}`, contentType: "application/json"},
-			want: NewValidationChainRule(
+			want: newValidationChainRule(
 				withIsValid(true),
 				withNewValue("example@example.com"),
-				withValidationChainName(NormalizeEmailSanitizerFuncName),
+				withValidationChainName(NormalizeEmailSanitizerName),
 				withValidationChainType(sanitizerType),
 			),
 		},
@@ -313,7 +313,7 @@ func TestRTrim(t *testing.T) {
 		name string
 
 		field      string
-		errFmtFunc ErrFmtFuncHandler
+		errFmtFunc ErrFmtFunc
 
 		chars   string
 		reqOpts ginCtxReqOpts
@@ -326,10 +326,10 @@ func TestRTrim(t *testing.T) {
 			errFmtFunc: nil,
 			chars:      "",
 			reqOpts:    ginCtxReqOpts{body: `{"name": "John"}`, contentType: "application/json"},
-			want: NewValidationChainRule(
+			want: newValidationChainRule(
 				withIsValid(true),
 				withNewValue("John"),
-				withValidationChainName(RTrimSanitizerFuncName),
+				withValidationChainName(RTrimSanitizerName),
 				withValidationChainType(sanitizerType),
 			),
 		},
@@ -339,10 +339,10 @@ func TestRTrim(t *testing.T) {
 			errFmtFunc: nil,
 			chars:      " ",
 			reqOpts:    ginCtxReqOpts{body: `{"name": " John "}`, contentType: "application/json"},
-			want: NewValidationChainRule(
+			want: newValidationChainRule(
 				withIsValid(true),
 				withNewValue(" John"),
-				withValidationChainName(RTrimSanitizerFuncName),
+				withValidationChainName(RTrimSanitizerName),
 				withValidationChainType(sanitizerType),
 			),
 		},
@@ -378,7 +378,7 @@ func TestStripLow(t *testing.T) {
 		name string
 
 		field      string
-		errFmtFunc ErrFmtFuncHandler
+		errFmtFunc ErrFmtFunc
 
 		keepNewLines bool
 		reqOpts      ginCtxReqOpts
@@ -391,10 +391,10 @@ func TestStripLow(t *testing.T) {
 			errFmtFunc:   nil,
 			keepNewLines: false,
 			reqOpts:      ginCtxReqOpts{body: `{"name": "Hello\nWorld"}`, contentType: "application/json"},
-			want: NewValidationChainRule(
+			want: newValidationChainRule(
 				withIsValid(true),
 				withNewValue("HelloWorld"),
-				withValidationChainName(StripLowSanitizerFuncName),
+				withValidationChainName(StripLowSanitizerName),
 				withValidationChainType(sanitizerType),
 			),
 		},
@@ -404,10 +404,10 @@ func TestStripLow(t *testing.T) {
 			errFmtFunc:   nil,
 			keepNewLines: true,
 			reqOpts:      ginCtxReqOpts{body: `{"name": " John\n"}`, contentType: "application/json"},
-			want: NewValidationChainRule(
+			want: newValidationChainRule(
 				withIsValid(true),
 				withNewValue(" John\n"),
-				withValidationChainName(StripLowSanitizerFuncName),
+				withValidationChainName(StripLowSanitizerName),
 				withValidationChainType(sanitizerType),
 			),
 		},
@@ -443,7 +443,7 @@ func TestToBoolean(t *testing.T) {
 		name string
 
 		field      string
-		errFmtFunc ErrFmtFuncHandler
+		errFmtFunc ErrFmtFunc
 
 		strict  bool
 		reqOpts ginCtxReqOpts
@@ -456,10 +456,10 @@ func TestToBoolean(t *testing.T) {
 			errFmtFunc: nil,
 			strict:     false,
 			reqOpts:    ginCtxReqOpts{body: `{"name": "true"}`, contentType: "application/json"},
-			want: NewValidationChainRule(
+			want: newValidationChainRule(
 				withIsValid(true),
 				withNewValue("true"),
-				withValidationChainName(ToBooleanSanitizerFuncName),
+				withValidationChainName(ToBooleanSanitizerName),
 				withValidationChainType(sanitizerType),
 			),
 		},
@@ -469,10 +469,10 @@ func TestToBoolean(t *testing.T) {
 			errFmtFunc: nil,
 			strict:     true,
 			reqOpts:    ginCtxReqOpts{body: `{"name": "false"}`, contentType: "application/json"},
-			want: NewValidationChainRule(
+			want: newValidationChainRule(
 				withIsValid(true),
 				withNewValue("false"),
-				withValidationChainName(ToBooleanSanitizerFuncName),
+				withValidationChainName(ToBooleanSanitizerName),
 				withValidationChainType(sanitizerType),
 			),
 		},
@@ -508,7 +508,7 @@ func TestToDate(t *testing.T) {
 		name string
 
 		field      string
-		errFmtFunc ErrFmtFuncHandler
+		errFmtFunc ErrFmtFunc
 
 		reqOpts ginCtxReqOpts
 
@@ -519,10 +519,10 @@ func TestToDate(t *testing.T) {
 			field:      "date",
 			errFmtFunc: nil,
 			reqOpts:    ginCtxReqOpts{body: `{"date": "Mon Jan  2 15:04:05 2006"}`, contentType: "application/json"},
-			want: NewValidationChainRule(
+			want: newValidationChainRule(
 				withIsValid(true),
 				withNewValue("2006-01-02 15:04:05"),
-				withValidationChainName(ToDateSanitizerFuncName),
+				withValidationChainName(ToDateSanitizerName),
 				withValidationChainType(sanitizerType),
 			),
 		},
@@ -558,7 +558,7 @@ func TestToFloat(t *testing.T) {
 		name string
 
 		field      string
-		errFmtFunc ErrFmtFuncHandler
+		errFmtFunc ErrFmtFunc
 
 		reqOpts ginCtxReqOpts
 
@@ -569,10 +569,10 @@ func TestToFloat(t *testing.T) {
 			field:      "flt",
 			errFmtFunc: nil,
 			reqOpts:    ginCtxReqOpts{body: `{"flt": "123"}`, contentType: "application/json"},
-			want: NewValidationChainRule(
+			want: newValidationChainRule(
 				withIsValid(true),
 				withNewValue("123.000000"),
-				withValidationChainName(ToFloatSanitizerFuncName),
+				withValidationChainName(ToFloatSanitizerName),
 				withValidationChainType(sanitizerType),
 			),
 		},
@@ -608,7 +608,7 @@ func TestToInt(t *testing.T) {
 		name string
 
 		field      string
-		errFmtFunc ErrFmtFuncHandler
+		errFmtFunc ErrFmtFunc
 
 		reqOpts ginCtxReqOpts
 
@@ -619,10 +619,10 @@ func TestToInt(t *testing.T) {
 			field:      "int",
 			errFmtFunc: nil,
 			reqOpts:    ginCtxReqOpts{body: `{"int": "123"}`, contentType: "application/json"},
-			want: NewValidationChainRule(
+			want: newValidationChainRule(
 				withIsValid(true),
 				withNewValue("123"),
-				withValidationChainName(ToIntSanitizerFuncName),
+				withValidationChainName(ToIntSanitizerName),
 				withValidationChainType(sanitizerType),
 			),
 		},
@@ -658,7 +658,7 @@ func TestTrim(t *testing.T) {
 		name string
 
 		field      string
-		errFmtFunc ErrFmtFuncHandler
+		errFmtFunc ErrFmtFunc
 
 		chars   string
 		reqOpts ginCtxReqOpts
@@ -671,10 +671,10 @@ func TestTrim(t *testing.T) {
 			errFmtFunc: nil,
 			chars:      "",
 			reqOpts:    ginCtxReqOpts{body: `{"name": "John"}`, contentType: "application/json"},
-			want: NewValidationChainRule(
+			want: newValidationChainRule(
 				withIsValid(true),
 				withNewValue("John"),
-				withValidationChainName(TrimSanitizerFuncName),
+				withValidationChainName(TrimSanitizerName),
 				withValidationChainType(sanitizerType),
 			),
 		},
@@ -684,10 +684,10 @@ func TestTrim(t *testing.T) {
 			errFmtFunc: nil,
 			chars:      " ",
 			reqOpts:    ginCtxReqOpts{body: `{"name": " John "}`, contentType: "application/json"},
-			want: NewValidationChainRule(
+			want: newValidationChainRule(
 				withIsValid(true),
 				withNewValue("John"),
-				withValidationChainName(TrimSanitizerFuncName),
+				withValidationChainName(TrimSanitizerName),
 				withValidationChainType(sanitizerType),
 			),
 		},
@@ -723,7 +723,7 @@ func TestUnescape(t *testing.T) {
 		name string
 
 		field      string
-		errFmtFunc ErrFmtFuncHandler
+		errFmtFunc ErrFmtFunc
 
 		reqOpts ginCtxReqOpts
 
@@ -734,10 +734,10 @@ func TestUnescape(t *testing.T) {
 			field:      "name",
 			errFmtFunc: nil,
 			reqOpts:    ginCtxReqOpts{body: `{"name": "&lt;John"}`, contentType: "application/json"},
-			want: NewValidationChainRule(
+			want: newValidationChainRule(
 				withIsValid(true),
 				withNewValue("<John"),
-				withValidationChainName(UnescapeSanitizerFuncName),
+				withValidationChainName(UnescapeSanitizerName),
 				withValidationChainType(sanitizerType),
 			),
 		},
@@ -773,7 +773,7 @@ func TestWhitelist(t *testing.T) {
 		name string
 
 		field      string
-		errFmtFunc ErrFmtFuncHandler
+		errFmtFunc ErrFmtFunc
 
 		whitelistedChars string
 		reqOpts          ginCtxReqOpts
@@ -786,10 +786,10 @@ func TestWhitelist(t *testing.T) {
 			errFmtFunc:       nil,
 			whitelistedChars: "0-9",
 			reqOpts:          ginCtxReqOpts{body: `{"name": "John109"}`, contentType: "application/json"},
-			want: NewValidationChainRule(
+			want: newValidationChainRule(
 				withIsValid(true),
 				withNewValue("109"),
-				withValidationChainName(WhitelistSanitizerFuncName),
+				withValidationChainName(WhitelistSanitizerName),
 				withValidationChainType(sanitizerType),
 			),
 		},
@@ -799,10 +799,10 @@ func TestWhitelist(t *testing.T) {
 			errFmtFunc:       nil,
 			whitelistedChars: "[a-zA-Z]",
 			reqOpts:          ginCtxReqOpts{body: `{"name": "John109"}`, contentType: "application/json"},
-			want: NewValidationChainRule(
+			want: newValidationChainRule(
 				withIsValid(true),
 				withNewValue("John"),
-				withValidationChainName(WhitelistSanitizerFuncName),
+				withValidationChainName(WhitelistSanitizerName),
 				withValidationChainType(sanitizerType),
 			),
 		},

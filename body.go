@@ -3,14 +3,14 @@ package ginvalidator
 // Body is used to validate data from the `http.Request` body.
 type Body struct {
 	field      string            // the field to be specified
-	errFmtFunc ErrFmtFuncHandler // the function to create the error message
+	errFmtFunc ErrFmtFunc // the function to create the error message
 }
 
 // Chain initializes a validation chain for the given body field.
 // It creates a new ValidationChain object that will validate the specified field
-// and format error messages using the provided ErrFmtFuncHandler.
+// and format error messages using the provided ErrFmtFunc.
 func (b Body) Chain() ValidationChain {
-	return NewValidationChain(b.field, b.errFmtFunc, BodyLocation)
+	return newValidationChain(b.field, b.errFmtFunc, BodyLocation)
 }
 
 // NewBody constructs a Body validator for the given field.
@@ -21,9 +21,14 @@ func (b Body) Chain() ValidationChain {
 //   - errFmtFunc: a handler for formatting error messages.
 //
 // [gjson]: https://github.com/tidwall/gjson?tab=readme-ov-file#path-syntax
-func NewBody(field string, errFmtFunc ErrFmtFuncHandler) Body {
+func NewBody(field string, errFmtFunc ErrFmtFunc) Body {
 	return Body{
 		field:      field,
 		errFmtFunc: errFmtFunc,
 	}
+}
+
+// NewBodyChain is a shorthand for NewBody(field, errFmtFunc).Chain().
+func NewBodyChain(field string, errFmtFunc ErrFmtFunc) ValidationChain {
+	return NewBody(field, errFmtFunc).Chain()
 }

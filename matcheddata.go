@@ -42,6 +42,12 @@ func (md MatchedData) Get(loc RequestLocation, field string) (string, bool) {
 	return value, ok
 }
 
+// Has reports whether a field exists at the given request location.
+func (md MatchedData) Has(loc RequestLocation, field string) bool {
+	_, ok := md[loc.String()][field]
+	return ok
+}
+
 // GetMatchedData extracts and returns matched data from various locations in the request context.
 // It retrieves fields and values from predefined request locations such as query parameters, body,
 // URL parameters, and headers.

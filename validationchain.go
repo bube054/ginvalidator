@@ -12,13 +12,23 @@
 package ginvalidator
 
 import (
+	"errors"
 	"log"
-	"time"
+	"sync/atomic"
 
+	vgo "github.com/bube054/validatorgo"
 	"github.com/gin-gonic/gin"
 )
 
-const DefaultValChainErrMsg string = "Invalid value"
+var globalErrorOrder uint64
+
+const DefaultErrMsg string = "Invalid value"
+
+// DefaultErrFmtFunc is a package-level fallback error message formatter.
+// When set, it is used for any validation chain that does not have its own errFmtFunc.
+// If nil (the default), the system falls back to the validatorgo error message,
+// then to DefaultErrMsg.
+var DefaultErrFmtFunc ErrFmtFunc
 
 type ValidationChain struct {
 	validator
@@ -26,139 +36,169 @@ type ValidationChain struct {
 	sanitizer
 }
 
+type chainResult struct {
+	errors         []ValidationChainError
+	location       string
+	field          string
+	sanitizedValue string
+}
+
+func (v ValidationChain) validate(ctx *gin.Context) chainResult {
+	var (
+		initialValue   string
+		sanitizedValue string
+		extractionErr  error
+	)
+
+	field := v.validator.field
+	reqLoc := v.validator.reqLoc
+	location := reqLoc.String()
+	errFmtFunc := v.validator.errFmtFunc
+
+	switch v.validator.reqLoc {
+	case 0:
+		initialValue, extractionErr = extractFieldValFromBody(ctx, field)
+	case 1:
+		initialValue, extractionErr = extractFieldValFromCookie(ctx, field)
+	case 2:
+		initialValue, extractionErr = extractFieldValFromHeader(ctx, field)
+	case 3:
+		initialValue, extractionErr = extractFieldValFromParam(ctx, field)
+	case 4:
+		initialValue, extractionErr = extractFieldValFromQuery(ctx, field)
+	}
+
+	sanitizedValue = initialValue
+
+	if extractionErr != nil {
+		log.Printf("Error extracting field %q from request location %q: %v", field, location, extractionErr)
+	}
+
+	ruleCreators := v.validator.rulesCreatorFuncs
+	valErrs := make([]ValidationChainError, 0, len(ruleCreators))
+
+	numOfPreviousValidatorsFailed := 0
+	shouldNegateNextValidator := false
+	shouldSkipNextValidator := false
+
+	for _, ruleCreator := range ruleCreators {
+		if shouldSkipNextValidator {
+			shouldSkipNextValidator = false
+			continue
+		}
+
+		rule := ruleCreator(ctx, initialValue, sanitizedValue)
+		vcn := rule.validationChainName
+		valid := rule.isValid
+		newValue := rule.newValue
+		shouldBail := rule.shouldBail
+		shouldSkip := rule.shouldSkip
+		validationErr := rule.validationErr
+
+		var errMsg string
+
+		switch {
+		case errFmtFunc != nil:
+			errMsg = errFmtFunc(initialValue, sanitizedValue, vcn)
+		case DefaultErrFmtFunc != nil:
+			errMsg = DefaultErrFmtFunc(initialValue, sanitizedValue, vcn)
+		case validationErr != nil:
+			var ve *vgo.ValidationError
+			if errors.As(validationErr, &ve) {
+				errMsg = ve.Message
+			} else {
+				errMsg = validationErr.Error()
+			}
+		default:
+			errMsg = DefaultErrMsg
+		}
+
+		if rule.validationChainType == 0 {
+			if shouldNegateNextValidator {
+				valid = !valid
+				shouldNegateNextValidator = false
+			}
+
+			if !valid {
+				numOfPreviousValidatorsFailed++
+
+				order := atomic.AddUint64(&globalErrorOrder, 1)
+
+				var code string
+				if validationErr != nil {
+					var ve *vgo.ValidationError
+					if errors.As(validationErr, &ve) {
+						code = ve.Code
+					}
+				}
+
+				vce := newValidationChainError(
+					vceWithLocation(location),
+					vceWithMessage(errMsg),
+					vceWithField(field),
+					vceWithValue(initialValue),
+					vceWithCode(code),
+					vceWithOrder(order),
+				)
+
+				valErrs = append(valErrs, vce)
+			}
+		}
+
+		if rule.validationChainType == 1 {
+			sanitizedValue = newValue
+		}
+
+		if rule.validationChainType == 2 {
+			vcn := rule.validationChainName
+
+			if vcn == "Bail" {
+				if numOfPreviousValidatorsFailed > 0 {
+					break
+				}
+			}
+
+			if vcn == "If" {
+				if shouldBail {
+					break
+				}
+			}
+
+			if vcn == "Not" {
+				shouldNegateNextValidator = true
+			}
+
+			if vcn == "Skip" {
+				shouldSkipNextValidator = shouldSkip
+			}
+
+			if vcn == "Optional" {
+				if initialValue == "" {
+					valErrs = make([]ValidationChainError, 0)
+					break
+				}
+			}
+		}
+	}
+
+	return chainResult{
+		errors:         valErrs,
+		location:       location,
+		field:          field,
+		sanitizedValue: sanitizedValue,
+	}
+}
+
 func (v ValidationChain) Validate() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-
-		var (
-			initialValue   string
-			sanitizedValue string
-			extractionErr  error
-		)
-
-		field := v.validator.field
-		reqLoc := v.validator.reqLoc
-		location := reqLoc.String()
-		errFmtFunc := v.validator.errFmtFunc
-
-		switch v.validator.reqLoc {
-		case 0:
-			initialValue, extractionErr = extractFieldValFromBody(ctx, field)
-		case 1:
-			initialValue, extractionErr = extractFieldValFromCookie(ctx, field)
-		case 2:
-			initialValue, extractionErr = extractFieldValFromHeader(ctx, field)
-		case 3:
-			initialValue, extractionErr = extractFieldValFromParam(ctx, field)
-		case 4:
-			initialValue, extractionErr = extractFieldValFromQuery(ctx, field)
-		}
-
-		sanitizedValue = initialValue
-
-		if extractionErr != nil {
-			log.Printf("Error extracting field %q from request location %q: %v", field, location, extractionErr)
-		}
-
-		ruleCreators := v.validator.rulesCreatorFuncs
-		valErrs := make([]ValidationChainError, 0, len(ruleCreators))
-
-		numOfPreviousValidatorsFailed := 0 // counter for dealing with previous failed validations, used by bail.
-		shouldNegateNextValidator := false // state for dealing with the immediate previous validation validity and negating it, used by not.
-		shouldSkipNextValidator := false   // state for dealing with whether to skip next link in the validation chain. used by skip.
-
-		errorCountId := 0
-		for _, ruleCreator := range ruleCreators {
-			if shouldSkipNextValidator {
-				shouldSkipNextValidator = false
-				continue
-			}
-
-			rule := ruleCreator(ctx, initialValue, sanitizedValue)
-			vcn := rule.validationChainName
-			valid := rule.isValid
-			newValue := rule.newValue
-			shouldBail := rule.shouldBail
-			shouldSkip := rule.shouldSkip
-
-			var errMsg string
-
-			if errFmtFunc == nil {
-				errMsg = DefaultValChainErrMsg
-			} else {
-				errMsg = errFmtFunc(initialValue, sanitizedValue, vcn)
-			}
-
-			// rule is for validators
-			if rule.validationChainType == 0 {
-				if shouldNegateNextValidator {
-					valid = !valid
-					shouldNegateNextValidator = false
-				}
-
-				if !valid {
-					errorCountId++
-					numOfPreviousValidatorsFailed++
-
-					time.Sleep(time.Nanosecond)
-					vce := NewValidationChainError(
-						vceWithLocation(location),
-						vceWithMsg(errMsg),
-						vceWithField(field),
-						vceWithValue(initialValue),
-						vceWithCreatedAt(time.Now()),
-						vceWithIncID(errorCountId),
-					)
-
-					valErrs = append(valErrs, vce)
-				}
-			}
-
-			// rule is for sanitizers
-			if rule.validationChainType == 1 {
-				sanitizedValue = newValue
-			}
-
-			// rule is for modifiers
-			if rule.validationChainType == 2 {
-				vcn := rule.validationChainName
-
-				if vcn == "Bail" {
-					if numOfPreviousValidatorsFailed > 0 {
-						break
-					}
-				}
-
-				if vcn == "If" {
-					if shouldBail {
-						break
-					}
-				}
-
-				if vcn == "Not" {
-					shouldNegateNextValidator = true
-				}
-
-				if vcn == "Skip" {
-					shouldSkipNextValidator = shouldSkip
-				}
-
-				if vcn == "Optional" {
-					if initialValue == "" {
-						valErrs = make([]ValidationChainError, 0)
-						break
-					}
-				}
-			}
-		}
-
-		saveValidationErrorsToCtx(ctx, valErrs)
-		saveMatchedDataToCtx(ctx, location, field, sanitizedValue)
-
+		result := v.validate(ctx)
+		saveValidationErrorsToCtx(ctx, result.errors)
+		saveMatchedDataToCtx(ctx, result.location, result.field, result.sanitizedValue)
 		ctx.Next()
 	}
 }
 
-func NewValidationChain(field string, errFmtFunc ErrFmtFuncHandler, reqLoc RequestLocation) ValidationChain {
+func newValidationChain(field string, errFmtFunc ErrFmtFunc, reqLoc RequestLocation) ValidationChain {
 	return ValidationChain{
 		validator: newValidator(field, errFmtFunc, reqLoc),
 		modifier:  newModifier(field, errFmtFunc, reqLoc),

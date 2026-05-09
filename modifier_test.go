@@ -10,7 +10,7 @@ func TestBail(t *testing.T) {
 		name string
 
 		field      string
-		errFmtFunc ErrFmtFuncHandler
+		errFmtFunc ErrFmtFunc
 
 		reqOpts ginCtxReqOpts
 
@@ -21,10 +21,10 @@ func TestBail(t *testing.T) {
 			field:      "name",
 			errFmtFunc: nil,
 			reqOpts:    ginCtxReqOpts{body: `{"name": "John"}`, contentType: "application/json"},
-			want: NewValidationChainRule(
+			want: newValidationChainRule(
 				withIsValid(true),
 				withNewValue("John"),
-				withValidationChainName(BailModifierFuncName),
+				withValidationChainName(BailModifierName),
 				withValidationChainType(modifierType),
 			),
 		},
@@ -61,7 +61,7 @@ func TestIf(t *testing.T) {
 
 		imf        IfModifierFunc
 		field      string
-		errFmtFunc ErrFmtFuncHandler
+		errFmtFunc ErrFmtFunc
 
 		reqOpts ginCtxReqOpts
 
@@ -75,10 +75,10 @@ func TestIf(t *testing.T) {
 			field:      "name",
 			errFmtFunc: nil,
 			reqOpts:    ginCtxReqOpts{body: `{"name": "John"}`, contentType: "application/json"},
-			want: NewValidationChainRule(
+			want: newValidationChainRule(
 				withIsValid(true),
 				withNewValue("John"),
-				withValidationChainName(IfModifierFuncName),
+				withValidationChainName(IfModifierName),
 				withValidationChainType(modifierType),
 				withShouldBail(true),
 			),
@@ -91,10 +91,10 @@ func TestIf(t *testing.T) {
 			field:      "name",
 			errFmtFunc: nil,
 			reqOpts:    ginCtxReqOpts{body: `{"name": "John"}`, contentType: "application/json"},
-			want: NewValidationChainRule(
+			want: newValidationChainRule(
 				withIsValid(true),
 				withNewValue("John"),
-				withValidationChainName(IfModifierFuncName),
+				withValidationChainName(IfModifierName),
 				withValidationChainType(modifierType),
 				withShouldBail(false),
 			),
@@ -131,7 +131,7 @@ func TestNot(t *testing.T) {
 		name string
 
 		field      string
-		errFmtFunc ErrFmtFuncHandler
+		errFmtFunc ErrFmtFunc
 
 		reqOpts ginCtxReqOpts
 
@@ -142,10 +142,10 @@ func TestNot(t *testing.T) {
 			field:      "name",
 			errFmtFunc: nil,
 			reqOpts:    ginCtxReqOpts{body: `{"name": "John"}`, contentType: "application/json"},
-			want: NewValidationChainRule(
+			want: newValidationChainRule(
 				withIsValid(true),
 				withNewValue("John"),
-				withValidationChainName(NotModifierFuncName),
+				withValidationChainName(NotModifierName),
 				withValidationChainType(modifierType),
 				withShouldBail(false),
 			),
@@ -183,7 +183,7 @@ func TestSkip(t *testing.T) {
 
 		smf        SkipModifierFunc
 		field      string
-		errFmtFunc ErrFmtFuncHandler
+		errFmtFunc ErrFmtFunc
 
 		reqOpts ginCtxReqOpts
 
@@ -197,10 +197,10 @@ func TestSkip(t *testing.T) {
 			field:      "name",
 			errFmtFunc: nil,
 			reqOpts:    ginCtxReqOpts{body: `{"name": "John"}`, contentType: "application/json"},
-			want: NewValidationChainRule(
+			want: newValidationChainRule(
 				withIsValid(true),
 				withNewValue("John"),
-				withValidationChainName(SkipModifierFuncName),
+				withValidationChainName(SkipModifierName),
 				withValidationChainType(modifierType),
 				withShouldBail(false),
 				withShouldSkip(true),
@@ -214,10 +214,10 @@ func TestSkip(t *testing.T) {
 			field:      "name",
 			errFmtFunc: nil,
 			reqOpts:    ginCtxReqOpts{body: `{"name": "John"}`, contentType: "application/json"},
-			want: NewValidationChainRule(
+			want: newValidationChainRule(
 				withIsValid(true),
 				withNewValue("John"),
-				withValidationChainName(SkipModifierFuncName),
+				withValidationChainName(SkipModifierName),
 				withValidationChainType(modifierType),
 				withShouldBail(false),
 				withShouldSkip(false),
@@ -256,7 +256,7 @@ func TestOptional(t *testing.T) {
 
 		smf        SkipModifierFunc
 		field      string
-		errFmtFunc ErrFmtFuncHandler
+		errFmtFunc ErrFmtFunc
 
 		reqOpts ginCtxReqOpts
 
@@ -268,10 +268,10 @@ func TestOptional(t *testing.T) {
 			field:      "name",
 			errFmtFunc: nil,
 			reqOpts:    ginCtxReqOpts{body: `{"name": "John"}`, contentType: "application/json"},
-			want: NewValidationChainRule(
+			want: newValidationChainRule(
 				withIsValid(true),
 				withNewValue("John"),
-				withValidationChainName(OptionalModifierFuncName),
+				withValidationChainName(OptionalModifierName),
 				withValidationChainType(modifierType),
 				withShouldBail(false),
 				withShouldSkip(false),

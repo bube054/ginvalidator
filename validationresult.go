@@ -71,7 +71,7 @@ func ValidationResult(ctx *gin.Context) ([]ValidationChainError, error) {
 
 	// allErrs = RandomizeErrors(allErrs)
 
-	SortValidationErrors(allErrs)
+	sortValidationErrors(allErrs)
 
 	return allErrs, nil
 }
@@ -139,15 +139,54 @@ func saveValidationErrorsToCtx(ctx *gin.Context, errs []ValidationChainError) {
 	}
 }
 
-func SortValidationErrors(errors []ValidationChainError) {
+// HasErrors returns true if there are any validation errors in the context.
+func HasErrors(ctx *gin.Context) bool {
+	errs, err := ValidationResult(ctx)
+	return err == nil && len(errs) > 0
+}
+
+// FirstError returns the first validation error, or nil if there are none.
+func FirstError(ctx *gin.Context) *ValidationChainError {
+	errs, err := ValidationResult(ctx)
+	if err != nil || len(errs) == 0 {
+		return nil
+	}
+	return &errs[0]
+}
+
+// ErrorsByField groups validation errors by field name.
+func ErrorsByField(ctx *gin.Context) (map[string][]ValidationChainError, error) {
+	errs, err := ValidationResult(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	grouped := make(map[string][]ValidationChainError)
+	for _, e := range errs {
+		grouped[e.Field] = append(grouped[e.Field], e)
+	}
+	return grouped, nil
+}
+
+// FirstErrorByField returns at most one error per field.
+func FirstErrorByField(ctx *gin.Context) (map[string]ValidationChainError, error) {
+	errs, err := ValidationResult(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	firsts := make(map[string]ValidationChainError)
+	for _, e := range errs {
+		if _, exists := firsts[e.Field]; !exists {
+			firsts[e.Field] = e
+		}
+	}
+	return firsts, nil
+}
+
+func sortValidationErrors(errors []ValidationChainError) {
 	sort.Slice(errors, func(i, j int) bool {
-		if errors[i].createdAt.Before(errors[j].createdAt) {
-			return true
-		}
-		if errors[i].createdAt.Equal(errors[j].createdAt) {
-			return errors[i].incId > errors[j].incId
-		}
-		return false
+		return errors[i].order < errors[j].order
 	})
 }
 

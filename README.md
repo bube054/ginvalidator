@@ -196,7 +196,7 @@ curl -X POST http://localhost:8080/signup ^
   -d "{\"email\": \"nope\", \"username\": \"\"}"
 ```
 
-> **Tip:** If the JSON comes back as a single hard-to-read line, Gin has `ctx.IndentedJSON` which pretty-prints the output. We use it in this example so you can read the response easily.
+> **Tip:** For this example we're using `ctx.IndentedJSON` instead of `ctx.JSON` so the response comes back pretty-printed and easy to read.
 
 Now you get:
 

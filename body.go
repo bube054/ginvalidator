@@ -27,3 +27,8 @@ func NewBody(field string, errFmtFunc ErrFmtFuncHandler) Body {
 		errFmtFunc: errFmtFunc,
 	}
 }
+
+// NewBodyChain is a shorthand for NewBody(field, errFmtFunc).Chain().
+func NewBodyChain(field string, errFmtFunc ErrFmtFuncHandler) ValidationChain {
+	return NewBody(field, errFmtFunc).Chain()
+}

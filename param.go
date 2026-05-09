@@ -25,3 +25,8 @@ func NewParam(field string, errFmtFunc ErrFmtFuncHandler) Param {
 		errFmtFunc: errFmtFunc,
 	}
 }
+
+// NewParamChain is a shorthand for NewParam(field, errFmtFunc).Chain().
+func NewParamChain(field string, errFmtFunc ErrFmtFuncHandler) ValidationChain {
+	return NewParam(field, errFmtFunc).Chain()
+}

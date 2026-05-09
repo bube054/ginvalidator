@@ -25,3 +25,8 @@ func NewCookie(field string, errFmtFunc ErrFmtFuncHandler) Cookie {
 		errFmtFunc: errFmtFunc,
 	}
 }
+
+// NewCookieChain is a shorthand for NewCookie(field, errFmtFunc).Chain().
+func NewCookieChain(field string, errFmtFunc ErrFmtFuncHandler) ValidationChain {
+	return NewCookie(field, errFmtFunc).Chain()
+}

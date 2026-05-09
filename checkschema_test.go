@@ -90,8 +90,8 @@ func TestCheckSchema(t *testing.T) {
 		if len(errs) != 1 {
 			t.Fatalf("expected 1 error, got %d", len(errs))
 		}
-		if errs[0].Msg != "bad age" {
-			t.Errorf("expected 'bad age', got %q", errs[0].Msg)
+		if errs[0].Message != "bad age" {
+			t.Errorf("expected 'bad age', got %q", errs[0].Message)
 		}
 	})
 

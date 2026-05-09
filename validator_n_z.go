@@ -19,7 +19,7 @@ func (v validator) Numeric(opts *vgo.IsNumericOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsNumeric(sanitizedValue, opts)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(NumericValidatorName),
@@ -41,7 +41,7 @@ func (v validator) Object(opts *vgo.IsObjectOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsObject(sanitizedValue, opts)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(OctalValidatorName),
@@ -63,7 +63,7 @@ func (v validator) Octal() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsOctal(sanitizedValue)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(OctalValidatorName),
@@ -85,7 +85,7 @@ func (v validator) PassportNumber(countryCode string) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsPassportNumber(sanitizedValue, countryCode)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(PassportNumberValidatorName),
@@ -107,7 +107,7 @@ func (v validator) Port() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsPort(sanitizedValue)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(PortValidatorName),
@@ -129,7 +129,7 @@ func (v validator) PostalCode(locale string) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsPostalCode(sanitizedValue, locale)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(PostalCodeValidatorName),
@@ -151,7 +151,7 @@ func (v validator) RFC3339() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsRFC3339(sanitizedValue)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(RFC3339ValidatorName),
@@ -173,7 +173,7 @@ func (v validator) RgbColor(opts *vgo.IsRgbOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsRgbColor(sanitizedValue, opts)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(RgbColorValidatorName),
@@ -195,7 +195,7 @@ func (v validator) SemVer() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsSemVer(sanitizedValue)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(SemVerValidatorName),
@@ -217,7 +217,7 @@ func (v validator) Slug() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsSlug(sanitizedValue)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(SlugValidatorName),
@@ -239,7 +239,7 @@ func (v validator) StrongPassword(opts *vgo.IsStrongPasswordOpts) ValidationChai
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, _, vErr := vgo.IsStrongPassword(sanitizedValue, opts)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(StrongPasswordValidatorName),
@@ -261,7 +261,7 @@ func (v validator) TaxID(locale string) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsTaxID(sanitizedValue, locale)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(TaxIDValidatorName),
@@ -283,7 +283,7 @@ func (v validator) SurrogatePair() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsSurrogatePair(sanitizedValue)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(SurrogatePairValidatorName),
@@ -305,7 +305,7 @@ func (v validator) Time(opts *vgo.IsTimeOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsTime(sanitizedValue, opts)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(TimeValidatorName),
@@ -327,7 +327,7 @@ func (v validator) ULID() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsULID(sanitizedValue)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(ULIDValidatorName),
@@ -349,7 +349,7 @@ func (v validator) UpperCase() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsUpperCase(sanitizedValue)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(UpperCaseValidatorName),
@@ -371,7 +371,7 @@ func (v validator) URL(opts *vgo.IsURLOpts) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsURL(sanitizedValue, opts)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(URLValidatorName),
@@ -393,7 +393,7 @@ func (v validator) UUID(version string) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsUUID(sanitizedValue, version)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(UUIDValidatorName),
@@ -415,7 +415,7 @@ func (v validator) VariableWidth() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsVariableWidth(sanitizedValue)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(VariableWidthValidatorName),
@@ -437,7 +437,7 @@ func (v validator) VAT(countryCode string) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsVAT(sanitizedValue, countryCode)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(VATValidatorName),
@@ -459,7 +459,7 @@ func (v validator) Whitelisted(chars string) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.IsWhitelisted(sanitizedValue, chars)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(WhitelistedValidatorName),
@@ -481,7 +481,7 @@ func (v validator) Matches(re *regexp.Regexp) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		isValid, vErr := vgo.Matches(sanitizedValue, re)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(isValid),
 			withNewValue(sanitizedValue),
 			withValidationChainName(MatchesValidatorName),

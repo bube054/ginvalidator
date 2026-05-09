@@ -44,9 +44,9 @@ func OneOf(chainGroups ...[]ValidationChain) gin.HandlerFunc {
 		}
 
 		order := atomic.AddUint64(&globalErrorOrder, 1)
-		oneOfErr := NewValidationChainError(
+		oneOfErr := newValidationChainError(
 			vceWithLocation(""),
-			vceWithMsg("No group in OneOf passed validation"),
+			vceWithMessage("No group in OneOf passed validation"),
 			vceWithField("_oneOf"),
 			vceWithValue(""),
 			vceWithOrder(order),

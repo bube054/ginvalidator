@@ -14,7 +14,7 @@ type SchemaField struct {
 
 	// ErrFmtFunc is an optional per-field error message formatter.
 	// When nil, the package-level fallback rules apply.
-	ErrFmtFunc ErrFmtFuncHandler
+	ErrFmtFunc ErrFmtFunc
 
 	// Optional, when true, skips validation if the field is empty.
 	Optional bool
@@ -55,7 +55,7 @@ func CheckSchema(schema Schema) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		for _, field := range fields {
 			sf := schema[field]
-			vc := NewValidationChain(field, sf.ErrFmtFunc, sf.In)
+			vc := newValidationChain(field, sf.ErrFmtFunc, sf.In)
 
 			if sf.Optional {
 				vc = vc.Optional()

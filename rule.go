@@ -13,8 +13,8 @@ type validationChainRule struct {
 	validationErr       error               // The error returned by the validatorgo validator, if any.
 }
 
-// NewValidationChainRule creates a new validationChainRule with the specified options.
-func NewValidationChainRule(opts ...func(*validationChainRule)) validationChainRule {
+// newValidationChainRule creates a new validationChainRule with the specified options.
+func newValidationChainRule(opts ...func(*validationChainRule)) validationChainRule {
 	validationChainRule := &validationChainRule{}
 
 	for _, opt := range opts {
@@ -72,7 +72,7 @@ func withValidationErr(err error) func(*validationChainRule) {
 	}
 }
 
-// func NewValidationChainRule(isValid bool, newValue string, validationChainName string, validationChainType string, shouldBail bool, shouldNegate bool) validationChainRule {
+// func newValidationChainRule(isValid bool, newValue string, validationChainName string, validationChainType string, shouldBail bool, shouldNegate bool) validationChainRule {
 // 	return validationChainRule{
 // 		isValid:      isValid,
 // 		newValue:     newValue,

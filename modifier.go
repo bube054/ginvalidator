@@ -7,17 +7,17 @@ import (
 )
 
 const (
-	BailModifierFuncName     string = "Bail"
-	IfModifierFuncName       string = "If"
-	NotModifierFuncName      string = "Not"
-	SkipModifierFuncName     string = "Skip"
-	OptionalModifierFuncName string = "Optional"
+	BailModifierName     string = "Bail"
+	IfModifierName       string = "If"
+	NotModifierName      string = "Not"
+	SkipModifierName     string = "Skip"
+	OptionalModifierName string = "Optional"
 )
 
 // A modifier is simply a piece of the validation chain that can manipulate the whole validation chain.
 type modifier struct {
 	field      string            // the field to be specified
-	errFmtFunc ErrFmtFuncHandler // the function to create the error message
+	errFmtFunc ErrFmtFunc // the function to create the error message
 
 	reqLoc            RequestLocation  // the HTTP request location (e.g., body, headers, cookies, params, or queries)
 	rulesCreatorFuncs ruleCreatorFuncs // the list of functions that creates the validation rules.
@@ -57,10 +57,10 @@ func (m *modifier) recreateValidationChainFromModifier(ruleCreatorFunc ruleCreat
 func (m modifier) Bail() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(true),
 			withNewValue(sanitizedValue),
-			withValidationChainName(BailModifierFuncName),
+			withValidationChainName(BailModifierName),
 			withValidationChainType(modifierType),
 			withShouldBail(false),
 		)
@@ -89,10 +89,10 @@ func (m modifier) If(imf IfModifierFunc) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		shouldBail := imf(ctx.Request, initialValue, sanitizedValue)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(true),
 			withNewValue(sanitizedValue),
-			withValidationChainName(IfModifierFuncName),
+			withValidationChainName(IfModifierName),
 			withValidationChainType(modifierType),
 			withShouldBail(shouldBail),
 		)
@@ -104,10 +104,10 @@ func (m modifier) If(imf IfModifierFunc) ValidationChain {
 // Not negates the result of the next validator in the chain.
 func (m modifier) Not() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(true),
 			withNewValue(sanitizedValue),
-			withValidationChainName(NotModifierFuncName),
+			withValidationChainName(NotModifierName),
 			withValidationChainType(modifierType),
 			withShouldBail(false),
 		)
@@ -136,10 +136,10 @@ func (m modifier) Skip(smf SkipModifierFunc) ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
 		shouldSkip := smf(ctx.Request, initialValue, sanitizedValue)
 
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(true),
 			withNewValue(sanitizedValue),
-			withValidationChainName(SkipModifierFuncName),
+			withValidationChainName(SkipModifierName),
 			withValidationChainType(modifierType),
 			withShouldBail(false),
 			withShouldSkip(shouldSkip),
@@ -152,10 +152,10 @@ func (m modifier) Skip(smf SkipModifierFunc) ValidationChain {
 // Optional ignores validation if the value is not present/empty, instead of failing it.
 func (m modifier) Optional() ValidationChain {
 	var ruleCreator ruleCreatorFunc = func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule {
-		return NewValidationChainRule(
+		return newValidationChainRule(
 			withIsValid(true),
 			withNewValue(sanitizedValue),
-			withValidationChainName(OptionalModifierFuncName),
+			withValidationChainName(OptionalModifierName),
 			withValidationChainType(modifierType),
 			withShouldBail(false),
 			withShouldSkip(false),
@@ -171,7 +171,7 @@ func (m modifier) Optional() ValidationChain {
 //   - field: The field to validate from the HTTP request data location (e.g., body, headers, cookies, params, or queries).
 //   - errFmtFunc: A function that returns a custom error message. If nil, a generic error message will be used.
 //   - reqLoc: The location in the HTTP request from where the field is extracted (e.g., body, headers, cookies, params, or queries).
-func newModifier(field string, errFmtFunc ErrFmtFuncHandler, reqLoc RequestLocation) modifier {
+func newModifier(field string, errFmtFunc ErrFmtFunc, reqLoc RequestLocation) modifier {
 	return modifier{
 		field:      field,
 		errFmtFunc: errFmtFunc,

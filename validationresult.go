@@ -71,7 +71,7 @@ func ValidationResult(ctx *gin.Context) ([]ValidationChainError, error) {
 
 	// allErrs = RandomizeErrors(allErrs)
 
-	SortValidationErrors(allErrs)
+	sortValidationErrors(allErrs)
 
 	return allErrs, nil
 }
@@ -184,7 +184,7 @@ func FirstErrorByField(ctx *gin.Context) (map[string]ValidationChainError, error
 	return firsts, nil
 }
 
-func SortValidationErrors(errors []ValidationChainError) {
+func sortValidationErrors(errors []ValidationChainError) {
 	sort.Slice(errors, func(i, j int) bool {
 		return errors[i].order < errors[j].order
 	})

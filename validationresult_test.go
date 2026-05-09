@@ -41,8 +41,8 @@ func TestMessageFallbackAndCode(t *testing.T) {
 		if len(errs) != 1 {
 			t.Fatalf("expected 1 error, got %d", len(errs))
 		}
-		if errs[0].Msg == DefaultValChainErrMsg {
-			t.Errorf("expected validatorgo message, got default %q", errs[0].Msg)
+		if errs[0].Message == DefaultErrMsg {
+			t.Errorf("expected validatorgo message, got default %q", errs[0].Message)
 		}
 		if errs[0].Code == "" {
 			t.Error("expected non-empty code from validatorgo")
@@ -57,8 +57,8 @@ func TestMessageFallbackAndCode(t *testing.T) {
 		if len(errs) != 1 {
 			t.Fatalf("expected 1 error, got %d", len(errs))
 		}
-		if errs[0].Msg != "custom: Email" {
-			t.Errorf("expected 'custom: Email', got %q", errs[0].Msg)
+		if errs[0].Message != "custom: Email" {
+			t.Errorf("expected 'custom: Email', got %q", errs[0].Message)
 		}
 		if errs[0].Code == "" {
 			t.Error("expected non-empty code even with custom formatter")
@@ -76,12 +76,12 @@ func TestMessageFallbackAndCode(t *testing.T) {
 		if len(errs) != 1 {
 			t.Fatalf("expected 1 error, got %d", len(errs))
 		}
-		if errs[0].Msg != "default: Email" {
-			t.Errorf("expected 'default: Email', got %q", errs[0].Msg)
+		if errs[0].Message != "default: Email" {
+			t.Errorf("expected 'default: Email', got %q", errs[0].Message)
 		}
 	})
 
-	t.Run("tier 4: DefaultValChainErrMsg for CustomValidator", func(t *testing.T) {
+	t.Run("tier 4: DefaultErrMsg for CustomValidator", func(t *testing.T) {
 		chain := NewBody("email", nil).Chain().CustomValidator(func(r *http.Request, initialValue, sanitizedValue string) bool {
 			return false
 		}).Validate()
@@ -89,8 +89,8 @@ func TestMessageFallbackAndCode(t *testing.T) {
 		if len(errs) != 1 {
 			t.Fatalf("expected 1 error, got %d", len(errs))
 		}
-		if errs[0].Msg != DefaultValChainErrMsg {
-			t.Errorf("expected %q, got %q", DefaultValChainErrMsg, errs[0].Msg)
+		if errs[0].Message != DefaultErrMsg {
+			t.Errorf("expected %q, got %q", DefaultErrMsg, errs[0].Message)
 		}
 		if errs[0].Code != "" {
 			t.Errorf("expected empty code for CustomValidator, got %q", errs[0].Code)
@@ -110,18 +110,18 @@ func TestValidationResult(t *testing.T) {
 			name: "Nil ctx provided",
 			ctx:  nil,
 			insertedValidationErrors: []ValidationChainError{
-				NewValidationChainError(
+				newValidationChainError(
 					vceWithLocation("body"),
-					vceWithMsg("invalid value"),
+					vceWithMessage("invalid value"),
 					vceWithField("invalidField"),
 					vceWithValue("value"),
 					vceWithOrder(1),
 				),
 			},
 			expectedValidationChainError: []ValidationChainError{
-				NewValidationChainError(
+				newValidationChainError(
 					vceWithLocation("body"),
-					vceWithMsg("invalid value"),
+					vceWithMessage("invalid value"),
 					vceWithField("invalidField"),
 					vceWithValue("value"),
 					vceWithOrder(1),
@@ -133,18 +133,18 @@ func TestValidationResult(t *testing.T) {
 			name: "Valid validation errors for body location, with 1 item.",
 			ctx:  createTestGinCtx(ginCtxReqOpts{}),
 			insertedValidationErrors: []ValidationChainError{
-				NewValidationChainError(
+				newValidationChainError(
 					vceWithLocation("body"),
-					vceWithMsg("invalid value"),
+					vceWithMessage("invalid value"),
 					vceWithField("invalidField"),
 					vceWithValue("value"),
 					vceWithOrder(1),
 				),
 			},
 			expectedValidationChainError: []ValidationChainError{
-				NewValidationChainError(
+				newValidationChainError(
 					vceWithLocation("body"),
-					vceWithMsg("invalid value"),
+					vceWithMessage("invalid value"),
 					vceWithField("invalidField"),
 					vceWithValue("value"),
 					vceWithOrder(1),
@@ -156,14 +156,14 @@ func TestValidationResult(t *testing.T) {
 			name: "Valid validation errors for headers location, with 3 items.",
 			ctx:  createTestGinCtx(ginCtxReqOpts{}),
 			insertedValidationErrors: []ValidationChainError{
-				NewValidationChainError(vceWithLocation("headers"), vceWithMsg("invalid value1"), vceWithField("invalidField1"), vceWithValue("value1"), vceWithOrder(1)),
-				NewValidationChainError(vceWithLocation("headers"), vceWithMsg("invalid value2"), vceWithField("invalidField2"), vceWithValue("value2"), vceWithOrder(2)),
-				NewValidationChainError(vceWithLocation("headers"), vceWithMsg("invalid value3"), vceWithField("invalidField3"), vceWithValue("value3"), vceWithOrder(3)),
+				newValidationChainError(vceWithLocation("headers"), vceWithMessage("invalid value1"), vceWithField("invalidField1"), vceWithValue("value1"), vceWithOrder(1)),
+				newValidationChainError(vceWithLocation("headers"), vceWithMessage("invalid value2"), vceWithField("invalidField2"), vceWithValue("value2"), vceWithOrder(2)),
+				newValidationChainError(vceWithLocation("headers"), vceWithMessage("invalid value3"), vceWithField("invalidField3"), vceWithValue("value3"), vceWithOrder(3)),
 			},
 			expectedValidationChainError: []ValidationChainError{
-				NewValidationChainError(vceWithLocation("headers"), vceWithMsg("invalid value1"), vceWithField("invalidField1"), vceWithValue("value1"), vceWithOrder(1)),
-				NewValidationChainError(vceWithLocation("headers"), vceWithMsg("invalid value2"), vceWithField("invalidField2"), vceWithValue("value2"), vceWithOrder(2)),
-				NewValidationChainError(vceWithLocation("headers"), vceWithMsg("invalid value3"), vceWithField("invalidField3"), vceWithValue("value3"), vceWithOrder(3)),
+				newValidationChainError(vceWithLocation("headers"), vceWithMessage("invalid value1"), vceWithField("invalidField1"), vceWithValue("value1"), vceWithOrder(1)),
+				newValidationChainError(vceWithLocation("headers"), vceWithMessage("invalid value2"), vceWithField("invalidField2"), vceWithValue("value2"), vceWithOrder(2)),
+				newValidationChainError(vceWithLocation("headers"), vceWithMessage("invalid value3"), vceWithField("invalidField3"), vceWithValue("value3"), vceWithOrder(3)),
 			},
 			expectedErr: nil,
 		},
@@ -171,10 +171,10 @@ func TestValidationResult(t *testing.T) {
 			name: "Valid validation errors for cookies location, with 1 item.",
 			ctx:  createTestGinCtx(ginCtxReqOpts{}),
 			insertedValidationErrors: []ValidationChainError{
-				NewValidationChainError(vceWithLocation("cookies"), vceWithMsg("invalid value"), vceWithField("invalidField"), vceWithValue("value"), vceWithOrder(1)),
+				newValidationChainError(vceWithLocation("cookies"), vceWithMessage("invalid value"), vceWithField("invalidField"), vceWithValue("value"), vceWithOrder(1)),
 			},
 			expectedValidationChainError: []ValidationChainError{
-				NewValidationChainError(vceWithLocation("cookies"), vceWithMsg("invalid value"), vceWithField("invalidField"), vceWithValue("value"), vceWithOrder(1)),
+				newValidationChainError(vceWithLocation("cookies"), vceWithMessage("invalid value"), vceWithField("invalidField"), vceWithValue("value"), vceWithOrder(1)),
 			},
 			expectedErr: nil,
 		},
@@ -182,10 +182,10 @@ func TestValidationResult(t *testing.T) {
 			name: "Valid validation errors for params location, with 1 item.",
 			ctx:  createTestGinCtx(ginCtxReqOpts{}),
 			insertedValidationErrors: []ValidationChainError{
-				NewValidationChainError(vceWithLocation("params"), vceWithMsg("invalid value"), vceWithField("invalidField"), vceWithValue("value"), vceWithOrder(1)),
+				newValidationChainError(vceWithLocation("params"), vceWithMessage("invalid value"), vceWithField("invalidField"), vceWithValue("value"), vceWithOrder(1)),
 			},
 			expectedValidationChainError: []ValidationChainError{
-				NewValidationChainError(vceWithLocation("params"), vceWithMsg("invalid value"), vceWithField("invalidField"), vceWithValue("value"), vceWithOrder(1)),
+				newValidationChainError(vceWithLocation("params"), vceWithMessage("invalid value"), vceWithField("invalidField"), vceWithValue("value"), vceWithOrder(1)),
 			},
 			expectedErr: nil,
 		},
@@ -193,16 +193,16 @@ func TestValidationResult(t *testing.T) {
 			name: "Valid validation errors for query location, with 4 item.",
 			ctx:  createTestGinCtx(ginCtxReqOpts{}),
 			insertedValidationErrors: []ValidationChainError{
-				NewValidationChainError(vceWithLocation("query"), vceWithMsg("invalid value"), vceWithField("invalidField"), vceWithValue("value"), vceWithOrder(1)),
-				NewValidationChainError(vceWithLocation("query"), vceWithMsg("invalid value1"), vceWithField("invalidField1"), vceWithValue("value1"), vceWithOrder(2)),
-				NewValidationChainError(vceWithLocation("query"), vceWithMsg("invalid value2"), vceWithField("invalidField2"), vceWithValue("value2"), vceWithOrder(3)),
-				NewValidationChainError(vceWithLocation("query"), vceWithMsg("invalid value3"), vceWithField("invalidField3"), vceWithValue("value3"), vceWithOrder(4)),
+				newValidationChainError(vceWithLocation("query"), vceWithMessage("invalid value"), vceWithField("invalidField"), vceWithValue("value"), vceWithOrder(1)),
+				newValidationChainError(vceWithLocation("query"), vceWithMessage("invalid value1"), vceWithField("invalidField1"), vceWithValue("value1"), vceWithOrder(2)),
+				newValidationChainError(vceWithLocation("query"), vceWithMessage("invalid value2"), vceWithField("invalidField2"), vceWithValue("value2"), vceWithOrder(3)),
+				newValidationChainError(vceWithLocation("query"), vceWithMessage("invalid value3"), vceWithField("invalidField3"), vceWithValue("value3"), vceWithOrder(4)),
 			},
 			expectedValidationChainError: []ValidationChainError{
-				NewValidationChainError(vceWithLocation("query"), vceWithMsg("invalid value"), vceWithField("invalidField"), vceWithValue("value"), vceWithOrder(1)),
-				NewValidationChainError(vceWithLocation("query"), vceWithMsg("invalid value1"), vceWithField("invalidField1"), vceWithValue("value1"), vceWithOrder(2)),
-				NewValidationChainError(vceWithLocation("query"), vceWithMsg("invalid value2"), vceWithField("invalidField2"), vceWithValue("value2"), vceWithOrder(3)),
-				NewValidationChainError(vceWithLocation("query"), vceWithMsg("invalid value3"), vceWithField("invalidField3"), vceWithValue("value3"), vceWithOrder(4)),
+				newValidationChainError(vceWithLocation("query"), vceWithMessage("invalid value"), vceWithField("invalidField"), vceWithValue("value"), vceWithOrder(1)),
+				newValidationChainError(vceWithLocation("query"), vceWithMessage("invalid value1"), vceWithField("invalidField1"), vceWithValue("value1"), vceWithOrder(2)),
+				newValidationChainError(vceWithLocation("query"), vceWithMessage("invalid value2"), vceWithField("invalidField2"), vceWithValue("value2"), vceWithOrder(3)),
+				newValidationChainError(vceWithLocation("query"), vceWithMessage("invalid value3"), vceWithField("invalidField3"), vceWithValue("value3"), vceWithOrder(4)),
 			},
 			expectedErr: nil,
 		},
@@ -237,17 +237,17 @@ func TestSortErrorsByOrder(t *testing.T) {
 		{
 			name: "slice of 1 errors",
 			initial: []ValidationChainError{
-				NewValidationChainError(
+				newValidationChainError(
 					vceWithLocation("body"),
-					vceWithMsg(DefaultValChainErrMsg),
+					vceWithMessage(DefaultErrMsg),
 					vceWithField("field"),
 					vceWithValue("value"),
 					vceWithOrder(1)),
 			},
 			expectedResult: []ValidationChainError{
-				NewValidationChainError(
+				newValidationChainError(
 					vceWithLocation("body"),
-					vceWithMsg(DefaultValChainErrMsg),
+					vceWithMessage(DefaultErrMsg),
 					vceWithField("field"),
 					vceWithValue("value"),
 					vceWithOrder(1)),
@@ -256,29 +256,29 @@ func TestSortErrorsByOrder(t *testing.T) {
 		{
 			name: "slice of 2 errors already ordered",
 			initial: []ValidationChainError{
-				NewValidationChainError(
+				newValidationChainError(
 					vceWithLocation("body"),
-					vceWithMsg(DefaultValChainErrMsg),
+					vceWithMessage(DefaultErrMsg),
 					vceWithField("field"),
 					vceWithValue("value"),
 					vceWithOrder(1)),
-				NewValidationChainError(
+				newValidationChainError(
 					vceWithLocation("body"),
-					vceWithMsg(DefaultValChainErrMsg),
+					vceWithMessage(DefaultErrMsg),
 					vceWithField("field"),
 					vceWithValue("value"),
 					vceWithOrder(2)),
 			},
 			expectedResult: []ValidationChainError{
-				NewValidationChainError(
+				newValidationChainError(
 					vceWithLocation("body"),
-					vceWithMsg(DefaultValChainErrMsg),
+					vceWithMessage(DefaultErrMsg),
 					vceWithField("field"),
 					vceWithValue("value"),
 					vceWithOrder(1)),
-				NewValidationChainError(
+				newValidationChainError(
 					vceWithLocation("body"),
-					vceWithMsg(DefaultValChainErrMsg),
+					vceWithMessage(DefaultErrMsg),
 					vceWithField("field"),
 					vceWithValue("value"),
 					vceWithOrder(2)),
@@ -287,29 +287,29 @@ func TestSortErrorsByOrder(t *testing.T) {
 		{
 			name: "slice of 2 errors not already ordered",
 			initial: []ValidationChainError{
-				NewValidationChainError(
+				newValidationChainError(
 					vceWithLocation("body"),
-					vceWithMsg(DefaultValChainErrMsg),
+					vceWithMessage(DefaultErrMsg),
 					vceWithField("field"),
 					vceWithValue("value"),
 					vceWithOrder(2)),
-				NewValidationChainError(
+				newValidationChainError(
 					vceWithLocation("body"),
-					vceWithMsg(DefaultValChainErrMsg),
+					vceWithMessage(DefaultErrMsg),
 					vceWithField("field"),
 					vceWithValue("value"),
 					vceWithOrder(1)),
 			},
 			expectedResult: []ValidationChainError{
-				NewValidationChainError(
+				newValidationChainError(
 					vceWithLocation("body"),
-					vceWithMsg(DefaultValChainErrMsg),
+					vceWithMessage(DefaultErrMsg),
 					vceWithField("field"),
 					vceWithValue("value"),
 					vceWithOrder(1)),
-				NewValidationChainError(
+				newValidationChainError(
 					vceWithLocation("body"),
-					vceWithMsg(DefaultValChainErrMsg),
+					vceWithMessage(DefaultErrMsg),
 					vceWithField("field"),
 					vceWithValue("value"),
 					vceWithOrder(2)),
@@ -318,41 +318,41 @@ func TestSortErrorsByOrder(t *testing.T) {
 		{
 			name: "slice of 3 errors not already ordered",
 			initial: []ValidationChainError{
-				NewValidationChainError(
+				newValidationChainError(
 					vceWithLocation("body"),
-					vceWithMsg(DefaultValChainErrMsg),
+					vceWithMessage(DefaultErrMsg),
 					vceWithField("field"),
 					vceWithValue("value"),
 					vceWithOrder(3)),
-				NewValidationChainError(
+				newValidationChainError(
 					vceWithLocation("body"),
-					vceWithMsg(DefaultValChainErrMsg),
+					vceWithMessage(DefaultErrMsg),
 					vceWithField("field"),
 					vceWithValue("value"),
 					vceWithOrder(2)),
-				NewValidationChainError(
+				newValidationChainError(
 					vceWithLocation("body"),
-					vceWithMsg(DefaultValChainErrMsg),
+					vceWithMessage(DefaultErrMsg),
 					vceWithField("field"),
 					vceWithValue("value"),
 					vceWithOrder(1)),
 			},
 			expectedResult: []ValidationChainError{
-				NewValidationChainError(
+				newValidationChainError(
 					vceWithLocation("body"),
-					vceWithMsg(DefaultValChainErrMsg),
+					vceWithMessage(DefaultErrMsg),
 					vceWithField("field"),
 					vceWithValue("value"),
 					vceWithOrder(1)),
-				NewValidationChainError(
+				newValidationChainError(
 					vceWithLocation("body"),
-					vceWithMsg(DefaultValChainErrMsg),
+					vceWithMessage(DefaultErrMsg),
 					vceWithField("field"),
 					vceWithValue("value"),
 					vceWithOrder(2)),
-				NewValidationChainError(
+				newValidationChainError(
 					vceWithLocation("body"),
-					vceWithMsg(DefaultValChainErrMsg),
+					vceWithMessage(DefaultErrMsg),
 					vceWithField("field"),
 					vceWithValue("value"),
 					vceWithOrder(3)),
@@ -361,7 +361,7 @@ func TestSortErrorsByOrder(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		SortValidationErrors(test.initial)
+		sortValidationErrors(test.initial)
 		if !cmp.Equal(test.initial, test.expectedResult, cmpopts.IgnoreUnexported(ValidationChainError{}), cmpopts.EquateEmpty()) {
 			t.Errorf("got %+v, wanted %+v", test.initial, test.expectedResult)
 		}
@@ -380,7 +380,7 @@ func TestHasErrors(t *testing.T) {
 	t.Run("returns true with errors", func(t *testing.T) {
 		ctx := createTestGinCtx(ginCtxReqOpts{})
 		saveValidationErrorsToCtx(ctx, []ValidationChainError{
-			NewValidationChainError(vceWithField("email"), vceWithMsg("bad"), vceWithLocation("body"), vceWithValue("x")),
+			newValidationChainError(vceWithField("email"), vceWithMessage("bad"), vceWithLocation("body"), vceWithValue("x")),
 		})
 		if !HasErrors(ctx) {
 			t.Error("expected true, got false")
@@ -406,15 +406,15 @@ func TestFirstError(t *testing.T) {
 	t.Run("returns first error", func(t *testing.T) {
 		ctx := createTestGinCtx(ginCtxReqOpts{})
 		saveValidationErrorsToCtx(ctx, []ValidationChainError{
-			NewValidationChainError(vceWithField("email"), vceWithMsg("first"), vceWithLocation("body"), vceWithValue("x"), vceWithOrder(1)),
-			NewValidationChainError(vceWithField("name"), vceWithMsg("second"), vceWithLocation("body"), vceWithValue("y"), vceWithOrder(2)),
+			newValidationChainError(vceWithField("email"), vceWithMessage("first"), vceWithLocation("body"), vceWithValue("x"), vceWithOrder(1)),
+			newValidationChainError(vceWithField("name"), vceWithMessage("second"), vceWithLocation("body"), vceWithValue("y"), vceWithOrder(2)),
 		})
 		got := FirstError(ctx)
 		if got == nil {
 			t.Fatal("expected non-nil")
 		}
-		if got.Field != "email" || got.Msg != "first" {
-			t.Errorf("expected email/first, got %s/%s", got.Field, got.Msg)
+		if got.Field != "email" || got.Message != "first" {
+			t.Errorf("expected email/first, got %s/%s", got.Field, got.Message)
 		}
 	})
 }
@@ -422,9 +422,9 @@ func TestFirstError(t *testing.T) {
 func TestErrorsByField(t *testing.T) {
 	ctx := createTestGinCtx(ginCtxReqOpts{})
 	saveValidationErrorsToCtx(ctx, []ValidationChainError{
-		NewValidationChainError(vceWithField("email"), vceWithMsg("err1"), vceWithLocation("body"), vceWithValue("x"), vceWithOrder(1)),
-		NewValidationChainError(vceWithField("email"), vceWithMsg("err2"), vceWithLocation("body"), vceWithValue("x"), vceWithOrder(2)),
-		NewValidationChainError(vceWithField("name"), vceWithMsg("err3"), vceWithLocation("body"), vceWithValue("y"), vceWithOrder(3)),
+		newValidationChainError(vceWithField("email"), vceWithMessage("err1"), vceWithLocation("body"), vceWithValue("x"), vceWithOrder(1)),
+		newValidationChainError(vceWithField("email"), vceWithMessage("err2"), vceWithLocation("body"), vceWithValue("x"), vceWithOrder(2)),
+		newValidationChainError(vceWithField("name"), vceWithMessage("err3"), vceWithLocation("body"), vceWithValue("y"), vceWithOrder(3)),
 	})
 
 	grouped, err := ErrorsByField(ctx)
@@ -443,9 +443,9 @@ func TestErrorsByField(t *testing.T) {
 func TestFirstErrorByField(t *testing.T) {
 	ctx := createTestGinCtx(ginCtxReqOpts{})
 	saveValidationErrorsToCtx(ctx, []ValidationChainError{
-		NewValidationChainError(vceWithField("email"), vceWithMsg("err1"), vceWithLocation("body"), vceWithValue("x"), vceWithOrder(1)),
-		NewValidationChainError(vceWithField("email"), vceWithMsg("err2"), vceWithLocation("body"), vceWithValue("x"), vceWithOrder(2)),
-		NewValidationChainError(vceWithField("name"), vceWithMsg("err3"), vceWithLocation("body"), vceWithValue("y"), vceWithOrder(3)),
+		newValidationChainError(vceWithField("email"), vceWithMessage("err1"), vceWithLocation("body"), vceWithValue("x"), vceWithOrder(1)),
+		newValidationChainError(vceWithField("email"), vceWithMessage("err2"), vceWithLocation("body"), vceWithValue("x"), vceWithOrder(2)),
+		newValidationChainError(vceWithField("name"), vceWithMessage("err3"), vceWithLocation("body"), vceWithValue("y"), vceWithOrder(3)),
 	})
 
 	firsts, err := FirstErrorByField(ctx)
@@ -456,10 +456,10 @@ func TestFirstErrorByField(t *testing.T) {
 	if len(firsts) != 2 {
 		t.Errorf("expected 2 fields, got %d", len(firsts))
 	}
-	if firsts["email"].Msg != "err1" {
-		t.Errorf("expected first email error msg 'err1', got %q", firsts["email"].Msg)
+	if firsts["email"].Message != "err1" {
+		t.Errorf("expected first email error msg 'err1', got %q", firsts["email"].Message)
 	}
-	if firsts["name"].Msg != "err3" {
-		t.Errorf("expected first name error msg 'err3', got %q", firsts["name"].Msg)
+	if firsts["name"].Message != "err3" {
+		t.Errorf("expected first name error msg 'err3', got %q", firsts["name"].Message)
 	}
 }

@@ -1260,6 +1260,10 @@ Each field in the schema gets a `SchemaField`:
 
 Fields are processed in alphabetical order, so errors come back in a predictable order.
 
+## Contributing
+
+If you want to understand how the codebase is structured before making changes, read [UNDERSTANDING_THE_CODEBASE.md](UNDERSTANDING_THE_CODEBASE.md). It covers the core abstraction, a recommended file reading order, and the data flow.
+
 ## Maintainers
 
 - [bube054](https://github.com/bube054) — **Attah Gbubemi David** (author)

@@ -2,7 +2,7 @@
 
 All notable changes to `ginvalidator`. Versions follow [semantic versioning](https://semver.org).
 
-## Unreleased
+## v1.2.0 (2026-11-11)
 
 ### Changed
 - Gin v1.12.0, up from v1.10.1.

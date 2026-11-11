@@ -79,50 +79,46 @@ func GetMatchedData(ctx *gin.Context) (MatchedData, error) {
 	return store, nil
 }
 
-// createMatchedDataStore initializes an empty MatchedData store and adds it to the context
-// under the key specified by GinValidatorCtxMatchedDataStoreName.
-func createMatchedDataStore(ctx *gin.Context) {
-	var newStore MatchedData
-
-	ctx.Set(GinValidatorCtxMatchedDataStoreName, newStore)
+// matchedDataStore returns the request's matched data store, creating an empty
+// one if no chain has stored anything yet.
+func matchedDataStore(ctx *gin.Context) MatchedData {
+	if data, ok := ctx.Get(GinValidatorCtxMatchedDataStoreName); ok {
+		if store, ok := data.(MatchedData); ok && store != nil {
+			return store
+		}
+	}
+	store := make(MatchedData)
+	ctx.Set(GinValidatorCtxMatchedDataStoreName, store)
+	return store
 }
 
-// saveMatchedDataToCtx saves validated/sanitized data into the Gin context under the specified location and field.
+// saveMatchedDataToCtx saves a validated, sanitized value under its location and field.
 func saveMatchedDataToCtx(ctx *gin.Context, location, field, value string) {
 	if ctx == nil {
 		return
 	}
 
-	data, ok := ctx.Get(GinValidatorCtxMatchedDataStoreName)
+	store := matchedDataStore(ctx)
+	if store[location] == nil {
+		store[location] = make(MatchedDataFieldValues)
+	}
+	store[location][field] = value
+}
 
-	if !ok {
-		createMatchedDataStore(ctx)
-		saveMatchedDataToCtx(ctx, location, field, value)
+// saveChainResultToCtx records a chain's errors and, if the field was sent and
+// passed every rule, its final value. Failed and missing fields are left out of
+// the matched data, so Get and Has only report values that are safe to use.
+//
+// The matched data store is created even when nothing is saved, so
+// GetMatchedData works for every request a chain has run on.
+func saveChainResultToCtx(ctx *gin.Context, result chainResult) {
+	if ctx == nil {
 		return
 	}
 
-	var store MatchedData
-	store, ok = data.(MatchedData)
-
-	if !ok {
-		createMatchedDataStore(ctx)
-		saveMatchedDataToCtx(ctx, location, field, value)
-		return
+	saveValidationErrorsToCtx(ctx, result.errors)
+	matchedDataStore(ctx)
+	if result.matched {
+		saveMatchedDataToCtx(ctx, result.location, result.field, result.sanitizedValue)
 	}
-
-	if store == nil {
-		store = make(MatchedData)
-	}
-
-	specificLocationStore, ok := store[location]
-
-	if !ok {
-		specificLocationStore = make(MatchedDataFieldValues)
-		store[location] = specificLocationStore
-	}
-
-	specificLocationStore[field] = value
-	store[location] = specificLocationStore
-
-	ctx.Set(GinValidatorCtxMatchedDataStoreName, store)
 }

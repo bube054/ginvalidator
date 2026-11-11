@@ -81,7 +81,7 @@ const (
 	MultibyteValidatorName          string = "Multibyte"
 	NumericValidatorName            string = "Numeric"
 	OctalValidatorName              string = "Octal"
-	ObjectValidatorName              string = "Object"
+	ObjectValidatorName             string = "Object"
 	PassportNumberValidatorName     string = "PassportNumber"
 	PortValidatorName               string = "Port"
 	PostalCodeValidatorName         string = "PostalCode"
@@ -105,7 +105,7 @@ const (
 
 // A validator is simply a piece of the validation chain that can validate values from the specified field.
 type validator struct {
-	field      string            // the field to be specified
+	field      string     // the field to be specified
 	errFmtFunc ErrFmtFunc // the function to create the error message
 
 	reqLoc            RequestLocation  // the HTTP request location (e.g., body, headers, cookies, params, or queries)

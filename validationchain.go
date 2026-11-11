@@ -1,7 +1,7 @@
 // Package ginvalidator is a set of [Gin] middlewares that wraps the
 // extensive collection of validators and sanitizers offered by [validatorgo].
 //
-// It allows you to combine them in many ways so that you can validate and sanitize your express requests,
+// It allows you to combine them in many ways so that you can validate and sanitize your Gin requests,
 // and offers tools to determine if the request is valid or not, which data was matched according to your validators, and so on.
 //
 // It is based on the popular js/express library [express-validator]
@@ -13,7 +13,6 @@ package ginvalidator
 
 import (
 	"errors"
-	"log"
 	"sync/atomic"
 
 	vgo "github.com/bube054/validatorgo"
@@ -23,6 +22,38 @@ import (
 var globalErrorOrder uint64
 
 const DefaultErrMsg string = "Invalid value"
+
+// InvalidJSONErrMsg and InvalidJSONErrCode are the message and code of the error a
+// body chain records when the request body is not valid JSON.
+const (
+	InvalidJSONErrMsg  string = "Invalid JSON in request body"
+	InvalidJSONErrCode string = "invalid_json"
+)
+
+// UnreadableRequestErrMsg and UnreadableRequestErrCode are the message and code of
+// the error a chain records when its value could not be read from the request at
+// all, for example because the client disconnected while sending the body.
+const (
+	UnreadableRequestErrMsg  string = "Could not read the request"
+	UnreadableRequestErrCode string = "unreadable_request"
+)
+
+// requestErrorResult is the result of a chain whose value could not be read: one
+// error, no rules run, and nothing for the matched data.
+func requestErrorResult(location, field, msg, code string) chainResult {
+	vce := newValidationChainError(
+		vceWithLocation(location),
+		vceWithMessage(msg),
+		vceWithField(field),
+		vceWithCode(code),
+		vceWithOrder(atomic.AddUint64(&globalErrorOrder, 1)),
+	)
+	return chainResult{
+		errors:   []ValidationChainError{vce},
+		location: location,
+		field:    field,
+	}
+}
 
 // DefaultErrFmtFunc is a package-level fallback error message formatter.
 // When set, it is used for any validation chain that does not have its own errFmtFunc.
@@ -41,6 +72,7 @@ type chainResult struct {
 	location       string
 	field          string
 	sanitizedValue string
+	matched        bool // the field was sent and passed every rule
 }
 
 func (v ValidationChain) validate(ctx *gin.Context) chainResult {
@@ -70,8 +102,23 @@ func (v ValidationChain) validate(ctx *gin.Context) chainResult {
 
 	sanitizedValue = initialValue
 
-	if extractionErr != nil {
-		log.Printf("Error extracting field %q from request location %q: %v", field, location, extractionErr)
+	// Problems reading the request are reported as errors on the chain, never
+	// logged, so the application decides what to do with them.
+	switch {
+	case extractionErr == nil:
+	case errors.Is(extractionErr, ErrExtractionInvalidContentType):
+		// The body isn't JSON or a form (or there is no body), so it has no fields
+		// this chain can read. The field is treated as not sent, like a missing
+		// query parameter: Optional passes and other rules fail as usual.
+	case errors.Is(extractionErr, ErrExtractionInvalidJSON):
+		// A body that isn't valid JSON has no trustworthy fields, so the chain
+		// reports that instead of running its rules. This also applies to Optional
+		// chains, which would otherwise treat every field as missing and pass.
+		return requestErrorResult(location, field, InvalidJSONErrMsg, InvalidJSONErrCode)
+	default:
+		// The request could not be read at all, for example because the client
+		// disconnected or the body is over a size limit.
+		return requestErrorResult(location, field, UnreadableRequestErrMsg, UnreadableRequestErrCode)
 	}
 
 	ruleCreators := v.validator.rulesCreatorFuncs
@@ -186,14 +233,13 @@ func (v ValidationChain) validate(ctx *gin.Context) chainResult {
 		location:       location,
 		field:          field,
 		sanitizedValue: sanitizedValue,
+		matched:        len(valErrs) == 0 && fieldPresent(ctx, reqLoc, field),
 	}
 }
 
 func (v ValidationChain) Validate() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		result := v.validate(ctx)
-		saveValidationErrorsToCtx(ctx, result.errors)
-		saveMatchedDataToCtx(ctx, result.location, result.field, result.sanitizedValue)
+		saveChainResultToCtx(ctx, v.validate(ctx))
 		ctx.Next()
 	}
 }

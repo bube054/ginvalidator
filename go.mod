@@ -5,7 +5,7 @@ go 1.23
 toolchain go1.24.4
 
 require (
-	github.com/bube054/validatorgo v1.0.0
+	github.com/bube054/validatorgo v1.1.0
 	github.com/gin-gonic/gin v1.10.1
 	github.com/google/go-cmp v0.6.0
 	github.com/tidwall/gjson v1.19.0

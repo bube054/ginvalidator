@@ -189,12 +189,3 @@ func sortValidationErrors(errors []ValidationChainError) {
 		return errors[i].order < errors[j].order
 	})
 }
-
-// func randomizeErrors(errors []ValidationChainError) []ValidationChainError {
-// 	rand.Seed(time.Now().UnixNano()) // Seed random number generator with current timep
-// 	for i := len(errors) - 1; i > 0; i-- {
-// 		j := rand.Intn(i + 1)
-// 		errors[i], errors[j] = errors[j], errors[i] // Swap elements
-// 	}
-// 	return errors
-// }

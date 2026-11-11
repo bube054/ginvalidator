@@ -84,7 +84,7 @@ john@example.com
 				{Location: "body", Message: DefaultErrMsg, Field: "name.first", Value: "Tom"},
 			},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"body": MatchedDataFieldValues{"name.first": "Tom"}},
+			matchedData:         MatchedData{},
 			matchedDataErr:      nil,
 		},
 		{
@@ -117,7 +117,7 @@ john@example.com
 				{Location: "body", Message: DefaultErrMsg, Field: "name.last", Value: "Anderson"},
 			},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"body": MatchedDataFieldValues{"name.first": "Tom", "name.last": "Anderson"}},
+			matchedData:         MatchedData{},
 			matchedDataErr:      nil,
 		},
 		{
@@ -139,7 +139,7 @@ john@example.com
 				{Location: "body", Message: "Invalid last name Currency", Field: "name.last", Value: "Anderson"},
 			},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"body": MatchedDataFieldValues{"name.first": "Tom", "name.last": "Anderson"}},
+			matchedData:         MatchedData{},
 			matchedDataErr:      nil,
 		},
 		{
@@ -211,7 +211,7 @@ john@example.com
 				{Location: "body", Message: DefaultErrMsg, Field: "name.first", Value: "Tom"},
 			},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"body": MatchedDataFieldValues{"name.first": "Tom"}},
+			matchedData:         MatchedData{},
 			matchedDataErr:      nil,
 		},
 		{
@@ -332,7 +332,7 @@ john@example.com
 				{Location: "body", Message: DefaultErrMsg, Field: "name.last", Value: "Anderson"},
 			},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"body": MatchedDataFieldValues{"name.first": "Tom", "name.last": "Anderson"}},
+			matchedData:         MatchedData{},
 			matchedDataErr:      nil,
 		},
 		{
@@ -471,7 +471,7 @@ john@example.com
 				{Location: "body", Message: DefaultErrMsg, Field: "message", Value: "A good saying is 7 comes after ate."},
 			},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"body": MatchedDataFieldValues{"message": "A good saying is 7 comes after ate."}},
+			matchedData:         MatchedData{},
 			matchedDataErr:      nil,
 		},
 		{
@@ -489,7 +489,7 @@ john@example.com
 				{Location: "body", Message: DefaultErrMsg, Field: "friends.0.age", Value: "44"},
 			},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"body": MatchedDataFieldValues{"message": "A good saying is 7 comes after ate.", "friends.0.age": "44"}},
+			matchedData:         MatchedData{},
 			matchedDataErr:      nil,
 		},
 		{
@@ -526,7 +526,7 @@ john@example.com
 				{Location: "body", Message: DefaultErrMsg, Field: "message", Value: "A good saying is 7 comes after ate."},
 			},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"body": MatchedDataFieldValues{"message": "A good saying is 7 comes after ate."}},
+			matchedData:         MatchedData{},
 			matchedDataErr:      nil,
 		},
 		{
@@ -588,7 +588,7 @@ john@example.com
 				{Location: "body", Message: DefaultErrMsg, Field: "age", Value: "37"},
 			},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"body": MatchedDataFieldValues{"message": "A good saying is 7 comes after ate.", "age": "37"}},
+			matchedData:         MatchedData{},
 			matchedDataErr:      nil,
 		},
 		{
@@ -626,7 +626,7 @@ john@example.com
 				{Location: "body", Message: DefaultErrMsg, Field: "message", Value: "A good saying is 7 comes after ate."},
 			},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"body": MatchedDataFieldValues{"message": "A good saying is 7 comes after ate."}},
+			matchedData:         MatchedData{},
 			matchedDataErr:      nil,
 		},
 		{
@@ -692,7 +692,7 @@ john@example.com
 				{Location: "body", Message: DefaultErrMsg, Field: "age", Value: "37"},
 			},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"body": MatchedDataFieldValues{"message": "A good saying is 7 comes after ate.", "age": "37"}},
+			matchedData:         MatchedData{},
 			matchedDataErr:      nil,
 		},
 		{
@@ -737,7 +737,7 @@ john@example.com
 				{Location: "body", Message: DefaultErrMsg, Field: "age", Value: "37"},
 			},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"body": MatchedDataFieldValues{"age": "37"}},
+			matchedData:         MatchedData{},
 			matchedDataErr:      nil,
 		},
 		{
@@ -755,7 +755,7 @@ john@example.com
 				{Location: "body", Message: DefaultErrMsg, Field: "friends.1.age", Value: "68"},
 			},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"body": MatchedDataFieldValues{"age": "37", "friends.1.age": "68"}},
+			matchedData:         MatchedData{},
 			matchedDataErr:      nil,
 		},
 		{
@@ -890,7 +890,7 @@ john@example.com
 				{Location: "body", Message: DefaultErrMsg, Field: `fav\.movie`, Value: "Deer Hunter"},
 			},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"body": MatchedDataFieldValues{`fav\.movie`: "Deer Hunter"}},
+			matchedData:         MatchedData{},
 			matchedDataErr:      nil,
 		},
 		{
@@ -927,7 +927,7 @@ john@example.com
 				{Location: "body", Message: DefaultErrMsg, Field: `fav\.movie`, Value: "Deer Hunter"},
 			},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"body": MatchedDataFieldValues{`fav\.movie`: "Deer Hunter"}},
+			matchedData:         MatchedData{},
 			matchedDataErr:      nil,
 		},
 		{
@@ -965,7 +965,7 @@ john@example.com
 				{Location: "body", Message: DefaultErrMsg, Field: `fav\.movie`, Value: "Deer Hunter"},
 			},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"body": MatchedDataFieldValues{`fav\.movie`: "Deer Hunter"}},
+			matchedData:         MatchedData{},
 			matchedDataErr:      nil,
 		},
 		{
@@ -981,7 +981,7 @@ john@example.com
 				{Location: "body", Message: DefaultErrMsg, Field: "age", Value: "37"},
 			},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"body": MatchedDataFieldValues{"age": "37"}},
+			matchedData:         MatchedData{},
 			matchedDataErr:      nil,
 		},
 		{
@@ -995,7 +995,7 @@ john@example.com
 			},
 			validationResult:    []ValidationChainError{},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"body": MatchedDataFieldValues{"num-brothers": ""}},
+			matchedData:         MatchedData{}, // not sent, so not matched
 			matchedDataErr:      nil,
 		},
 		// For "application/x-www-form-urlencoded
@@ -1026,7 +1026,7 @@ john@example.com
 				{Location: "body", Message: DefaultErrMsg, Field: "email", Value: "john@example.com"},
 			},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"body": MatchedDataFieldValues{"email": "john@example.com"}},
+			matchedData:         MatchedData{},
 			matchedDataErr:      nil,
 		},
 		// For "multipart/form-data"
@@ -1057,7 +1057,7 @@ john@example.com
 				{Location: "body", Message: DefaultErrMsg, Field: "email", Value: "john@example.com"},
 			},
 			validationResultErr: nil,
-			matchedData:         MatchedData{"body": MatchedDataFieldValues{"email": "john@example.com"}},
+			matchedData:         MatchedData{},
 			matchedDataErr:      nil,
 		},
 	}
@@ -1076,7 +1076,7 @@ john@example.com
 						t.Errorf("got %+v, wanted %+v", err, test.validationResultErr)
 					}
 				} else {
-					if !cmp.Equal(test.validationResult, validationResult, cmpopts.IgnoreUnexported(ValidationChainError{}), cmpopts.IgnoreFields(ValidationChainError{}, "Msg", "Code"), cmpopts.EquateEmpty()) {
+					if !cmp.Equal(test.validationResult, validationResult, cmpopts.IgnoreUnexported(ValidationChainError{}), cmpopts.IgnoreFields(ValidationChainError{}, "Message", "Code"), cmpopts.EquateEmpty()) {
 						t.Errorf("got %+v, wanted %+v", validationResult, test.validationResult)
 					}
 				}

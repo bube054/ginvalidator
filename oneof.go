@@ -36,7 +36,7 @@ func OneOf(chainGroups ...[]ValidationChain) gin.HandlerFunc {
 
 			if len(groupErrors) == 0 {
 				for _, result := range groupResults {
-					saveMatchedDataToCtx(ctx, result.location, result.field, result.sanitizedValue)
+					saveChainResultToCtx(ctx, result) // no errors here; saves the fields that were sent
 				}
 				ctx.Next()
 				return

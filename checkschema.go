@@ -65,9 +65,7 @@ func CheckSchema(schema Schema) gin.HandlerFunc {
 				vc = sf.Build(vc)
 			}
 
-			result := vc.validate(ctx)
-			saveValidationErrorsToCtx(ctx, result.errors)
-			saveMatchedDataToCtx(ctx, result.location, result.field, result.sanitizedValue)
+			saveChainResultToCtx(ctx, vc.validate(ctx))
 		}
 		ctx.Next()
 	}

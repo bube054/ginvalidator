@@ -72,17 +72,6 @@ func withValidationErr(err error) func(*validationChainRule) {
 	}
 }
 
-// func newValidationChainRule(isValid bool, newValue string, validationChainName string, validationChainType string, shouldBail bool, shouldNegate bool) validationChainRule {
-// 	return validationChainRule{
-// 		isValid:      isValid,
-// 		newValue:     newValue,
-// 		validationChainName:      validationChainName,
-// 		validationChainType:          validationChainType,
-// 		shouldBail:   shouldBail,
-// 		shouldNegate: shouldNegate,
-// 	}
-// }
-
 // ruleCreatorFunc defines a function type that generates a validationChainRule.
 // It takes a context, the initial value, and the current sanitized value, then returns a validationChainRule.
 type ruleCreatorFunc func(ctx *gin.Context, initialValue, sanitizedValue string) validationChainRule

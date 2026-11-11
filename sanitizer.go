@@ -27,7 +27,7 @@ const (
 
 // A sanitizer is simply a piece of the validation chain that can sanitize values from the specified field.
 type sanitizer struct {
-	field      string            // the field to be specified
+	field      string     // the field to be specified
 	errFmtFunc ErrFmtFunc // the function to create the error message
 
 	reqLoc            RequestLocation  // the HTTP request location (e.g., body, headers, cookies, params, or queries)

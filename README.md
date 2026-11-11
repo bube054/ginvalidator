@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/logo-wordmark.svg" alt="ginvalidator logo" width="440">
+</p>
+
 # ginvalidator
 
 [![CI](https://github.com/bube054/ginvalidator/actions/workflows/ci.yml/badge.svg)](https://github.com/bube054/ginvalidator/actions/workflows/ci.yml)

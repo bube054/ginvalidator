@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1070 256" width="1070" height="256" role="img" aria-labelledby="ginvalidator-wordmark-title">
+  <title id="ginvalidator-wordmark-title">ginvalidator</title>
+  <style>
+    .ginvalidator-word { fill: #111827; }
+    @media (prefers-color-scheme: dark) {
+      .ginvalidator-word { fill: #F9FAFB; }
+    }
+  </style>
+  <defs>
+    <linearGradient id="ginvalidator-wm-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F97316"/>
+      <stop offset="1" stop-color="#E11D48"/>
+    </linearGradient>
+    <linearGradient id="ginvalidator-wm-text" gradientUnits="userSpaceOnUse" x1="296" y1="0" x2="480" y2="0">
+      <stop offset="0" stop-color="#F97316"/>
+      <stop offset="1" stop-color="#E11D48"/>
+    </linearGradient>
+    <radialGradient id="ginvalidator-wm-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Icon (same artwork as logo.svg) -->
+  <g>
+    <rect width="256" height="256" rx="56" fill="url(#ginvalidator-wm-bg)"/>
+    <circle cx="128" cy="128" r="104" fill="url(#ginvalidator-wm-glow)"/>
+    <g opacity="0.85">
+      <path d="M56 128 L128 128" stroke="#FFFFFF" stroke-width="10" stroke-linecap="round"/>
+      <circle cx="56" cy="128" r="14" fill="#FFFFFF"/>
+      <circle cx="100" cy="128" r="14" fill="#FFFFFF"/>
+    </g>
+    <circle cx="172" cy="128" r="44" fill="none" stroke="#FFFFFF" stroke-width="12"/>
+    <path d="M152 130 L166 144 L193 114" fill="none" stroke="#FFFFFF" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M196 46 Q198.5 57.5 210 60 Q198.5 62.5 196 74 Q193.5 62.5 182 60 Q193.5 57.5 196 46 Z" fill="#FDE047"/>
+  </g>
+
+  <!-- Name: "gin" in colour, "validator" plain, matching validatorgo -->
+  <text x="296" y="164" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="104" font-weight="700" letter-spacing="-2"><tspan fill="url(#ginvalidator-wm-text)">gin</tspan><tspan class="ginvalidator-word">validator</tspan></text>
+</svg>

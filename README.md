@@ -2,27 +2,78 @@
   <img src="assets/logo-wordmark.svg" alt="ginvalidator logo" width="440">
 </p>
 
-# ginvalidator
+<p align="center">
+  <b><a href="https://express-validator.github.io/docs/">express-validator</a> for <a href="https://github.com/gin-gonic/gin">Gin</a>.</b><br>
+  Validate and sanitize request bodies, query strings, path params, headers and cookies with chainable rules.
+</p>
 
-[![CI](https://github.com/bube054/ginvalidator/actions/workflows/ci.yml/badge.svg)](https://github.com/bube054/ginvalidator/actions/workflows/ci.yml)
-[![Go Reference](https://pkg.go.dev/badge/github.com/bube054/ginvalidator.svg)](https://pkg.go.dev/github.com/bube054/ginvalidator)
-[![Go Report Card](https://goreportcard.com/badge/github.com/bube054/ginvalidator)](https://goreportcard.com/report/github.com/bube054/ginvalidator)
-![License](https://img.shields.io/github/license/bube054/ginvalidator)
+<p align="center">
+  <a href="https://github.com/bube054/ginvalidator/actions/workflows/ci.yml"><img src="https://github.com/bube054/ginvalidator/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://pkg.go.dev/github.com/bube054/ginvalidator"><img src="https://pkg.go.dev/badge/github.com/bube054/ginvalidator.svg" alt="Go Reference"></a>
+  <a href="https://github.com/bube054/ginvalidator/tags"><img src="https://img.shields.io/github/v/tag/bube054/ginvalidator?sort=semver&label=version" alt="Latest version"></a>
+  <a href="https://go.dev/"><img src="https://img.shields.io/github/go-mod/go-version/bube054/ginvalidator" alt="Go version"></a>
+  <a href="https://github.com/bube054/ginvalidator/blob/main/LICENSE"><img src="https://img.shields.io/github/license/bube054/ginvalidator" alt="License"></a>
+</p>
 
-Middleware-based request validation for [Gin](https://github.com/gin-gonic/gin). Chain validators, sanitizers and modifiers on any request field, then collect the errors however you want.
+```go
+r.POST("/signup",
+	gv.NewBodyChain("email", nil).Not().Empty(nil).Bail().Email(nil).Validate(),
+	gv.NewBodyChain("username", nil).Trim("").Alphanumeric(nil).Validate(),
+	func(ctx *gin.Context) {
+		if errs, _ := gv.ValidationResult(ctx); len(errs) > 0 {
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"errors": errs})
+			return
+		}
+		// email and username are valid, and username is trimmed
+	},
+)
+```
 
-Inspired by [express-validator](https://github.com/express-validator/express-validator). All built-in validators and sanitizers are powered by [validatorgo](https://github.com/bube054/validatorgo).
+An email of `"nope"` comes back as:
+
+```json
+{ "location": "body", "message": "invalid email", "field": "email", "value": "nope", "code": "invalid_format" }
+```
+
+```sh
+go get github.com/bube054/ginvalidator
+```
+
+<p align="center">
+  <a href="#getting-started">Getting started</a> ·
+  <a href="#validation-chains-in-depth">Chains</a> ·
+  <a href="#validators">Validators</a> ·
+  <a href="#sanitizers">Sanitizers</a> ·
+  <a href="#modifiers">Modifiers</a> ·
+  <a href="#reading-errors">Reading errors</a> ·
+  <a href="#matched-data">Matched data</a> ·
+  <a href="#oneof">OneOf</a> ·
+  <a href="#checkschema">CheckSchema</a>
+</p>
+
+---
+
+Built on [validatorgo](https://github.com/bube054/validatorgo), which provides every built-in validator and sanitizer.
+
+## Why ginvalidator?
+
+Gin already validates requests through [binding](https://gin-gonic.com/en/docs/binding/) struct tags. Here's how the two compare:
+
+| | **ginvalidator** | **Gin's binding** |
+| --- | --- | --- |
+| **Rules live** | in chains, next to the route | in struct tags, e.g. `` `binding:"required,email"` `` |
+| **Needs a struct** | no | yes, one per request shape |
+| **Reads from** | body, query, path params, headers, cookies | body, query, path params, headers |
+| **Sanitizing** | 13 built-in sanitizers, e.g. `Trim`, `Escape`, `NormalizeEmail` | not included |
+| **Errors** | a list ready to send as JSON, with a message and code per field | `validator.ValidationErrors`, which you turn into messages yourself |
+| **Values** | strings, which you convert as needed | typed struct fields |
+
+**Choose Gin's binding** if you want typed structs and no extra dependency. **Choose ginvalidator** if you know express-validator, or want sanitizing, cookie checks, conditional rules (`Optional`, `If`, `Skip`, `OneOf`) or API-ready errors without writing formatting code.
 
 ## Requirements
 
 - [Go](https://go.dev/dl/) 1.23+
 - [Gin](https://github.com/gin-gonic/gin) 1.x
-
-## Install
-
-```bash
-go get github.com/bube054/ginvalidator
-```
 
 ## Getting Started
 
@@ -1274,6 +1325,10 @@ Each field in the schema gets a `SchemaField`:
 - **`Build`** — receives a fresh `ValidationChain`, return it with your validators/sanitizers/modifiers attached. Use `Bail()` inside `Build` to stop on first failure. If `Build` is `nil`, the field always passes.
 
 Fields are processed in alphabetical order, so errors come back in a predictable order.
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for what changed in each release, including the behavior changes in v1.1.0.
 
 ## Contributing
 

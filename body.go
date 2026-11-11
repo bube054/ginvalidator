@@ -2,7 +2,7 @@ package ginvalidator
 
 // Body is used to validate data from the `http.Request` body.
 type Body struct {
-	field      string            // the field to be specified
+	field      string     // the field to be specified
 	errFmtFunc ErrFmtFunc // the function to create the error message
 }
 

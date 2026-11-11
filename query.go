@@ -2,7 +2,7 @@ package ginvalidator
 
 // Query is used to validate data from the `http.Request` queries.
 type Query struct {
-	field      string            // the field to be specified
+	field      string     // the field to be specified
 	errFmtFunc ErrFmtFunc // the function to create the error message
 }
 

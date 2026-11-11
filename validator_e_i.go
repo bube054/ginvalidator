@@ -446,4 +446,3 @@ func (v validator) IPRange(version string) ValidationChain {
 
 	return v.recreateValidationChainFromValidator(ruleCreator)
 }
-

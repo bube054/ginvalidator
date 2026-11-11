@@ -16,7 +16,7 @@ const (
 
 // A modifier is simply a piece of the validation chain that can manipulate the whole validation chain.
 type modifier struct {
-	field      string            // the field to be specified
+	field      string     // the field to be specified
 	errFmtFunc ErrFmtFunc // the function to create the error message
 
 	reqLoc            RequestLocation  // the HTTP request location (e.g., body, headers, cookies, params, or queries)

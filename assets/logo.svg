@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-labelledby="ginvalidator-logo-title">
+  <title id="ginvalidator-logo-title">ginvalidator</title>
+  <defs>
+    <linearGradient id="ginvalidator-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F97316"/>
+      <stop offset="1" stop-color="#E11D48"/>
+    </linearGradient>
+    <radialGradient id="ginvalidator-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Tile -->
+  <rect width="256" height="256" rx="56" fill="url(#ginvalidator-bg)"/>
+  <circle cx="128" cy="128" r="104" fill="url(#ginvalidator-glow)"/>
+
+  <!-- The chain: each rule runs in turn... -->
+  <g opacity="0.85">
+    <path d="M56 128 L128 128" stroke="#FFFFFF" stroke-width="10" stroke-linecap="round"/>
+    <circle cx="56" cy="128" r="14" fill="#FFFFFF"/>
+    <circle cx="100" cy="128" r="14" fill="#FFFFFF"/>
+  </g>
+
+  <!-- ...and the request comes out valid -->
+  <circle cx="172" cy="128" r="44" fill="none" stroke="#FFFFFF" stroke-width="12"/>
+  <path d="M152 130 L166 144 L193 114" fill="none" stroke="#FFFFFF" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Sparkle -->
+  <path d="M196 46 Q198.5 57.5 210 60 Q198.5 62.5 196 74 Q193.5 62.5 182 60 Q193.5 57.5 196 46 Z" fill="#FDE047"/>
+</svg>

@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/logo-wordmark.svg" alt="ginvalidator logo" width="440">
+</p>
+
 # ginvalidator
 
 [![CI](https://github.com/bube054/ginvalidator/actions/workflows/ci.yml/badge.svg)](https://github.com/bube054/ginvalidator/actions/workflows/ci.yml)
@@ -11,7 +15,7 @@ Inspired by [express-validator](https://github.com/express-validator/express-val
 
 ## Requirements
 
-- [Go](https://go.dev/dl/) 1.22+
+- [Go](https://go.dev/dl/) 1.23+
 - [Gin](https://github.com/gin-gonic/gin) 1.x
 
 ## Install
@@ -947,6 +951,15 @@ ginvalidator reads the `Code` and `Message` from this error and puts them into y
 
 Understanding [validatorgo's error types](https://pkg.go.dev/github.com/bube054/validatorgo) will help you make the most of these codes — they're handy for i18n or building client-side error handling.
 
+ginvalidator adds two codes of its own, for when a value can't be read from the request at all. The chain records one of these instead of running its rules, even if it is `Optional()`:
+
+| Code | Constant | When |
+|------|----------|------|
+| `invalid_json` | `gv.InvalidJSONErrCode` | The body is sent as JSON but isn't valid JSON, for example `{"email": "a@example.com"` |
+| `unreadable_request` | `gv.UnreadableRequestErrCode` | The body couldn't be read, for example because the client disconnected or the body is over a size limit |
+
+A body that is neither JSON nor a form (such as `text/plain`, or no body at all) is not an error: it simply has no fields, so body fields count as not sent.
+
 ## Reading errors
 
 We've been using `ValidationResult` to get all errors as a slice. That works, but ginvalidator also has helpers for common patterns.
@@ -1100,6 +1113,8 @@ Response (note each field maps to a single error object, not an array):
 ```
 
 ## Matched data
+
+Only fields that were **sent** and **passed every rule** are included. A field that failed validation, or wasn't in the request, is left out, so a value you get back is always safe to use.
 
 We covered `GetMatchedData` in [Step 6](#step-6--reading-the-validated-data), but here's a quick recap of the two methods it gives you:
 

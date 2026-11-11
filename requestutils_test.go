@@ -65,7 +65,7 @@ func createTestGinCtx(opts ginCtxReqOpts) *gin.Context {
 
 func setupRouter() *gin.Engine {
 	gin.SetMode(gin.TestMode)
-	r := gin.Default()
+	r := gin.New()
 	r.GET("/ping", func(ctx *gin.Context) {
 		ctx.String(200, "pong")
 	})
@@ -90,6 +90,10 @@ func TestExtractFieldValFromBody(t *testing.T) {
 		{name: "Field extraction with numeric values", field: "age", opts: ginCtxReqOpts{body: `{"name":"John", "age": 30}`, contentType: "application/json"}, value: `30`, err: nil},
 		{name: "Empty JSON object", field: "name", opts: ginCtxReqOpts{body: `{}`, contentType: "application/json"}, value: ``, err: nil},
 		{name: "Null field value", field: "name", opts: ginCtxReqOpts{body: `{"name": null}`, contentType: "application/json"}, value: ``, err: nil},
+		{name: "JSON with charset parameter", field: "name", opts: ginCtxReqOpts{body: `{"name":"John"}`, contentType: "application/json; charset=utf-8"}, value: `John`, err: nil},
+		{name: "JSON with uppercase media type", field: "name", opts: ginCtxReqOpts{body: `{"name":"John"}`, contentType: "Application/JSON"}, value: `John`, err: nil},
+		{name: "Structured JSON media type", field: "name", opts: ginCtxReqOpts{body: `{"name":"John"}`, contentType: "application/vnd.api+json"}, value: `John`, err: nil},
+		{name: "Form with charset parameter", field: "name", opts: ginCtxReqOpts{body: `name=John`, contentType: "application/x-www-form-urlencoded; charset=UTF-8"}, value: `John`, err: nil},
 
 		// // x-www-form-urlencoded extraction
 		{name: "Valid x-www-form-urlencoded extraction (name)", field: "name", opts: ginCtxReqOpts{body: `name=John`, contentType: "application/x-www-form-urlencoded"}, value: `John`, err: nil},
@@ -178,7 +182,7 @@ John%20Doe
 			ans, err := extractFieldValFromBody(ctx, test.field)
 
 			if err != nil {
-				if !errors.Is(test.err, test.err) {
+				if !errors.Is(err, test.err) {
 					t.Errorf("got error %+v, want %+v", err, test.err)
 				}
 
@@ -215,7 +219,7 @@ func TestExtractFieldValFromCookie(t *testing.T) {
 			ans, err := extractFieldValFromCookie(ctx, test.field)
 
 			if err != nil {
-				if !errors.Is(test.err, test.err) {
+				if !errors.Is(err, test.err) {
 					t.Errorf("got error %+v, want %+v", err, test.err)
 				}
 			}
@@ -250,7 +254,7 @@ func TestExtractFieldValFromHeader(t *testing.T) {
 			ans, err := extractFieldValFromHeader(ctx, test.field)
 
 			if err != nil {
-				if !errors.Is(test.err, test.err) {
+				if !errors.Is(err, test.err) {
 					t.Errorf("got error %+v, want %+v", err, test.err)
 				}
 			}
@@ -275,7 +279,6 @@ func TestExtractFieldValFromParam(t *testing.T) {
 		{name: "Valid header extraction (multiple headers)", field: "session", opts: ginCtxReqOpts{headers: map[string]string{"session": "abc123"}, params: gin.Params{gin.Param{Key: "session", Value: "abc123"}}}, value: `abc123`, err: nil},
 		{name: "Valid header extraction (empty header)", field: "empty", opts: ginCtxReqOpts{headers: map[string]string{"empty": ""}, params: gin.Params{gin.Param{Key: "empty", Value: ""}}}, value: ``, err: nil},
 		{name: "Invalid header extraction (missing header)", field: "missing", opts: ginCtxReqOpts{headers: map[string]string{}, params: gin.Params{}}, value: ``, err: nil},
-		{name: "Valid header extraction (special characters)", field: "name", opts: ginCtxReqOpts{headers: map[string]string{"name": "John%20Doe"}, params: gin.Params{gin.Param{Key: "name", Value: "John%20Doe"}}}, value: `John Doe`, err: nil},
 		{name: "Valid header extraction (numeric value)", field: "age", opts: ginCtxReqOpts{headers: map[string]string{"age": "42"}, params: gin.Params{gin.Param{Key: "age", Value: "42"}}}, value: `42`, err: nil},
 	}
 
@@ -285,7 +288,7 @@ func TestExtractFieldValFromParam(t *testing.T) {
 			ans, err := extractFieldValFromParam(ctx, test.field)
 
 			if err != nil {
-				if !errors.Is(test.err, test.err) {
+				if !errors.Is(err, test.err) {
 					t.Errorf("got error %+v, want %+v", err, test.err)
 				}
 			}
@@ -320,13 +323,48 @@ func TestExtractFieldValFromQuery(t *testing.T) {
 			ans, err := extractFieldValFromQuery(ctx, test.field)
 
 			if err != nil {
-				if !errors.Is(test.err, test.err) {
+				if !errors.Is(err, test.err) {
 					t.Errorf("got error %+v, want %+v", err, test.err)
 				}
 			}
 
 			if ans != test.value {
 				t.Errorf("got %q, want %q", ans, test.value)
+			}
+		})
+	}
+}
+
+// Path parameters go through a real router, because Gin decodes them before
+// ginvalidator sees them. They must not be decoded a second time.
+func TestParamDecodedOnce(t *testing.T) {
+	tests := []struct {
+		path string
+		want string
+	}{
+		{path: "/files/John%20Doe", want: "John Doe"},
+		{path: "/files/100%25", want: "100%"},
+		{path: "/files/a+b", want: "a+b"},
+		{path: "/files/a%2Bb", want: "a+b"},
+		{path: "/files/caf%C3%A9", want: "café"},
+	}
+
+	for _, test := range tests {
+		t.Run(test.path, func(t *testing.T) {
+			gin.SetMode(gin.TestMode)
+			r := gin.New()
+			var got string
+			var errs []ValidationChainError
+			r.GET("/files/:name", NewParamChain("name", nil).Not().Empty(nil).Validate(), func(ctx *gin.Context) {
+				errs, _ = ValidationResult(ctx)
+				md, _ := GetMatchedData(ctx)
+				got, _ = md.Get(ParamLocation, "name")
+			})
+
+			r.ServeHTTP(httptest.NewRecorder(), httptest.NewRequest(http.MethodGet, test.path, nil))
+
+			if got != test.want || len(errs) != 0 {
+				t.Errorf("got %q with errors %+v, want %q and no errors", got, errs, test.want)
 			}
 		})
 	}

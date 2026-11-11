@@ -72,8 +72,8 @@ Gin already validates requests through [binding](https://gin-gonic.com/en/docs/b
 
 ## Requirements
 
-- [Go](https://go.dev/dl/) 1.23+
-- [Gin](https://github.com/gin-gonic/gin) 1.x
+- [Go](https://go.dev/dl/) 1.25+
+- [Gin](https://github.com/gin-gonic/gin) v1.12+ (installed for you by `go get`)
 
 ## Getting Started
 

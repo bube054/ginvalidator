@@ -2,6 +2,12 @@
 
 All notable changes to `ginvalidator`. Versions follow [semantic versioning](https://semver.org).
 
+## Unreleased
+
+### Changed
+- Gin v1.12.0, up from v1.10.1.
+- Requires Go 1.25 or newer, up from 1.23, because Gin v1.12.0 does. Go 1.23 and 1.24 no longer get security fixes from the Go team.
+
 ## v1.1.0 (2026-11-11)
 
 ### Fixed
